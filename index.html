@@ -702,6 +702,7 @@
         // ========================================================
         
         const database = [
+            
     {
         id: 1,
         title: "S line 2025",
@@ -829,50 +830,48 @@
 
 
         
-        id: 2,
+       
+        id: 3,
         title: "Train to Busan",
-        // زانیارییەکانی تری ئەم فیلمە لێرە تەواو بکە
-                type: "movie",
-                genre: "ئەکشن • ترسناک", // نمونە
-                desc: "باوکێک و کچەکەی لە گەشتێکدان بە شەمەندەفەر بەرەو بوسان، بەڵام ڤایرۆسێکی کوشندە بڵاودەبێتەوە و گەشتەکەیان دەکاتە جەنگێک بۆ مانەوە لە ژیان.", // نمونە
-                image: "https://upload.wikimedia.org/wikipedia/en/9/95/Train_to_Busan.jpg",
-                episodes: [
-                    { 
-                        ep: 1, 
-                        name: "تەواوی فلیم",
-                        servers: [
-                            { name: "Vidmoly", link: "https://vidmoly.to/embed-busan" },
-                            { name: "Have Server", link: "https://myserver.com/busan" }
-                        ]
-                    }
-                ]
-            },
-            {
-                id: 3,
-                title: "All of Us Are Dead",
-                type: "drama",
-                genre: "زانستی • ترسناک", // نمونە
-                desc: "قوتابخانەیەک دەبێتە ناوەندی بڵاوبوونەوەی ڤایرۆسی زۆمبی، خوێندکارەکان دەبێت بجەنگن بۆ ئەوەی ڕزگاریان بێت پێش ئەوەی تووش ببن.", // نمونە
-                image: "https://upload.wikimedia.org/wikipedia/en/2/24/All_of_Us_Are_Dead.jpeg",
-                episodes: [
-                    { ep: 1, servers: [{name: "Main", link: "..."}] },
-                    { ep: 2, servers: [{name: "Main", link: "..."}] },
-                    { ep: 3, servers: [{name: "Main", link: "..."}] },
-                    { ep: 4, servers: [{name: "Main", link: "..."}] },
-                    { ep: 5, servers: [{name: "Main", link: "..."}] },
-                    { ep: 6, servers: [{name: "Main", link: "..."}] }
+        type: "movie",
+        genre: "ئەکشن • ترسناک",
+        desc: "باوکێک و کچەکەی لە گەشتێکدان بە شەمەندەفەر بەرەو بوسان...",
+        image: "https://upload.wikimedia.org/wikipedia/en/9/95/Train_to_Busan.jpg",
+        episodes: [
+            { ep: 1, name: "تەواوی فلیم", servers: [{ name: "Vidmoly", link: "https://vidmoly.to/embed-busan" }] }
+        ]
+
+    },
+    {
+        id: 5, 
+        title: "Bloody Flower 2026 ",
+        type: "drama",
+        genre: " تاوانکاری • پزیشکی", 
+        desc: "(لی وو گیۆم) بکوژێکی  زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
+        image: "IMG_2778.JPG",
+        episodes: [
+            { 
+                ep: 1, 
+                servers: [
+                    { name: "vip have korea", link: "https://vidmoly.net/embed-sm0to27xmz9t.html" },
+                    { name: " stream", link: "https://streamtape.com/v/eg0Oy2dBrOhoYp/Bloody.Flower.S01E01.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
+                    { name: "mixdrop", link: "https://mixdrop.top/e/nlx1oo18hppx6x" },
                 ]
             }
-        ];
+        ]
+    }
+]; //
 
         const app = {
             data: database,
             currentMovie: null,
             currentEpisodeIndex: 0,
 
-            init: function() {
-                this.renderGrid(this.data);
-            },
+           init: function() {
+    // ڕێکخستنی داتا بەپێی ئایدی (لە گەورەوە بۆ بچووک)
+    this.data.sort((a, b) => b.id - a.id);
+    this.renderGrid(this.data);
+},
 
             renderGrid: function(list) {
                 const grid = document.getElementById('grid');
@@ -907,22 +906,24 @@
                 });
             },
 
-            openPlayer: function(item) {
-                this.currentMovie = item;
-                this.currentEpisodeIndex = 0;
+           openPlayer: function(item) {
+    this.currentMovie = item;
+    this.currentEpisodeIndex = 0;
 
-                document.getElementById('home-view').style.display = 'none';
-                document.getElementById('player-modal').style.display = 'block';
-                
-                // پڕکردنەوەی زانیارییەکان لە ناو پلەیەر
-                document.getElementById('movie-title').innerText = item.title;
-                document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
-                document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
-                document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
+    // لێرەدا ناوی تایتڵی برۆسەرەکە دەگۆڕین
+    document.title = item.title + " Kurdish";
 
-                this.renderEpisodes();
-                this.playEpisode(0, 0);
-            },
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('player-modal').style.display = 'block';
+    
+    document.getElementById('movie-title').innerText = item.title;
+    document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
+    document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
+    document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
+
+    this.renderEpisodes();
+    this.playEpisode(0, 0);
+},
 
             renderEpisodes: function() {
                 const listContainer = document.getElementById('episode-list');
@@ -970,8 +971,10 @@
                     serverContainer.innerHTML = '<span style="color:red">هیچ سێرڤەرێک نییە</span>';
                 }
             },
-
-            goHome: function() {
+goHome: function() {
+                // ناوی برۆسەرەکە دەگەڕێتەوە بۆ ناوی سەرەکی
+                document.title = "HAve Korea | هاڤی کۆریا";
+                
                 document.getElementById('video-frame').src = "";
                 document.getElementById('player-modal').style.display = 'none';
                 document.getElementById('home-view').style.display = 'block';
@@ -987,18 +990,21 @@
                 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
                 btnElement.classList.add('active');
 
+                let filtered;
                 if(type === 'all') {
-                    this.renderGrid(this.data);
+                    filtered = this.data;
                 } else {
-                    const filtered = this.data.filter(i => i.type === type);
-                    this.renderGrid(filtered);
+                    filtered = this.data.filter(i => i.type === type);
                 }
+                
+                filtered.sort((a, b) => b.id - a.id);
+                this.renderGrid(filtered);
+
                 if(document.getElementById('player-modal').style.display === 'block') this.goHome();
             }
         };
 
         app.init();
-
     </script>
     
 <style>
