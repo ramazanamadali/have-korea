@@ -3,9 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HAve Korea | هاڤی کۆریا</title>
+    <meta name="google-site-verification" content="BO0KIG3OE7ubRt-BFnpaaZ1KHMBdLGlXgcrorlzo2pk" />
+    <title>HAve Korea | هاڤی کۆریا - درامای کۆری بە ژێرنووسی کوردی</title>
+    <meta name="description" content="سایتی هاڤی کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
+    <meta name="keywords" content="kurdish subtitle, ژێرنووسی کوردی, درامای کۆری, فلیمی کۆری, kurdsub, HAve Korea, دراما و فیلم">
+    <meta name="author" content="HAve Korea">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="HAve Korea | هاڤی کۆریا">
+    <meta property="og:description" content="باشترین سەرچاوە بۆ بینینی دراما کۆرییەکان بە کوردی">
+    <meta property="og:type" content="website">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
     <style>
         /* ========================================
            بەشی دیزاینی نوێ (Glass & Animated Borders)
@@ -867,11 +876,22 @@
             currentMovie: null,
             currentEpisodeIndex: 0,
 
-           init: function() {
-    // ڕێکخستنی داتا بەپێی ئایدی (لە گەورەوە بۆ بچووک)
-    this.data.sort((a, b) => b.id - a.id);
-    this.renderGrid(this.data);
-},
+        init: function() {
+                // ڕێکخستنی داتا بەپێی ئایدی (لە گەورەوە بۆ بچووک)
+                this.data.sort((a, b) => b.id - a.id);
+                this.renderGrid(this.data);
+
+                // --- لێرە کۆدە نوێیەکەی SEO بۆ دۆزینەوە لە گووگل زیاد کرا ---
+                const seoBox = document.createElement('div');
+                seoBox.style.display = 'none'; // بەکارهێنەر نایبینێت بەڵام گووگل دەیبینێت
+                seoBox.id = 'seo-tags';
+                
+                // کۆکردنەوەی ناوی هەموو دراماکان لەناو یەک شوێن بۆ ئەوەی گووگل بیخوێنێتەوە
+                const allTitles = this.data.map(item => `${item.title} kurdish subtitle ژێرنووسی کوردی`).join(', ');
+                seoBox.innerHTML = `<h1>${allTitles}</h1>`;
+                document.body.appendChild(seoBox);
+                // ----------------------------------------------------
+            },
 
             renderGrid: function(list) {
                 const grid = document.getElementById('grid');
@@ -887,7 +907,6 @@
                     card.className = 'card';
                     card.onclick = () => this.openPlayer(item);
                     
-                    // لێرە دیزاینی کاردەکە گۆڕدراوە بۆ پیشاندانی ژانەر و کورتە
                     card.innerHTML = `
                         <img src="${item.image}" alt="${item.title}" class="card-img" loading="lazy">
                         <span class="card-tag">${item.type === 'drama' ? 'Drama' : 'Movie'}</span>
@@ -906,24 +925,24 @@
                 });
             },
 
-           openPlayer: function(item) {
-    this.currentMovie = item;
-    this.currentEpisodeIndex = 0;
+            openPlayer: function(item) {
+                this.currentMovie = item;
+                this.currentEpisodeIndex = 0;
 
-    // لێرەدا ناوی تایتڵی برۆسەرەکە دەگۆڕین
-    document.title = item.title + " Kurdish";
+                // گۆڕینی ناوی تابی برۆسەرەکە بۆ ناوی دراماکە + Kurdish
+                document.title = item.title + " Kurdish";
 
-    document.getElementById('home-view').style.display = 'none';
-    document.getElementById('player-modal').style.display = 'block';
-    
-    document.getElementById('movie-title').innerText = item.title;
-    document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
-    document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
-    document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
+                document.getElementById('home-view').style.display = 'none';
+                document.getElementById('player-modal').style.display = 'block';
+                
+                document.getElementById('movie-title').innerText = item.title;
+                document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
+                document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
+                document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
 
-    this.renderEpisodes();
-    this.playEpisode(0, 0);
-},
+                this.renderEpisodes();
+                this.playEpisode(0, 0);
+            },
 
             renderEpisodes: function() {
                 const listContainer = document.getElementById('episode-list');
@@ -971,8 +990,9 @@
                     serverContainer.innerHTML = '<span style="color:red">هیچ سێرڤەرێک نییە</span>';
                 }
             },
-goHome: function() {
-                // ناوی برۆسەرەکە دەگەڕێتەوە بۆ ناوی سەرەکی
+
+            goHome: function() {
+                // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
                 document.title = "HAve Korea | هاڤی کۆریا";
                 
                 document.getElementById('video-frame').src = "";
