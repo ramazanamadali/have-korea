@@ -403,16 +403,49 @@
 }
 
 .card-title {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 700;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 4px;
     color: #fff;
-    text-align: right;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+    text-align: center; /* ناوەڕاست کرا */
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+    
+    /* سیستمی 2 دێڕ */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    
+    overflow: hidden;
+    word-wrap: break-word;
+    hyphens: auto;
+    
+    line-height: 1.35;
+    max-height: 2.7em;
+    margin-bottom: 6px;
+    padding: 0 6px;
+    
+    /* جوانکاری */
+    text-align-last: center; /* دێڕی کۆتایی دەچێتە ناوەڕاست */
+    
+    transition: all 0.3s ease;
 }
+
+/* کاتێک hover دەکەیت */
+.card:hover .card-title {
+    text-shadow: 0 0 12px rgba(140, 0, 255, 0.9),
+                 0 2px 8px rgba(0,0,0,0.9);
+    transform: scale(1.02);
+}
+
+/* بۆ مۆبایل */
+@media (max-width: 768px) {
+    .card-title {
+        font-size: 11.5px;
+        line-height: 1.3;
+        max-height: 2.6em;
+    }
+}
+
 
 /* ژانەرەکە لە دەرەوە بشارەوە و تەنها لە کاتی Hover نیشانی بدە */
 .card-genre {
@@ -662,6 +695,49 @@
             <button class="cat-btn" onclick="app.filter('drama', this)">دراما</button>
             <button class="cat-btn" onclick="app.filter('movie', this)">فلیم</button>
         </div>
+        <!-- ناڤباری فلتەر (تەنها بۆ دراما و فیلم) -->
+<div class="filter-navbar" id="filter-navbar" style="display: none;">
+    <button class="filter-toggle-btn" onclick="toggleFilterMenu()">
+        <i class="fas fa-filter"></i> فلتەر
+        <i class="fas fa-chevron-down arrow-down"></i>
+    </button>
+    
+    <div class="filter-dropdown" id="filter-dropdown">
+    <div class="filter-dropdown-content">
+        <div class="filter-section">
+            <h4><i class="fas fa-film"></i> ژانەر</h4>
+            <div class="filter-options">
+                <label><input type="checkbox" value="ڕۆمانسی"> ڕۆمانسی</label>
+                <label><input type="checkbox" value="ئەکشن"> ئەکشن</label>
+                <label><input type="checkbox" value="کۆمیدی"> کۆمیدی</label>
+                <label><input type="checkbox" value="تاوانکاری"> تاوانکاری</label>
+                <label><input type="checkbox" value="خەیاڵی"> خەیاڵی</label>
+                <label><input type="checkbox" value="دراما"> دراما</label>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <h4><i class="fas fa-calendar-alt"></i> ساڵ</h4>
+            <div class="filter-options">
+                <label><input type="checkbox" value="2026"> 2026</label>
+                <label><input type="checkbox" value="2025"> 2025</label>
+                <label><input type="checkbox" value="2024"> 2024</label>
+                <label><input type="checkbox" value="2023"> 2023</label>
+                <label><input type="checkbox" value="2022"> 2022</label>
+                <label><input type="checkbox" value="2021"> 2021</label>
+                <label><input type="checkbox" value="2020"> 2020</label>
+                <label><input type="checkbox" value="2019"> 2019</label>
+                <label><input type="checkbox" value="2018"> 2018</label>
+                <label><input type="checkbox" value="2017"> 2017</label>
+            </div>
+        </div>
+        
+        <div class="filter-actions">
+            <button onclick="applyFilters()" class="apply-btn">جێبەجێکردن</button>
+            <button onclick="clearFilters()" class="clear-btn">سڕینەوە</button>
+        </div>
+    </div>
+</div>
     </nav>
 
     <div class="main-container" id="home-view">
@@ -693,6 +769,7 @@
                 </div>
                 <p id="movie-desc" class="info-desc">کورتەی چیرۆک لێرە دەردەکەوێت...</p>
                 <div id="episode-container" style="margin-bottom: 30px;">
+<div id="credits-container" style="margin-bottom: 30px;"></div>
                     <span class="section-label"><i class="fas fa-list-ol"></i> هەڵبژاردنی ئەلقە:</span>
                     <div class="btn-grid" id="episode-list"></div>
                 </div>
@@ -713,12 +790,26 @@
         const database = [
             
     {
-        id: 1,
+        id: 2,
         title: "S line 2025",
         type: "drama",
         genre: "ڕۆمانسی • خەیاڵی", 
         desc: "چاویلەکەیەکی ئەفسوناوی هەیە هەر کەسێک لە چاوی بکات دەبێتە کەسێکی جیاواز و دەتوانێت (هێڵی سوور) ببینێت، ئایا کێشەکانی پێ چارەسەر دەکات یان دەبێتە هۆکاری مردنی خۆی و کەسانی تر؟!",
         image: "sline.png",
+
+
+// **زیادکردنی وەرگێر و تەکنیکار**
+        translator: {
+            name: "سەنا ئەحمەد",
+            avatar: "سانا.png",
+            
+        },
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+
+
         episodes: [
             { 
                 ep: 1, 
@@ -727,6 +818,7 @@
                     { name: "mixdrop", link: "https://mixdrop.top/e/l7qwz61xhnnngo"  },
                     { name: "voe", link: "https://voe.sx/e/jcsu5pzu47an" }
                 ]
+                
             },
             { 
                 ep: 2, 
@@ -776,12 +868,24 @@
 
 
     
-        id: 2,
+        id: 3,
         title: "trigger 2025",
         type: "drama",
         genre: " ئەکشن • سەرکێشی • تاوانکاری• ", 
         desc: "لە وڵاتێکی وەک کۆریای باشووردا کە یاساکانی هەڵگرتنی چەک زۆر توندن و تاوانی تەقەکردن تێیدا دەگمەنە، لەناکاو کۆمەڵێک چەکی نایاسایی و بێ مۆڵەت بە وڵاتدا بڵاو دەبنەوە. ئەمەش دەبێتە هۆی دروستبوونی پشێوی و زیادبوونی تاوانە خوێناوییەکان.",
         image: "trigger.png",
+
+// **زیادکردنی وەرگێر و تەکنیکار**
+        translator: {
+            name: "هێلین ",
+            avatar: "admin1.png",
+            
+        },
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        
         episodes: [
             { 
                 ep: 1, 
@@ -819,9 +923,9 @@
             { 
                 ep: 5, 
                 servers: [
-                    { name: "vip have korea", link: "https://vidmoly.net/embed-zclaxuu8x45y.html" }, // لینکەکەی لێرە دابنێ
-                    { name: "mixdrop", link: "https://mixdrop.top/e/363qn7rpi87ez" },        // لینکەکەی لێرە دابنێ
-                    { name: "streamtabe", link: "https://streamtape.com/e/AXlOJ9WyXQHXy89/S_Line_-_SLine_Episode_5_kisskh.mkv" }      // لینکەکەی لێرە دابنێ
+                    { name: "vip have korea", link: "https://vidmoly.net/embed-yjjug83mzne7.html" }, // لینکەکەی لێرە دابنێ
+                    { name: "mixdrop", link: "https://mixdrop.top/e/q19vxkwxhx7gvo3" },        // لینکەکەی لێرە دابنێ
+                    { name: "streamtabe", link: "https://streamtape.com/e/46wWm0aQR4CKvPl/Trigger_%282025%29_Episode_5_kisskh.mkv" }      // لینکەکەی لێرە دابنێ
                 ]
             },
             { 
@@ -834,42 +938,66 @@
             }
         ]
     },
-    {
-
-
-
-        
-       
-        id: 3,
-        title: "Train to Busan",
+   {
+        id: 6,
+        title: "Daddy you Daughter me 2017",
         type: "movie",
-        genre: "ئەکشن • ترسناک",
-        desc: "باوکێک و کچەکەی لە گەشتێکدان بە شەمەندەفەر بەرەو بوسان...",
-        image: "https://upload.wikimedia.org/wikipedia/en/9/95/Train_to_Busan.jpg",
-        episodes: [
-            { ep: 1, name: "تەواوی فلیم", servers: [{ name: "Vidmoly", link: "https://vidmoly.to/embed-busan" }] }
-        ]
-
-    },
-    {
-        id: 5, 
-        title: "Bloody Flower 2026 ",
-        type: "drama",
-        genre: " تاوانکاری • پزیشکی", 
-        desc: "(لی وو گیۆم) بکوژێکی  زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
-        image: "IMG_2778.JPG",
+        genre: "کۆمیدی - خەیاڵی - خێزانی - دراما",
+        desc: " باوک و کچێکی کۆری بەهۆی ڕووداوێکی هاتوچۆوە جەستەیان دەگۆڕێت و بڕیار دەدەن ژیانی یەکتری تاقیبکەنەوە. بڕیار دەدەن دایکیان بەم بابەتە نەزانێت، بۆیە کچەکە لەجیاتی باوکی دەچێتە سەر کار و باوکەکەش لەجیاتی کچەکەی دەچێتە قوتابخانە.",
+        image: "dady.png", 
         episodes: [
             { 
                 ep: 1, 
+                name: "تەواوی فلیم", 
                 servers: [
-                    { name: "vip have korea", link: "https://vidmoly.net/embed-sm0to27xmz9t.html" },
-                    { name: " stream", link: "https://streamtape.com/v/eg0Oy2dBrOhoYp/Bloody.Flower.S01E01.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
-                    { name: "mixdrop", link: "https://mixdrop.top/e/nlx1oo18hppx6x" },
-                ]
+                    { name: "have korea vip", link: "https://vidmoly.net/embed-u29zxqtt6ibv.html" },
+                    { name: "streamtabe", link: "https://streamtape.com/e/2WbL93MD0pUZk82/Daddy_You_Daughter_Me_2017_Full_movie_online_MyFlixer_File_%23dzp3MWiLGAk2.mkv.mp4" },
+                    { name: "Mixdrop", link:"https://mixdrop.top/e/4dmnp3k4tq4q7nz" }
+                ] 
             }
         ]
-    }
+    },
+    {
+    id: 5, 
+    title: "Bloody Flower 2026 ",
+    type: "drama",
+    genre: " تاوانکاری • پزیشکی", 
+    desc: "(لی وو گیۆم) بکوژێکی زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
+    image: "IMG_2778.JPG",
+    episodes: [
+        { 
+            ep: 1, 
+            servers: [
+                { name: "vip have korea", link: "https://vidmoly.net/embed-sm0to27xmz9t.html" },
+                { name: "stream", link: "https://streamtape.com/v/eg0Oy2dBrOhoYp/Bloody.Flower.S01E01.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
+                { name: "mixdrop", link: "https://mixdrop.top/e/nlx1oo18hppx6x" }
+            ]
+        },
+        // ئەڵقەی نوێ لێرە زیاد بکە
+        { 
+            ep: 2, 
+            servers: [
+                { name: "vip have korea", link: "" },
+                { name: "stream", link: " " },
+                { name: "mixdrop", link: " " }
+            ]
+        },
+        { 
+            ep: 3, 
+            servers: [
+                { name: "vip have korea", link: "لینکەکەی لێرە دابنێ" },
+                { name: "stream", link: "لینکەکەی لێرە دابنێ" },
+                { name: "mixdrop", link: "لینکەکەی لێرە دابنێ" }
+            ]
+        }
+    ]
+}
 ]; //
+
+
+
+
+
 
         const app = {
             data: database,
@@ -939,10 +1067,48 @@
                 document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
                 document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
                 document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
+// **زیادکردنی وەرگێر و تەکنیکار**
+    this.renderCredits(item);
 
-                this.renderEpisodes();
-                this.playEpisode(0, 0);
-            },
+    this.renderEpisodes();
+    this.playEpisode(0, 0);
+},
+renderCredits: function(item) {
+    const container = document.getElementById('credits-container');
+    container.innerHTML = '';
+    
+    if (item.translator || item.technician) {
+        let html = '<div class="credits-wrapper">';
+        
+        if (item.translator) {
+            html += `
+                <div class="credit-card" onclick="app.showPersonWorks('translator', '${item.translator.name}')">
+                    <img src="${item.translator.avatar}" alt="${item.translator.name}">
+                    <div class="credit-info">
+                        <span class="credit-role">وەرگێڕ</span>
+                        <span class="credit-name">${item.translator.name}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (item.technician) {
+            html += `
+                <div class="credit-card" onclick="app.showPersonWorks('technician', '${item.technician.name}')">
+                    <img src="${item.technician.avatar}" alt="${item.technician.name}">
+                    <div class="credit-info">
+                        <span class="credit-role">تەکنیکار</span>
+                        <span class="credit-name">${item.technician.name}</span>
+                    </div>
+                </div>
+            `;
+        }
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
+},
+
 
             renderEpisodes: function() {
                 const listContainer = document.getElementById('episode-list');
@@ -1006,26 +1172,185 @@
                 if(document.getElementById('player-modal').style.display === 'block') this.goHome();
             },
 
-            filter: function(type, btnElement) {
-                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-                btnElement.classList.add('active');
+          filter: function(type, btnElement) {
+    document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
 
-                let filtered;
-                if(type === 'all') {
-                    filtered = this.data;
-                } else {
-                    filtered = this.data.filter(i => i.type === type);
-                }
-                
-                filtered.sort((a, b) => b.id - a.id);
-                this.renderGrid(filtered);
+    const filterNav = document.getElementById('filter-navbar');
+    
+    if (type === 'drama' || type === 'movie') {
+        filterNav.style.display = 'flex';
+    } else {
+        filterNav.style.display = 'none';
+    }
 
-                if(document.getElementById('player-modal').style.display === 'block') this.goHome();
+    let filtered;
+    if(type === 'all') {
+        filtered = this.data;
+    } else {
+        filtered = this.data.filter(i => i.type === type);
+    }
+    
+    filtered.sort((a, b) => b.id - a.id);
+    this.renderGrid(filtered);
+
+    // گۆڕینەوەی سەردێڕی بەش لەگەڵ لۆگۆی جیاواز
+    const sectionHeader = document.querySelector('.section-header');
+    
+    if (type === 'all') {
+        sectionHeader.innerHTML = `
+            <i class="fas fa-fire"></i>
+            <span>نوێترین زیادکراوەکان</span>
+        `;
+    } else if (type === 'drama') {
+        sectionHeader.innerHTML = `
+            <i class="fas fa-tv"></i>
+            <span>دراما</span>
+        `;
+    } else if (type === 'movie') {
+        sectionHeader.innerHTML = `
+            <i class="fas fa-film"></i>
+            <span>فیلم</span>
+        `;
+    }
+
+    if(document.getElementById('player-modal').style.display === 'block') this.goHome();
+},  // ⬅️ ئەم کۆمایە (,) گرنگە
+
+
+
+
+showPersonWorks: function(role, personName) {
+    const works = this.data.filter(item => {
+        if (role === 'translator') {
+            return item.translator && item.translator.name === personName;
+        } else if (role === 'technician') {
+            return item.technician && item.technician.name === personName;
+        }
+        return false;
+    });
+    
+    if (works.length === 0) {
+        alert('هیچ کارێک نەدۆزرایەوە بۆ ' + personName);
+        return;
+    }
+    
+    let modal = document.getElementById('person-works-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'person-works-modal';
+        modal.className = 'person-modal';
+        document.body.appendChild(modal);
+    }
+    
+    const roleText = role === 'translator' ? 'وەرگێڕ' : 'تەکنیکار';
+    
+    let html = `
+        <div class="person-modal-content">
+            <button class="modal-close-btn" onclick="document.getElementById('person-works-modal').style.display='none'">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="person-header">
+                <img src="${works[0][role].avatar}" alt="${personName}">
+                <h2>${personName}</h2>
+                <p>${roleText}</p>
+                <span class="works-count">${works.length} کار</span>
+            </div>
+            <div class="person-works-grid">
+    `;
+    
+    works.forEach(work => {
+        html += `
+            <div class="work-card" onclick="app.openPlayer(app.data.find(d => d.id === ${work.id})); document.getElementById('person-works-modal').style.display='none';">
+                <img src="${work.image}" alt="${work.title}">
+                <div class="work-title">${work.title}</div>
+            </div>
+        `;
+    });
+    
+    html += `
+            </div>
+        </div>
+    `;
+    
+    modal.innerHTML = html;
+    modal.style.display = 'flex';
+}
+};
+
+// کۆدی فلتەر
+function toggleFilterMenu() {
+    const dropdown = document.getElementById('filter-dropdown');
+    const btn = document.querySelector('.filter-toggle-btn');
+    dropdown.classList.toggle('show');
+    btn.classList.toggle('active');
+}
+
+function applyFilters() {
+    const genreCheckboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+    const selectedGenres = [];
+    const selectedYears = [];
+    
+    // کۆکردنەوەی هەڵبژاردنەکان
+    genreCheckboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            const value = checkbox.value;
+            if (!isNaN(value)) {
+                selectedYears.push(value);
+            } else {
+                selectedGenres.push(value);
             }
-        };
+        }
+    });
+    
+    // **ئەمە گرنگە:** یەکەم دەبێت بزانین ئێستا لەسەر کام فلتەرین (دراما یان فیلم)
+    const activeBtn = document.querySelector('.cat-btn.active');
+    let currentType = 'all';
+    
+    if (activeBtn) {
+        const btnText = activeBtn.textContent.trim();
+        if (btnText === 'دراما') {
+            currentType = 'drama';
+        } else if (btnText === 'فلیم') {
+            currentType = 'movie';
+        }
+    }
+    
+    // دەستپێکردن لە هەموو داتاکان
+    let filtered = app.data;
+    
+    // **یەکەم:** فلتەر بکە بەپێی جۆر (دراما یان فیلم)
+    if (currentType !== 'all') {
+        filtered = filtered.filter(item => item.type === currentType);
+    }
+    
+    // **دووەم:** فلتەر بکە بەپێی ژانەر (ئەگەر هەڵبژێردراوە)
+    if (selectedGenres.length > 0) {
+        filtered = filtered.filter(item => {
+            return selectedGenres.some(genre => item.genre && item.genre.includes(genre));
+        });
+    }
+    
+    // **سێیەم:** فلتەر بکە بەپێی ساڵ (ئەگەر هەڵبژێردراوە)
+    if (selectedYears.length > 0) {
+        filtered = filtered.filter(item => {
+            return selectedYears.some(year => item.title.includes(year));
+        });
+    }
+    
+    app.renderGrid(filtered);
+    toggleFilterMenu(); // داخستنی مێنیوی فلتەر
+}
 
-        app.init();
-    </script>
+function clearFilters() {
+    const checkboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    app.renderGrid(app.data);
+    toggleFilterMenu();
+}
+
+app.init();
+</script>
     
 <style>
     /* ئەگەر فۆنتەکەت لە فۆڵدەرێکی دیاریکراوە لێرە بانگی بکە، ئەگەر نا ئەم بەشە لاببە */
@@ -1126,9 +1451,553 @@
     @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
     @keyframes movePoint { 0% { left: 0%; opacity: 0; } 50% { opacity: 1; } 100% { left: 100%; opacity: 0; } }
 
-    @media (max-width: 768px) {
+   @media (max-width: 768px) {
         .helin-name { font-size: 32px; }
     }
+/* ========================================
+       ستایلی ناڤباری فلتەر - پڕۆفیشناڵ
+       ======================================== */
+
+    .filter-navbar {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        z-index: 999;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-toggle-btn {
+        position: relative;
+        background: linear-gradient(135deg, rgba(140, 0, 255, 0.2), rgba(179, 102, 255, 0.15));
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 2px solid rgba(140, 0, 255, 0.4);
+        color: white;
+        padding: 14px 35px;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 10px 30px rgba(140, 0, 255, 0.25),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+    .filter-toggle-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+    }
+
+    .filter-toggle-btn:hover::before {
+        left: 100%;
+    }
+
+    .filter-toggle-btn:hover {
+        background: linear-gradient(135deg, rgba(140, 0, 255, 0.35), rgba(179, 102, 255, 0.25));
+        border-color: var(--accent-light);
+        box-shadow: 0 15px 45px rgba(140, 0, 255, 0.4),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px) scale(1.02);
+    }
+
+    .filter-toggle-btn .arrow-down {
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        font-size: 13px;
+    }
+
+    .filter-toggle-btn.active .arrow-down {
+        transform: rotate(180deg);
+    }
+
+    .filter-dropdown {
+        position: absolute;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.95);
+        width: 550px;
+        max-width: 92vw;
+        max-height: 0;
+        background: linear-gradient(135deg, rgba(20, 10, 35, 0.97), rgba(30, 15, 50, 0.95));
+        backdrop-filter: blur(35px) saturate(150%);
+        -webkit-backdrop-filter: blur(35px) saturate(150%);
+        border: 2px solid rgba(140, 0, 255, 0.35);
+        border-radius: 25px;
+        padding: 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+                    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                    0 0 50px rgba(140, 0, 255, 0.15);
+        overflow: hidden;
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .filter-dropdown.show {
+        max-height: 500px;
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        padding: 30px;
+    }
+
+    .filter-dropdown-content {
+        max-height: 420px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 10px;
+    }
+
+    .filter-dropdown-content::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .filter-dropdown-content::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    .filter-dropdown-content::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #8c00ff, #b366ff);
+        border-radius: 10px;
+        border: 2px solid rgba(30, 15, 50, 0.5);
+        transition: all 0.3s ease;
+    }
+
+    .filter-dropdown-content::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #b366ff, #c77dff);
+        box-shadow: 0 0 10px rgba(140, 0, 255, 0.5);
+    }
+
+    .filter-dropdown-content {
+        scrollbar-width: thin;
+        scrollbar-color: #8c00ff rgba(0, 0, 0, 0.2);
+    }
+
+    .filter-section {
+        margin-bottom: 28px;
+    }
+
+    .filter-section:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .filter-section h4 {
+        color: #fff;
+        font-size: 16px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid rgba(140, 0, 255, 0.3);
+        text-shadow: 0 0 15px rgba(140, 0, 255, 0.5);
+        font-weight: 700;
+    }
+
+    .filter-section h4 i {
+        color: var(--accent-light);
+        font-size: 18px;
+        filter: drop-shadow(0 0 8px rgba(140, 0, 255, 0.6));
+    }
+
+    /* ستوونی بۆ هەڵبژاردنەکان - 3 ستوون بۆ هەموو ئامێرەکان */
+    .filter-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .filter-options label {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #e0e0e0;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 12px 10px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1.5px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+    }
+
+    .filter-options label:hover {
+        background: rgba(140, 0, 255, 0.15);
+        border-color: rgba(140, 0, 255, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(140, 0, 255, 0.2);
+    }
+
+    .filter-options input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid rgba(140, 0, 255, 0.4);
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .filter-options input[type="checkbox"]:checked {
+        background: linear-gradient(135deg, #8c00ff, #b366ff);
+        border-color: #b366ff;
+        box-shadow: 0 0 15px rgba(140, 0, 255, 0.6);
+    }
+
+    .filter-options input[type="checkbox"]:checked::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .filter-options label:has(input:checked) {
+        background: rgba(140, 0, 255, 0.2);
+        border-color: var(--accent-color);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(140, 0, 255, 0.3);
+    }
+
+    .filter-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 25px;
+        padding-top: 25px;
+        border-top: 2px solid rgba(140, 0, 255, 0.2);
+    }
+
+    .apply-btn, .clear-btn {
+        flex: 1;
+        padding: 14px;
+        border: none;
+        border-radius: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .apply-btn {
+        background: linear-gradient(135deg, #8c00ff, #b366ff);
+        color: white;
+        box-shadow: 0 8px 25px rgba(140, 0, 255, 0.35);
+        border: 2px solid rgba(179, 102, 255, 0.5);
+    }
+
+    .apply-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: 0.5s;
+    }
+
+    .apply-btn:hover::before {
+        left: 100%;
+    }
+
+    .apply-btn:hover {
+        box-shadow: 0 12px 35px rgba(140, 0, 255, 0.5);
+        transform: translateY(-3px);
+    }
+
+    .clear-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .clear-btn:hover {
+        background: rgba(255, 50, 50, 0.25);
+        border-color: rgba(255, 50, 50, 0.6);
+        box-shadow: 0 8px 25px rgba(255, 50, 50, 0.3);
+        transform: translateY(-3px);
+    }
+
+    /* ڕێکخستن بۆ مۆبایل و ئەندرۆید */
+    @media (max-width: 768px) {
+        .filter-navbar {
+            top: 185px;
+        }
+        
+        .filter-dropdown {
+            width: 95vw;
+        }
+
+        .filter-dropdown.show {
+            padding: 20px 15px;
+        }
+
+        .filter-dropdown-content {
+            max-height: 350px;
+            padding-right: 5px;
+        }
+        
+        /* 3 ستوون بۆ ئەندرۆید و ئایفۆن */
+        .filter-options {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        
+        .filter-options label {
+            padding: 9px 5px;
+            font-size: 11px;
+            gap: 5px;
+        }
+
+        .filter-options input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .filter-options input[type="checkbox"]:checked::after {
+            font-size: 11px;
+        }
+        
+        .filter-toggle-btn {
+            padding: 12px 25px;
+            font-size: 13px;
+        }
+        
+        .filter-section h4 {
+            font-size: 14px;
+        }
+
+        .filter-actions {
+            gap: 10px;
+        }
+
+        .apply-btn, .clear-btn {
+            padding: 12px;
+            font-size: 13px;
+        }
+    }
+
+    /* بۆ شاشەی زۆر بچووک */
+    @media (max-width: 400px) {
+        .filter-options {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        
+        .filter-options label {
+            padding: 8px 3px;
+            font-size: 10px;
+        }
+
+        .filter-options input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+
+/* ستایلی وەرگێر و تەکنیکار */
+.credits-wrapper {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.credit-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(140, 0, 255, 0.1);
+    border: 1px solid rgba(140, 0, 255, 0.3);
+    padding: 12px 18px;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.credit-card:hover {
+    background: rgba(140, 0, 255, 0.2);
+    border-color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(140, 0, 255, 0.3);
+}
+
+.credit-card img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-color);
+}
+
+.credit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.credit-role {
+    font-size: 11px;
+    color: var(--accent-light);
+    font-weight: 600;
+}
+
+.credit-name {
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+}
+
+/* مۆداڵی لیستی کارەکان */
+.person-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 3000;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.person-modal-content {
+    max-width: 900px;
+    width: 90%;
+    background: rgba(20, 20, 30, 0.95);
+    border-radius: 25px;
+    padding: 40px 30px;
+    border: 2px solid rgba(140, 0, 255, 0.3);
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 50, 50, 0.2);
+    border: 1px solid rgba(255, 50, 50, 0.5);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 50, 50, 0.4);
+    transform: rotate(90deg);
+}
+
+.person-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.person-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--accent-color);
+    margin-bottom: 15px;
+    box-shadow: 0 0 25px rgba(140, 0, 255, 0.5);
+}
+
+.person-header h2 {
+    color: #fff;
+    font-size: 26px;
+    margin-bottom: 8px;
+}
+
+.person-header p {
+    color: var(--accent-light);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.works-count {
+    background: rgba(140, 0, 255, 0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 600;
+}
+
+.person-works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.work-card {
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.work-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(140, 0, 255, 0.2);
+    transition: 0.3s;
+}
+
+.work-card:hover img {
+    transform: scale(1.05);
+    border-color: var(--accent-color);
+    box-shadow: 0 8px 20px rgba(140, 0, 255, 0.4);
+}
+
+.work-title {
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .person-works-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
 </style>
 
 <footer class="helin-footer">
@@ -1147,13 +2016,12 @@
         left: 0;
         width: 100%;
         height: 100%;
-        z-index: -1; /* دەچێتە پشت هەموو شتەکان */
+        z-index: -1;
         pointer-events: none;
         overflow: hidden;
         background: radial-gradient(circle at 50% 50%, #0a0a0f 0%, #050508 100%);
     }
 
-    /* بازنە ڕووناکییە جوڵاوەکان */
     .blob {
         position: absolute;
         width: 500px;
@@ -1171,7 +2039,6 @@
         bottom: 0;
     }
 
-    /* ئەنیمەیشنی جوڵەی ڕووناکییەکە */
     @keyframes moveBlobs {
         0% { transform: translate(0, 0) scale(1); }
         33% { transform: translate(10vw, 20vh) scale(1.2); }
@@ -1179,7 +2046,6 @@
         100% { transform: translate(0, 0) scale(1); }
     }
 
-    /* ستایلی ئەستێرە بچووکەکان */
     .particle {
         position: absolute;
         width: 2px;
@@ -1759,18 +2625,63 @@
 
                     <div class="vip-staff-card">
                         <div class="staff-avatar-box">
+                            <img src="سانا.png" alt="Staff 2"> <div class="online-badge"></div>
+                        </div>
+                        <div class="staff-details">
+                            <h4>سەنا ئەحمەد </h4>
+                            <span>وەرگێڕی سەرەکی</span>
+                            <div class="staff-socials">
+                                <a href="https://www.instagram.com/sana.sa_n4?igsh=MXh0azgzdXcwYjgxdg%3D%3D&utm_source=qr"><i class="fab fa-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+
+ <div class="vip-staff-card">
+                        <div class="staff-avatar-box">
                             <img src="admin2.png" alt="Staff 2"> <div class="online-badge"></div>
                         </div>
                         <div class="staff-details">
                             <h4>کێڵوا </h4>
-                            <span>وەرگێڕی دووەم</span>
+                            <span>وەرگێڕ</span>
                             <div class="staff-socials">
                                 <a href="https://www.instagram.com/y9u7x?igsh=bHprcHh3MnBjM2ti&utm_source=qr"><i class="fab fa-instagram"></i></a>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
+
+
+
+
+<div class="acc-card">
+    <div class="acc-head" onclick="toggleMenu(this)">
+        <span><i class="fas fa-cogs"></i> تەکنیکار</span>
+        <i class="fas fa-chevron-left arrow-icon"></i>
+    </div>
+    <div class="acc-body">
+        <div class="vip-staff-card">
+            <div class="staff-avatar-box">
+                <img src="admin2.png" alt="Technician">
+                <div class="online-badge"></div>
+            </div>
+            <div class="staff-details">
+                <h4>کێڵوا </h4>
+                <span>تەکنیکار</span>
+                <div class="staff-socials">
+                   <a href="https://www.instagram.com/y9u7x?igsh=bHprcHh3MnBjM2ti&utm_source=qr"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
 
             <div class="acc-card">
     <div class="acc-head" onclick="toggleMenu(this)">
@@ -1930,8 +2841,9 @@
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; direction: rtl; }
 
     /* Sidebar Base */
-    .vertical-bars-btn { position: fixed; top: 160px; left: 20px; z-index: 10001; background: rgba(140, 0, 255, 0.2); backdrop-filter: blur(15px); padding: 15px; border-radius: 14px; border: 1px solid rgba(140, 0, 255, 0.4); cursor: pointer; transition: 0.5s; }
-    .vertical-bars-btn.active { top: 25px !important; background: rgba(255, 50, 50, 0.2); border-color: rgba(255, 50, 50, 0.4); }
+    .vertical-bars-btn { position: fixed; top: 100px; left: 2%; z-index: 10001; background: rgba(140, 0, 255, 0.25); backdrop-filter: blur(20px); padding: 16px; border-radius: 16px; border: 1.5px solid rgba(140, 0, 255, 0.4); cursor: pointer; transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(140, 0, 255, 0.2); }
+    .vertical-bars-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(140, 0, 255, 0.4); }
+    .vertical-bars-btn.active { top: 25px !important; background: rgba(255, 50, 50, 0.25); border-color: rgba(255, 50, 50, 0.5); }
     .bars-wrapper { display: flex; gap: 5px; width: 20px; height: 22px; justify-content: center; position: relative; }
     .bars-wrapper span { width: 3px; height: 22px; background: #fff; border-radius: 10px; transition: 0.4s; box-shadow: 0 0 10px var(--primary-glow); }
     .vertical-bars-btn.active .bar-1 { transform: rotate(45deg) translate(5.5px, 0); position: absolute; }
@@ -1941,7 +2853,12 @@
     .glass-sidebar { position: fixed; top: 0; left: -320px; width: 310px; height: 100vh; background: rgba(8, 8, 14, 0.98); backdrop-filter: blur(35px); z-index: 10000; transition: 0.5s; border-right: 1px solid rgba(140, 0, 255, 0.2); padding-top: 100px; overflow-y: auto; }
     .glass-sidebar.active { left: 0; }
     .sidebar-header-title { color: #fff; text-align: center; font-weight: 900; margin-bottom: 35px; text-shadow: 0 0 15px var(--primary-glow); font-size: 18px; letter-spacing: 2px; }
-
+    
+    /* بۆ مۆبایل و ئایفۆن */
+    @media (max-width: 768px) {
+        .vertical-bars-btn { top: 15px !important; left: 15px !important; padding: 14px !important; }
+        .vertical-bars-btn.active { top: 15px !important; }
+    }
     /* Accordion */
     .acc-card { background: rgba(255,255,255,0.03); border-radius: 20px; margin: 0 15px 15px 15px; border: 1px solid rgba(255,255,255,0.06); overflow: hidden; transition: 0.3s; }
     .acc-head { padding: 18px; display: flex; justify-content: space-between; cursor: pointer; color: #fff; font-size: 15px; align-items: center; }
@@ -2125,6 +3042,7 @@
             btn.disabled = false;
         });
     });
+    
 </script>
 
 
