@@ -526,27 +526,108 @@
             padding: 40px 20px;
         }
 
-        .back-btn {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            padding: 12px 30px;
-            border-radius: 50px;
-            cursor: pointer;
-            margin-bottom: 30px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            transition: 0.3s;
-            backdrop-filter: blur(5px);
-        }
-        .back-btn:hover { 
-            background: var(--accent-color); 
-            box-shadow: 0 0 20px rgba(140, 0, 255, 0.5);
-            padding-right: 40px;
-            border-color: transparent;
-        }
+        /* دیزاینی پڕۆفیشناڵی دوگمەی گەڕانەوە بە بۆردەری جوڵاوی مۆر */
+.back-btn {
+    position: relative;
+    background: rgba(20, 20, 30, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    color: white;
+    padding: 14px 35px;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-bottom: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 15px;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* بۆردەری جوڵاوی مۆر - لایەری یەکەم */
+.back-btn::before {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    top: -25%;
+    left: -25%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 60deg,
+        #8c00ff 120deg,
+        #b366ff 180deg,
+        #8c00ff 240deg,
+        transparent 300deg,
+        transparent 360deg
+    );
+    animation: rotateBorder 3s linear infinite;
+    z-index: -2;
+}
+
+/* لایەری دووەم - باگراوندی ناوەوە */
+.back-btn::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: linear-gradient(135deg, rgba(20, 20, 30, 0.95), rgba(30, 15, 45, 0.9));
+    border-radius: 48px;
+    z-index: -1;
+}
+
+/* ئەنیمەیشنی سوڕانەوە */
+@keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* کاتی Hover - خێراکردنی جوڵەکە و گۆڕانی ڕەنگ */
+.back-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 35px rgba(140, 0, 255, 0.4);
+}
+
+.back-btn:hover::before {
+    animation-duration: 1.5s;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        #00d2ff 90deg,
+        #8c00ff 180deg,
+        #ff00ff 270deg,
+        transparent 360deg
+    );
+}
+
+/* درەوشانەوەی ئایکۆنەکە */
+.back-btn:hover i {
+    animation: arrowBounce 0.6s ease-in-out;
+}
+
+@keyframes arrowBounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
+/* کاتی کلیک کردن */
+.back-btn:active {
+    transform: translateY(-1px) scale(0.98);
+    box-shadow: 0 5px 15px rgba(140, 0, 255, 0.3);
+}
+
+/* بۆ مۆبایل */
+@media (max-width: 768px) {
+    .back-btn {
+        padding: 12px 28px;
+        font-size: 14px;
+    }
+}
 
         .video-wrapper {
             position: relative;
@@ -681,7 +762,7 @@
 
     <nav class="navbar">
         <div class="logo" onclick="app.goHome()">
-            <img src="logo.png" alt="Logo">
+            <img src="logologo.png" alt="Logo">
             <span>HAVE KOREA</span>
         </div>
         
@@ -799,11 +880,12 @@
 
 
 // **زیادکردنی وەرگێر و تەکنیکار**
-        translator: {
-            name: "سەنا ئەحمەد",
-            avatar: "سانا.png",
-            
-        },
+        translators: [
+    {
+        name: "هێلین",
+        avatar: "admin1.png"
+    }
+],
         technician: {
             name: "کێڵوا",
             avatar: "admin2.png"
@@ -875,17 +957,22 @@
         desc: "لە وڵاتێکی وەک کۆریای باشووردا کە یاساکانی هەڵگرتنی چەک زۆر توندن و تاوانی تەقەکردن تێیدا دەگمەنە، لەناکاو کۆمەڵێک چەکی نایاسایی و بێ مۆڵەت بە وڵاتدا بڵاو دەبنەوە. ئەمەش دەبێتە هۆی دروستبوونی پشێوی و زیادبوونی تاوانە خوێناوییەکان.",
         image: "trigger.png",
 
-// **زیادکردنی وەرگێر و تەکنیکار**
-        translator: {
-            name: "هێلین ",
-            avatar: "admin1.png",
-            
+ // زیادکردنی لیستی وەرگێڕان (چەند کەسێک بێت)
+    translators: [
+        {
+            name: "سەنا ئەحمەد",
+            avatar: "سانا.png"
         },
-        technician: {
-            name: "کێڵوا",
-            avatar: "admin2.png"
-        },
-        
+        {
+            name: "هێلین",
+            avatar: "admin1.png"
+        }
+    ],
+    
+    technician: {
+        name: "کێڵوا",
+        avatar: "admin2.png"
+    },
         episodes: [
             { 
                 ep: 1, 
@@ -939,12 +1026,27 @@
         ]
     },
    {
+   
         id: 6,
         title: "Daddy you Daughter me 2017",
         type: "movie",
         genre: "کۆمیدی - خەیاڵی - خێزانی - دراما",
         desc: " باوک و کچێکی کۆری بەهۆی ڕووداوێکی هاتوچۆوە جەستەیان دەگۆڕێت و بڕیار دەدەن ژیانی یەکتری تاقیبکەنەوە. بڕیار دەدەن دایکیان بەم بابەتە نەزانێت، بۆیە کچەکە لەجیاتی باوکی دەچێتە سەر کار و باوکەکەش لەجیاتی کچەکەی دەچێتە قوتابخانە.",
-        image: "dady.png", 
+        image: "dady.png",
+
+// **زیادکردنی وەرگێر و تەکنیکار**
+        translators: [
+    {
+        name: "کێڵوا",
+            avatar: "admin2.png"
+    }
+],
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+
+
         episodes: [
             { 
                 ep: 1, 
@@ -957,43 +1059,96 @@
             }
         ]
     },
-    {
-    id: 5, 
+   
+  {
+    id: 5,
     title: "Bloody Flower 2026 ",
     type: "drama",
-    genre: " تاوانکاری • پزیشکی", 
+    genre: " تاوانکاری • پزیشکی",
     desc: "(لی وو گیۆم) بکوژێکی زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
     image: "IMG_2778.JPG",
+    translators: [
+      {
+        name: "هێلین",
+        avatar: "admin1.png"
+      }
+    ],
+    technician: {
+      name: "کێڵوا",
+      avatar: "admin2.png"
+    },
     episodes: [
-        { 
-            ep: 1, 
-            servers: [
-                { name: "vip have korea", link: "https://vidmoly.net/embed-sm0to27xmz9t.html" },
-                { name: "stream", link: "https://streamtape.com/v/eg0Oy2dBrOhoYp/Bloody.Flower.S01E01.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
-                { name: "mixdrop", link: "https://mixdrop.top/e/nlx1oo18hppx6x" }
-            ]
-        },
-        // ئەڵقەی نوێ لێرە زیاد بکە
-        { 
-            ep: 2, 
-            servers: [
-                { name: "vip have korea", link: "" },
-                { name: "stream", link: " " },
-                { name: "mixdrop", link: " " }
-            ]
-        },
-        { 
-            ep: 3, 
-            servers: [
-                { name: "vip have korea", link: "لینکەکەی لێرە دابنێ" },
-                { name: "stream", link: "لینکەکەی لێرە دابنێ" },
-                { name: "mixdrop", link: "لینکەکەی لێرە دابنێ" }
-            ]
-        }
+      {
+        ep: 1,
+        servers: [
+          { name: "vip have korea", link: "https://vidmoly.net/embed-sm0to27xmz9t.html" },
+          { name: "stream", link: "https://streamtape.com/e/eg0Oy2dBrOhoYp/Bloody.Flower.S01E01.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/nlx1oo18hppx6x" }
+        ]
+      },
+      {
+        ep: 2,
+        servers: [
+          { name: "vip have korea", link: "https://vidmoly.net/embed-luoyp3ftgoxf.html" },
+          { name: "stream", link: "https://streamtape.com/e/Ody0QmzqBbT7xr/Bloody.Flower.S01E02.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/r69wr8l6ire9kv" }
+        ]
+      },
+      {
+        ep: 3,
+        servers: [
+          { name: "vip have korea", link: "لینکەکەی لێرە دابنێ" },
+          { name: "stream", link: "لینکەکەی لێرە دابنێ" },
+          { name: "mixdrop", link: "لینکەکەی لێرە دابنێ" }
+        ]
+      }
     ]
-}
-]; //
+  }, // کۆتایی درامای یەکەم
 
+  // دەستپێکی درامای تازە (Surly)
+  {
+   
+    id: 8,
+    title: "surely tomorrow 2025",
+    type: "drama",
+    genre: "ڕۆمانسی - درامایی",
+    desc:"(لی کیۆنگ دۆ) کارمەندێکی ئاسایی ڕۆژنامەنووس کار دەکات، کاتێک تەمەنی ۲۰ سال بوو، له گروپی شانودا (سيۆ جی وۆ)ـی ناسی و عاشقی یەکتر بوون بەڵام بەهۆی بێئومێد بوونی (سیۆ جی وۆ) لە ژیان دووجار جیابوونەوە",
+    image: "sur.png",
+    translators: [
+        {
+            name: "سەنا ئەحمەد",
+            avatar: "سانا.png"
+        },
+        {
+            name: "هێلین",
+            avatar: "admin1.png"
+        }
+    ],
+    
+    technician: {
+        name: "کێڵوا",
+        avatar: "admin2.png"
+    },
+    episodes: [
+      {
+        ep: 1,
+        servers: [
+          { name: "vip have korea", link: "https://vidmoly.net/embed-l7rlikpu1ta4.html " },
+          { name: "stream", link: "https://streamtape.com/e/M7ejd0zVd6tm8bl/Watch_Surely_Tomorrow_Episode_1_English_Sub_KissAsian_Surely_Tomorrow.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/wlmn39wra8o7n9" }
+        ]
+      }, // <--- ئاگاداربە: ئەم کۆمایە زۆر گرنگە بۆ جیاکردنەوەی ئەڵقەکان
+      {
+        ep: 2,
+        servers: [
+          { name: "vip have korea", link: "https://vidmoly.net/embed-xo2v7abnlryn.html" },
+          { name: "stream", link: "https://streamtape.com/e/dk72D8Z6gPIkakY/Watch_Surely_Tomorrow_Episode_2_English_Sub_KissAsian_Surely_Tomorrow.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/9wqngndnhexwvg" }
+        ]
+      }
+    ]
+  }
+];
 
 
 
@@ -1059,7 +1214,7 @@
 
                 // گۆڕینی ناوی تابی برۆسەرەکە بۆ ناوی دراماکە + Kurdish
                 document.title = item.title + " Kurdish";
-
+document.getElementById('sidebar-trigger').style.display = 'none';
                 document.getElementById('home-view').style.display = 'none';
                 document.getElementById('player-modal').style.display = 'block';
                 
@@ -1077,36 +1232,38 @@ renderCredits: function(item) {
     const container = document.getElementById('credits-container');
     container.innerHTML = '';
     
-    if (item.translator || item.technician) {
-        let html = '<div class="credits-wrapper">';
-        
-        if (item.translator) {
+    let html = '<div class="credits-wrapper">';
+    
+    // بۆ وەرگێڕان (دەتوانێت چەند کەسێک بێت)
+    if (item.translators && item.translators.length > 0) {
+        item.translators.forEach(translator => {
             html += `
-                <div class="credit-card" onclick="app.showPersonWorks('translator', '${item.translator.name}')">
-                    <img src="${item.translator.avatar}" alt="${item.translator.name}">
+                <div class="credit-card" onclick="app.showPersonWorks('translator', '${translator.name}')">
+                    <img src="${translator.avatar}" alt="${translator.name}">
                     <div class="credit-info">
                         <span class="credit-role">وەرگێڕ</span>
-                        <span class="credit-name">${item.translator.name}</span>
+                        <span class="credit-name">${translator.name}</span>
                     </div>
                 </div>
             `;
-        }
-        
-        if (item.technician) {
-            html += `
-                <div class="credit-card" onclick="app.showPersonWorks('technician', '${item.technician.name}')">
-                    <img src="${item.technician.avatar}" alt="${item.technician.name}">
-                    <div class="credit-info">
-                        <span class="credit-role">تەکنیکار</span>
-                        <span class="credit-name">${item.technician.name}</span>
-                    </div>
-                </div>
-            `;
-        }
-        
-        html += '</div>';
-        container.innerHTML = html;
+        });
     }
+    
+    // بۆ تەکنیکار (هەمیشە یەک کەسە)
+    if (item.technician) {
+        html += `
+            <div class="credit-card" onclick="app.showPersonWorks('technician', '${item.technician.name}')">
+                <img src="${item.technician.avatar}" alt="${item.technician.name}">
+                <div class="credit-info">
+                    <span class="credit-role">تەکنیکار</span>
+                    <span class="credit-name">${item.technician.name}</span>
+                </div>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    container.innerHTML = html;
 },
 
 
@@ -1160,7 +1317,7 @@ renderCredits: function(item) {
             goHome: function() {
                 // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
                 document.title = "HAve Korea | هاڤی کۆریا";
-                
+                document.getElementById('sidebar-trigger').style.display = 'block';
                 document.getElementById('video-frame').src = "";
                 document.getElementById('player-modal').style.display = 'none';
                 document.getElementById('home-view').style.display = 'block';
@@ -1221,9 +1378,24 @@ renderCredits: function(item) {
 
 
 showPersonWorks: function(role, personName) {
+    // فانکشنێک بۆ دۆزینەوەی وێنەی کەس
+    function getPersonAvatar(works, role, personName) {
+        if (role === 'translator') {
+            for (let work of works) {
+                if (work.translators) {
+                    const found = work.translators.find(t => t.name === personName);
+                    if (found) return found.avatar;
+                }
+            }
+        } else if (role === 'technician') {
+            return works[0].technician.avatar;
+        }
+        return 'admin1.png';
+    }
+
     const works = this.data.filter(item => {
         if (role === 'translator') {
-            return item.translator && item.translator.name === personName;
+            return item.translators && item.translators.some(t => t.name === personName);
         } else if (role === 'technician') {
             return item.technician && item.technician.name === personName;
         }
@@ -1251,7 +1423,7 @@ showPersonWorks: function(role, personName) {
                 <i class="fas fa-times"></i>
             </button>
             <div class="person-header">
-                <img src="${works[0][role].avatar}" alt="${personName}">
+                <img src="${getPersonAvatar(works, role, personName)}" alt="${personName}">
                 <h2>${personName}</h2>
                 <p>${roleText}</p>
                 <span class="works-count">${works.length} کار</span>
@@ -1276,8 +1448,7 @@ showPersonWorks: function(role, personName) {
     modal.innerHTML = html;
     modal.style.display = 'flex';
 }
-};
-
+}
 // کۆدی فلتەر
 function toggleFilterMenu() {
     const dropdown = document.getElementById('filter-dropdown');
@@ -1874,7 +2045,7 @@ app.init();
     font-weight: 700;
 }
 
-/* مۆداڵی لیستی کارەکان */
+/* مۆداڵی لیستی کارەکان - دیزاینی پڕۆفیشناڵ */
 .person-modal {
     display: none;
     position: fixed;
@@ -1882,121 +2053,320 @@ app.init();
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.97);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     z-index: 3000;
     justify-content: center;
     align-items: center;
     overflow-y: auto;
+    padding: 30px 15px;
+    animation: modalFadeIn 0.4s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .person-modal-content {
-    max-width: 900px;
-    width: 90%;
-    background: rgba(20, 20, 30, 0.95);
-    border-radius: 25px;
-    padding: 40px 30px;
-    border: 2px solid rgba(140, 0, 255, 0.3);
+    max-width: 1000px;
+    width: 92%;
+    max-height: 90vh;
+    background: linear-gradient(135deg, rgba(20, 10, 40, 0.98), rgba(30, 15, 50, 0.95));
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 30px;
+    padding: 50px 35px 35px;
+    border: 2px solid rgba(140, 0, 255, 0.4);
     position: relative;
+    overflow-y: auto;
+    margin: auto;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9),
+                0 0 60px rgba(140, 0, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* سکرۆڵ باڕی جوان */
+.person-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.person-modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+.person-modal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8c00ff, #b366ff);
+    border-radius: 10px;
+    border: 2px solid rgba(30, 15, 50, 0.5);
+}
+
+.person-modal-content::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #b366ff, #c77dff);
+    box-shadow: 0 0 10px rgba(140, 0, 255, 0.6);
 }
 
 .modal-close-btn {
     position: absolute;
     top: 20px;
     left: 20px;
-    background: rgba(255, 50, 50, 0.2);
-    border: 1px solid rgba(255, 50, 50, 0.5);
+    background: rgba(255, 50, 50, 0.15);
+    border: 2px solid rgba(255, 50, 50, 0.4);
     color: white;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 18px;
-    transition: 0.3s;
+    font-size: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
 }
 
 .modal-close-btn:hover {
-    background: rgba(255, 50, 50, 0.4);
-    transform: rotate(90deg);
+    background: rgba(255, 50, 50, 0.3);
+    border-color: rgba(255, 50, 50, 0.7);
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 50, 50, 0.5);
 }
 
 .person-header {
     text-align: center;
-    margin-bottom: 35px;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 25px;
+}
+
+.person-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #8c00ff, transparent);
+    box-shadow: 0 0 15px rgba(140, 0, 255, 0.6);
 }
 
 .person-header img {
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
-    border: 3px solid var(--accent-color);
-    margin-bottom: 15px;
-    box-shadow: 0 0 25px rgba(140, 0, 255, 0.5);
+    border: 4px solid var(--accent-color);
+    margin-bottom: 20px;
+    box-shadow: 0 0 40px rgba(140, 0, 255, 0.6),
+                0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.person-header img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 50px rgba(140, 0, 255, 0.8);
 }
 
 .person-header h2 {
     color: #fff;
-    font-size: 26px;
-    margin-bottom: 8px;
+    font-size: 28px;
+    margin-bottom: 10px;
+    font-weight: 800;
+    text-shadow: 0 0 20px rgba(140, 0, 255, 0.5);
+    letter-spacing: 1px;
 }
 
 .person-header p {
     color: var(--accent-light);
-    font-size: 14px;
-    margin-bottom: 10px;
+    font-size: 15px;
+    margin-bottom: 15px;
+    font-weight: 600;
 }
 
 .works-count {
-    background: rgba(140, 0, 255, 0.2);
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 13px;
+    background: linear-gradient(135deg, rgba(140, 0, 255, 0.3), rgba(179, 102, 255, 0.2));
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-size: 14px;
     color: #fff;
-    font-weight: 600;
+    font-weight: 700;
+    display: inline-block;
+    border: 1px solid rgba(140, 0, 255, 0.4);
+    box-shadow: 0 0 20px rgba(140, 0, 255, 0.3);
 }
 
 .person-works-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 25px;
+    padding: 0 10px;
 }
 
 .work-card {
     cursor: pointer;
-    transition: 0.3s;
-    border-radius: 12px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 16px;
     overflow: hidden;
+    position: relative;
+    background: rgba(20, 20, 30, 0.6);
+}
+
+.work-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(140, 0, 255, 0.1), rgba(179, 102, 255, 0.05));
+    opacity: 0;
+    transition: 0.4s;
+    z-index: 1;
+}
+
+.work-card:hover::before {
+    opacity: 1;
 }
 
 .work-card img {
     width: 100%;
     aspect-ratio: 2/3;
     object-fit: cover;
-    border-radius: 12px;
-    border: 2px solid rgba(140, 0, 255, 0.2);
-    transition: 0.3s;
+    border-radius: 16px;
+    border: 2px solid rgba(140, 0, 255, 0.3);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.work-card:hover {
+    transform: translateY(-8px) scale(1.03);
 }
 
 .work-card:hover img {
-    transform: scale(1.05);
     border-color: var(--accent-color);
-    box-shadow: 0 8px 20px rgba(140, 0, 255, 0.4);
+    box-shadow: 0 15px 35px rgba(140, 0, 255, 0.5),
+                0 0 30px rgba(140, 0, 255, 0.3);
+    filter: brightness(1.1);
 }
 
 .work-title {
     text-align: center;
     color: #fff;
-    font-size: 12px;
-    margin-top: 8px;
-    font-weight: 600;
+    font-size: 13px;
+    margin-top: 12px;
+    font-weight: 700;
+    padding: 0 5px;
+    line-height: 1.4;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
 }
 
+.work-card:hover .work-title {
+    color: var(--accent-light);
+    text-shadow: 0 0 10px rgba(140, 0, 255, 0.7);
+}
+
+/* چارەسەری تایبەت بۆ مۆبایل */
 @media (max-width: 768px) {
+    .person-modal {
+        padding: 15px 10px;
+        align-items: flex-start;
+    }
+    
+    .person-modal-content {
+        width: 96%;
+        max-height: 88vh;
+        padding: 55px 20px 25px;
+        margin-top: 10px;
+        border-radius: 25px;
+    }
+    
+    @media (max-width: 768px) {
+    .modal-close-btn {
+        top: 45px;  /* ⬅️ گۆڕدرا لە 15px بۆ 25px */
+        left: 15px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+}
+    
+    .person-header {
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+    }
+    
+    .person-header img {
+        width: 85px;
+        height: 85px;
+    }
+    
+    .person-header h2 {
+        font-size: 22px;
+    }
+    
+    .person-header p {
+        font-size: 13px;
+    }
+    
+    .works-count {
+        font-size: 12px;
+        padding: 6px 16px;
+    }
+    
     .person-works-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0 5px;
+    }
+    
+    .work-title {
+        font-size: 11.5px;
+        margin-top: 8px;
     }
 }
 
+/* بۆ شاشەی زۆر بچووک */
+@media (max-width: 400px) {
+    .person-modal-content {
+        width: 98%;
+        padding: 50px 15px 20px;
+    }
+    
+    .person-header img {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .person-header h2 {
+        font-size: 20px;
+    }
+    
+    .person-works-grid {
+        gap: 12px;
+    }
+}
 
 </style>
 
@@ -2496,6 +2866,16 @@ app.init();
         document.getElementById('online-count').innerText = Math.floor(Math.random() * (300 - 100 + 1)) + 100;
     };
 </script>
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3048,6 +3428,563 @@ app.init();
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/* --- چاکسازی گشتی بۆ هەموو ئامێرێک --- */
+.rating-wrapper *, .rating-wrapper *::before, .rating-wrapper *::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* لابردنی ڕەنگی شین لەکاتی کلیک لە ئەندرۆید */
+}
+
+/* کۆنتەینەری سەرەکی */
+.rating-wrapper {
+    position: relative;
+    
+    /* ڕێکخستنی قەبارە و جێگا */
+    max-width: 100%;
+    width: 100%;
+    margin: 30px auto;
+    padding: 30px 20px;
+    
+    /* گرنگە بۆ ئەوەی جوڵەکە لە دەرەوەی بازنەکە دەرنەچێت */
+    border-radius: 24px;
+    overflow: hidden; 
+    
+    /* لابردنی بۆردەری کۆن چونکە ئێستا جوڵەکە دەبێتە بۆردەر */
+    /* border: 1px solid ... (This is removed/replaced by the animation) */
+    
+    /* سێبەر بۆ جوانی */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6),
+                0 0 50px rgba(140, 0, 255, 0.15);
+                
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    /* دڵنیابوونەوە لەوەی نووسینەکان دەکەونە سەرەوە */
+    z-index: 1; 
+}
+
+/* ::before - بەرپرسیارە لە جوڵەی ڕەنگەکە (لە خوارەوە دەخولێتەوە) */
+.rating-wrapper::before {
+    content: '';
+    position: absolute;
+    /* قەبارەکەی گەورەتر دەکەین بۆ ئەوەی لە کاتی خولانەوەدا بۆشایی نەمێنێت */
+    width: 200%; 
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    
+    /* دیزاینی جوڵەکە: لێرە ڕەنگەکان دیاری دەکەیت */
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(140, 0, 255, 0) 60deg,  /* دەستپێک */
+        rgba(140, 0, 255, 1) 120deg, /* ڕەنگی تێری مۆر */
+        rgba(140, 0, 255, 0) 180deg, /* کاڵبوونەوە */
+        transparent 360deg
+    );
+    
+    animation: rotateBorder 4s linear infinite; /* خێرایی جوڵەکە */
+    z-index: -2; /* دەچێتە ژێر هەموو شتێک */
+}
+
+/* ::after - بەرپرسیارە لە دروستکردنی باگراوندە جێگیرەکە */
+.rating-wrapper::after {
+    content: '';
+    position: absolute;
+    
+    /* ئەم بەشە ئەستووری بۆردەرەکە دیاری دەکات */
+    /* ژمارەکە گەورەتر بێت، هێڵە جوڵاوەکە باریکتر دەبێت */
+    inset: 2px; 
+    
+    background: rgba(20, 10, 40, 0.98); /* ڕەنگی سەرەکی باگراوند */
+    background: linear-gradient(145deg, rgba(15, 5, 30, 0.98), rgba(25, 10, 45, 0.95));
+    
+    border-radius: 22px; /* کەمێک کەمتر لە هی باوکەکە بۆ ئەوەی جوان بێت */
+    z-index: -1; /* لە سەرووی جوڵەکەوەیە بەڵام لە ژێر نووسینەکە */
+}
+
+@keyframes rotateBorder {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* سەردێڕ */
+.rating-header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.rating-main-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-shadow: 0 2px 10px rgba(140, 0, 255, 0.5);
+    line-height: 1.4;
+}
+
+.rating-main-title i {
+    color: #ffd700;
+    font-size: 22px;
+}
+
+.rating-subtitle {
+    color: #c499ff;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+/* بەشی ئەستێرەکان - دیزاینی گەردوونی جوڵاو */
+.rating-stars-section {
+    /* باگراوندێکی تاریکی شەفاف بە دیزاینی شووشەیی */
+    background: rgba(20, 20, 30, 0.6);
+    backdrop-filter: blur(12px); /* تارکردنی پشتەوە (Blur) - زۆر مۆدێرنە */
+    -webkit-backdrop-filter: blur(12px);
+    
+    padding: 30px 15px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    
+    /* سنوورێکی (Border) ناسک کە ڕەنگدانەوەی هەیە */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
+                inset 0 0 20px rgba(255, 255, 255, 0.05); /* ڕووناکی ناوەوە */
+    
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    overflow: hidden; /* بۆ ئەوەی ڕووناکییە جوڵاوەکان نەچنە دەرەوە */
+}
+
+/* دروستکردنی شەپۆلی ڕووناکی کە بە پاشبنەمادا تێدەپەڕێت */
+.rating-stars-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 60%);
+    animation: rotateGlow 10s linear infinite; /* ڕووناکییەکە دەسوڕێتەوە */
+    z-index: -1;
+}
+
+.stars-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+    direction: rtl; /* ئێستا لە ڕاستەوە دەستپێدەکات */
+}
+
+.star {
+    font-size: 42px;
+    color: #4a4a6a;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s;
+    user-select: none;
+    
+    /* ڕێککردنی کێشەی ئەندرۆید */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 48px;
+    height: 48px;
+    -webkit-tap-highlight-color: transparent;
+}
+/* ئەمەش لە ژێری زیاد بکە */
+.star svg {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    fill: currentColor;
+}
+
+/* بۆ ئەوەی هەموو ئەستێرەکان بەیەکەوە نەجوڵێن، کاتی دەستپێکیان جیا دەکەینەوە */
+.star:nth-child(1) { animation-delay: 0s; }
+.star:nth-child(2) { animation-delay: 0.2s; }
+.star:nth-child(3) { animation-delay: 0.4s; }
+.star:nth-child(4) { animation-delay: 0.6s; }
+.star:nth-child(5) { animation-delay: 0.8s; }
+
+.star.active {
+    color: #ffd700;
+    /* گەورەبوون و درەوشانەوەی زێڕین */
+    transform: scale(1.15) translateY(-5px); 
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 
+                 0 0 40px rgba(255, 215, 0, 0.3);
+    
+    /* جوڵەی لێدانی دڵ بۆ ئەستێرە دیاریکراوەکان */
+    animation: starPulse 2s infinite alternate; 
+}
+
+.selection-hint {
+    color: #a8a8cf;
+    font-size: 15px;
+    font-weight: 600;
+    min-height: 24px;
+    margin-top: 15px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    transition: color 0.3s ease;
+}
+
+.selection-hint.active {
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* --- ئەنیمەیشنەکان (Keyframes) --- */
+
+/* جوڵەی ڕووناکی باگراوند */
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* جوڵەی مەلەکردن (Floating) - ئەستێرەکان دێن و دەچن */
+@keyframes floatingStars {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); } /* ٦ پیکسڵ دەچێتە سەرەوە */
+}
+
+/* جوڵەی ترپە (Pulse) بۆ ئەستێرە ئەکتیڤەکان */
+@keyframes starPulse {
+    0% { transform: scale(1.15) translateY(-5px); text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+    100% { transform: scale(1.25) translateY(-5px); text-shadow: 0 0 35px rgba(255, 215, 0, 0.9); }
+}
+
+/* میدیا کوێری بۆ مۆبایل */
+@media (max-width: 480px) {
+    .star {
+        font-size: 38px; /* کەمێک بچووکتر بۆ مۆبایل */
+    }
+    .rating-stars-section {
+        padding: 20px 10px;
+    }
+}
+
+/* دوگمەی ناردن - دیزاینی مۆری جوڵاو (با) */
+.submit-rating-btn {
+    -webkit-appearance: none; /* زۆر گرنگە بۆ ئەندرۆید */
+    appearance: none;
+    width: 100%;
+    
+    /* دروستکردنی شەپۆلی رەنگەکان (مۆری تۆخ، مۆری ڕوون، و کەمێک پەمەیی بۆ جوانی) */
+    background: linear-gradient(
+        120deg, 
+        #5b00c4, 
+        #8800ff, 
+        #b54eff, 
+        #8800ff, 
+        #5b00c4
+    );
+    background-size: 300% 300%; /* گرنگە: باگراوندەکە گەورە دەکات بۆ ئەوەی بجوڵێت */
+    
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    position: relative;
+    z-index: 2;
+    outline: none;
+    cursor: pointer;
+    
+    /* جوڵەی باگراوند و سێبەر بەیەکەوە */
+    animation: windFlow 4s ease-in-out infinite;
+    transition: transform 0.2s;
+}
+
+/* ئەمە بەرپرسە لە جوڵاندنی ڕەنگەکە و سێبەری لاکانی */
+@keyframes windFlow {
+    0% {
+        background-position: 0% 50%;
+        box-shadow: 0 8px 20px rgba(91, 0, 196, 0.4);
+    }
+    50% {
+        background-position: 100% 50%;
+        box-shadow: 0 10px 30px rgba(181, 78, 255, 0.6); /* سێبەرەکە گەورە دەبێت */
+    }
+    100% {
+        background-position: 0% 50%;
+        box-shadow: 0 8px 20px rgba(91, 0, 196, 0.4);
+    }
+}
+
+.submit-rating-btn:active {
+    transform: scale(0.96);
+    /* کاتێک دەست دەنێیت کەمێک سێبەرەکە کەم دەکاتەوە */
+    box-shadow: 0 5px 15px rgba(112, 0, 255, 0.4); 
+}
+
+.submit-rating-btn:disabled {
+    background: #3e3e4e;
+    color: #aaa;
+    box-shadow: none;
+    opacity: 0.7;
+    cursor: not-allowed;
+    animation: none; /* جوڵەی نامێنێت ئەگەر ئیش نەکات */
+}
+
+/* بەشی ئەنجامەکان */
+.rating-results {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 30px;
+    z-index: 2;
+    position: relative;
+}
+
+.result-card {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px 10px;
+    border-radius: 14px;
+    text-align: center;
+    border: 1px solid rgba(140, 0, 255, 0.1);
+}
+
+.result-label {
+    color: #b366ff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.result-value {
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+/* پەیامەکان */
+.rating-message {
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+    font-weight: bold;
+}
+
+.rating-message.success {
+    background: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.rating-message.error {
+    background: rgba(231, 76, 60, 0.15);
+    color: #e74c3c;
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* ڕێکخستن بۆ مۆبایلی زۆر بچوک */
+@media (max-width: 380px) {
+    .rating-wrapper { padding: 20px 15px; }
+    .star { font-size: 36px; gap: 8px; }
+    .rating-main-title { font-size: 18px; }
+}
+</style>
+
+<script>
+// سکریپتەکە وەک خۆی، تەنها کەمێک چاکسازیم تێدا کرد بۆ خێرایی
+const RATING_API_URL = 'https://script.google.com/macros/s/AKfycbyGN4f965k_b3zSkK1D7FivI4VZ-9QrqU7ETjC3a6NPKYtXa3xeiHB13gNfeOAefXUK/exec';
+
+async function getUserIP() {
+    const saved = localStorage.getItem('user_unique_id');
+    if (saved) return saved;
+    const tempID = `user_${Math.random().toString(36).substr(2, 15)}`;
+    localStorage.setItem('user_unique_id', tempID);
+    // هەوڵی هێنان لە باکگراوند
+    fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => localStorage.setItem('user_unique_id', data.ip)).catch(()=>{});
+    return tempID;
+}
+
+const originalOpenPlayer = app.openPlayer;
+app.openPlayer = async function(item) {
+    await originalOpenPlayer.call(this, item);
+    setTimeout(() => this.renderRatingSection(item), 100); // دواخستنێکی زۆر کەم بۆ دڵنیابوون لە ڕێندەر
+};
+
+app.renderRatingSection = async function(item) {
+    const oldSection = document.querySelector('.rating-wrapper');
+    if (oldSection) oldSection.remove();
+    
+    const serverContainer = document.getElementById('server-list').parentElement;
+    const hasVoted = localStorage.getItem(`voted_${item.id}`) === 'true';
+    const userRating = localStorage.getItem(`user_rating_${item.id}`) || '؟';
+
+    let html = `
+        <div class="rating-wrapper fade-in">
+            <div class="rating-header">
+                <div class="rating-main-title">
+                    <i class="fas fa-award"></i>
+                    نمرە بدە بەم ${item.type === 'drama' ? 'دراما' : 'فیلمە'}
+                </div>
+                <div class="rating-subtitle">
+                    ${hasVoted ? 'سوپاس بۆ بەشداریکردنت!' : 'پێشبینی خۆت تۆمار بکە'}
+                </div>
+            </div>
+            
+           <div class="rating-stars-section">
+    <div class="stars-container" id="stars-${item.id}">
+        ${[1,2,3,4,5].map(n => `
+            <span class="star ${hasVoted ? 'disabled' : ''}" data-rating="${n}">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                </svg>
+            </span>
+        `).join('')}
+    </div>
+    <div class="selection-hint" id="hint-${item.id}">
+        ${hasVoted ? 'نمرەی تۆ: ' + userRating : 'ئەستێرەیەک هەڵبژێرە'}
+    </div>
+</div>
+            
+            <button class="submit-rating-btn" id="submit-rating-${item.id}" ${hasVoted ? 'disabled' : ''}>
+                ${hasVoted ? '✓ نمرەکەت گەیشت' : 'ناردنی نمرە'}
+            </button>
+            
+            <div id="rating-message-${item.id}" class="rating-message"></div>
+            
+            <div class="rating-results">
+                <div class="result-card">
+                    <div class="result-label">تێکڕا</div>
+                    <div class="result-value rating-average" id="avg-${item.id}">-.-</div>
+                </div>
+                <div class="result-card">
+                    <div class="result-label">دەنگەکان</div>
+                    <div class="result-value" id="votes-${item.id}">0</div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    serverContainer.insertAdjacentHTML('afterend', html);
+    this.setupRatingEvents(item, hasVoted);
+    this.fetchLiveRatings(item.id);
+};
+
+app.fetchLiveRatings = async function(movieId) {
+    try {
+        const response = await fetch(`${RATING_API_URL}?movie_id=${movieId}`);
+        const data = await response.json();
+        const avgEl = document.getElementById(`avg-${movieId}`);
+        const votesEl = document.getElementById(`votes-${movieId}`);
+        if (avgEl) avgEl.innerText = data.average || '0.0';
+        if (votesEl) votesEl.innerHTML = `<i class="fas fa-user-friends"></i> ${data.total_votes || 0}`;
+    } catch (error) { console.log("Error fetching ratings"); }
+};
+
+app.setupRatingEvents = function(item, hasVoted) {
+    let selectedRating = 0;
+    const stars = document.querySelectorAll(`#stars-${item.id} .star`);
+    const hint = document.getElementById(`hint-${item.id}`);
+    const submitBtn = document.getElementById(`submit-rating-${item.id}`);
+    const messageDiv = document.getElementById(`rating-message-${item.id}`);
+
+    const ratingTexts = { 1: 'خراپ 😞', 2: 'مامناوەند 😐', 3: 'باش 🙂', 4: 'زۆر باش 😊', 5: 'نایاب! 🤩' };
+
+    stars.forEach(star => {
+        // بەکارهێنانی 'click' بۆ مۆبایل باشترە لە hover
+        star.addEventListener('click', function() {
+            if (hasVoted) return;
+            selectedRating = parseInt(this.dataset.rating);
+            
+            // لابردنی کلاسەکان و زیادکردنەوەیان
+            stars.forEach(s => {
+                const sVal = parseInt(s.dataset.rating);
+                if (sVal <= selectedRating) {
+                    s.classList.add('active');
+                    s.style.color = '#ffd700';
+                } else {
+                    s.classList.remove('active');
+                    s.style.color = '#3a3a50';
+                }
+            });
+            
+            hint.innerText = ratingTexts[selectedRating];
+            hint.classList.add('active');
+        });
+    });
+
+    submitBtn.addEventListener('click', async function() {
+        if (hasVoted || selectedRating === 0) {
+            if(selectedRating === 0) {
+                hint.style.color = '#e74c3c';
+                setTimeout(() => hint.style.color = '#9b59b6', 1000);
+            }
+            return;
+        }
+
+        this.disabled = true;
+        this.innerText = 'چاوەڕوانبە...';
+
+        try {
+            const userIP = await getUserIP();
+            const res = await fetch(RATING_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({ movie_id: item.id, user_ip: userIP, rating: selectedRating })
+            });
+
+            const result = await res.json();
+            if (result.status === 'success' || result.status === 'already_voted') {
+                localStorage.setItem(`voted_${item.id}`, 'true');
+                localStorage.setItem(`user_rating_${item.id}`, selectedRating);
+                
+                this.innerText = '✓ نمرەکەت گەیشت';
+                messageDiv.className = 'rating-message success';
+                messageDiv.innerText = 'سوپاس! دەنگەکەت بە سەرکەوتوویی تۆمارکرا.';
+                messageDiv.style.display = 'block';
+                
+                document.getElementById(`avg-${item.id}`).innerText = result.average;
+                document.getElementById(`votes-${item.id}`).innerHTML = `<i class="fas fa-user-friends"></i> ${result.total_votes}`;
+            }
+        } catch (error) {
+            this.disabled = false;
+            this.innerText = 'ناردنی نمرە';
+            messageDiv.className = 'rating-message error';
+            messageDiv.innerText = 'کێشەیەک لە پەیوەندی هەیە!';
+            messageDiv.style.display = 'block';
+        }
+    });
+};
+</script>
 
 
 
