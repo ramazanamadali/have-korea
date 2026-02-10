@@ -4,18 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google-site-verification" content="BO0KIG3OE7ubRt-BFnpaaZ1KHMBdLGlXgcrorlzo2pk" />
-    <title>HAve Korea | هاڤی کۆریا - درامای کۆری بە ژێرنووسی کوردی</title>
-    <meta name="description" content="سایتی هاڤی کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
-    <meta name="keywords" content="kurdish subtitle, ژێرنووسی کوردی, درامای کۆری, فلیمی کۆری, kurdsub, HAve Korea, دراما و فیلم">
-    <meta name="author" content="HAve Korea">
+    <title>have Korea | هاڤێ کۆریا - درامای کۆری بە ژێرنووسی کوردی</title>
+    <meta name="description" content="سایتی هاڤێ کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
+    <meta name="keywords" content="kurdish subtitle, ژێرنووسی کوردی, درامای کۆری, فلیمی کۆری, kurdsub, have Korea, دراما و فیلم">
+    <meta name="author" content="have Korea">
     <meta name="robots" content="index, follow">
 
-    <meta property="og:title" content="HAve Korea | هاڤی کۆریا">
+    <meta property="og:title" content="have Korea | هاڤێ کۆریا">
     <meta property="og:description" content="باشترین سەرچاوە بۆ بینینی دراما کۆرییەکان بە کوردی">
     <meta property="og:type" content="website">
+    <meta property="og:image" content="https://have-korea.netlify.app/logologo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://have-korea.netlify.app">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="have Korea | هاڤێ کۆریا">
+    <meta name="twitter:description" content="باشترین سەرچاوە بۆ بینینی دراما کۆرییەکان بە کوردی">
+    <meta name="twitter:image" content="https://have-korea.netlify.app/logologo.png">
+
+    <link rel="icon" type="image/png" href="logologo.png">
+    <link rel="apple-touch-icon" href="logologo.png">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+    
         /* ========================================
            بەشی دیزاینی نوێ (Glass & Animated Borders)
            ======================================== */
@@ -283,7 +296,30 @@
             box-shadow: 0 0 15px var(--accent-color);
         }
         
-        .section-header i { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
+      .section-header i {
+    font-size: 26px;
+    background: linear-gradient(45deg, #8c00ff, #00d2ff, #8c00ff);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(140, 0, 255, 0.8));
+
+    /* گۆڕینی ناوی ئەنیمەیشنەکە بۆ softPulse */
+    animation: softPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes softPulse {
+    0%, 100% { 
+        transform: scale(1);
+        background-position: 0% 50%;
+    }
+    50% { 
+        transform: scale(1.15); /* تەنها ١٥٪ گەورە دەبێت */
+        background-position: 100% 50%;
+        filter: drop-shadow(0 0 35px rgba(0, 210, 255, 0.9));
+    }
+}
 
         .movie-grid {
             display: grid;
@@ -823,7 +859,7 @@
 
     <div class="main-container" id="home-view">
         <div class="section-header">
-            <i class="fas fa-fire"></i>
+            <i class="fas fa-bolt"></i>
             <span>نوێترین زیادکراوەکان</span>
         </div>
         <div class="movie-grid" id="grid">
@@ -1145,6 +1181,15 @@
           { name: "stream", link: "https://streamtape.com/e/dk72D8Z6gPIkakY/Watch_Surely_Tomorrow_Episode_2_English_Sub_KissAsian_Surely_Tomorrow.mkv" },
           { name: "mixdrop", link: "https://mixdrop.top/e/9wqngndnhexwvg" }
         ]
+      },
+
+ {
+        ep: 2,
+        servers: [
+          { name: "vip have korea", link: "https://vidmoly.net/embed-cxqpuyrz05gl.html" },
+          { name: "stream", link: "https://streamtape.com/e/7GOaAydADdtAeb4/Watch_Surely_Tomorrow_Episode_3_English_Sub_KissAsian_Surely_Tomorrow.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/vkzk9g1vc8zldg" }
+        ]
       }
     ]
   }
@@ -1316,7 +1361,7 @@ renderCredits: function(item) {
 
             goHome: function() {
                 // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
-                document.title = "HAve Korea | هاڤی کۆریا";
+                document.title = "have Korea | هاڤێ کۆریا";
                 document.getElementById('sidebar-trigger').style.display = 'block';
                 document.getElementById('video-frame').src = "";
                 document.getElementById('player-modal').style.display = 'none';
@@ -1356,7 +1401,7 @@ renderCredits: function(item) {
     
     if (type === 'all') {
         sectionHeader.innerHTML = `
-            <i class="fas fa-fire"></i>
+            <i class="fas fa-bolt"></i>
             <span>نوێترین زیادکراوەکان</span>
         `;
     } else if (type === 'drama') {
@@ -2627,124 +2672,7 @@ app.init();
     }
 </style>
 
-<div class="purple-glass-footer">
-    <h2 class="purple-title">پێشنیاری درامای نوێ</h2>
-    <p style="color: #c77dff; font-size: 14px; margin-bottom: 20px;">ناوی ئەو درامایەی دەتەوێت وەرگێڕانی بۆ بکەین لێرە بینووسە</p>
-    
-    <form id="contact-form">
-        <input type="text" name="fi-text-drama_name" id="drama-name" class="purple-input" placeholder="ناوی دراما یان فیلم..." required>
-        <br>
-        <button type="submit" class="purple-btn" id="submit-btn">ناردنی پێشنیار</button>
-    </form>
-    
-    <p id="form-result" style="margin-top: 15px; font-weight: bold; display: none;"></p>
-</div>
 
-<div id="custom-cursor"></div>
-
-<style>
-   
-
-    /* دیزاینی فۆرمە مۆرەکە */
-    .purple-glass-footer {
-        margin: 50px auto; max-width: 450px; padding: 40px 20px;
-        background: rgba(30, 10, 60, 0.4); backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 30px; border: 1px solid rgba(157, 78, 221, 0.3);
-        text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    }
-    .purple-input {
-        width: 85%; padding: 12px; border-radius: 12px;
-        border: 1px solid rgba(157, 78, 221, 0.4); background: rgba(0,0,0,0.5);
-        color: white; text-align: center; outline: none;
-    }
-    .purple-btn {
-        background: linear-gradient(45deg, #7b2cbf, #9d4edd);
-        color: white; border: none; padding: 12px 30px;
-        border-radius: 12px; margin-top: 20px; cursor: pointer; font-weight: bold;
-    }
-
-    
-</style>
-
-<script src="https://forminit.com/sdk/v1/forminit.js"></script>
-<script>
-    const forminit = new Forminit();
-    
-    // ئایدییەکان لێرە جێگیر کراون
-    const MY_ID = '14un2see64a'; 
-    const FRIEND_ID = 'qwicwsphmdr'; 
-
-    const form = document.getElementById('contact-form');
-    const resultDisplay = document.getElementById('form-result');
-    const submitBtn = document.getElementById('submit-btn');
-    const cursor = document.getElementById('custom-cursor');
-
-    // جوڵەی ماوس
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
-    });
-
-    // پڕژانی خوێن
-    function createBlood(e) {
-        const blood = document.createElement('div');
-        blood.className = 'blood-splatter';
-        const x = e.clientX || (e.touches ? e.touches[0].clientX : 0);
-        const y = e.clientY || (e.touches ? e.touches[0].clientY : 0);
-        blood.style.left = (x - 30) + 'px';
-        blood.style.top = (y - 30) + 'px';
-        document.body.appendChild(blood);
-        setTimeout(() => blood.remove(), 600);
-    }
-    document.addEventListener('mousedown', createBlood);
-    document.addEventListener('touchstart', createBlood);
-
-    // ناردنی فۆرمەکە بۆ هەردووک ئایدییەکە
-    form.addEventListener('submit', async function(event) {
-        event.preventDefault();
-        submitBtn.innerHTML = "ناردن بۆ ئەدمین...";
-        submitBtn.disabled = true;
-
-        const dramaName = document.getElementById('drama-name').value;
-        const payload = {
-            blocks: [
-                {
-                    type: 'text',
-                    name: 'drama_name',
-                    value: dramaName
-                }
-            ]
-        };
-
-        try {
-            // ناردنی هاوکات (Parallel Request)
-            const [res1, res2] = await Promise.all([
-                forminit.submit(MY_ID, payload),
-                forminit.submit(FRIEND_ID, payload)
-            ]);
-
-            resultDisplay.style.display = "block";
-            
-            if (res1.error || res2.error) {
-                resultDisplay.style.color = "#ff4d4d";
-                resultDisplay.textContent = "هەڵەیەک لە یەکێک لە ئایدییەکان هەیە.";
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = "دووبارە بنێرەوە";
-            } else {
-                resultDisplay.style.color = "#2ecc71";
-                resultDisplay.textContent = "✅ سوپاس! پێشنیارەکە نێردرا.";
-                form.reset();
-                submitBtn.style.display = "none";
-            }
-        } catch (e) {
-            resultDisplay.style.display = "block";
-            resultDisplay.style.color = "#ff4d4d";
-            resultDisplay.textContent = "کێشەی هێڵ هەیە، دووبارە تاقی بکەرەوە.";
-            submitBtn.disabled = false;
-        }
-    });
-</script>
 
 
 <div class="live-stats-container">
@@ -2866,10 +2794,6 @@ app.init();
         document.getElementById('online-count').innerText = Math.floor(Math.random() * (300 - 100 + 1)) + 100;
     };
 </script>
-
-
-
-
 
 
 
@@ -3321,8 +3245,20 @@ app.init();
     function toggleMenu(header) {
         const item = header.parentElement;
         const isActive = item.classList.contains('active');
-        document.querySelectorAll('.acc-card').forEach(i => i.classList.remove('active'));
-        if (!isActive) item.classList.add('active');
+        
+        // ئەم بەشە زیادکراوە بۆ داخستنی هەموو لیستەکانی تر کاتێک یەکێکیان دەکەیتەوە
+        document.querySelectorAll('.acc-card').forEach(i => {
+            if(i !== item) {
+                i.classList.remove('active');
+            }
+        });
+        
+        // کردنەوە یان داخستنی ئەوەی کلیکت لێکردووە
+        if (isActive) {
+            item.classList.remove('active');
+        } else {
+            item.classList.add('active');
+        }
     }
 
     const imageInput = document.getElementById('imageInput');
@@ -3423,16 +3359,140 @@ app.init();
         });
     });
     
+
+    
 </script>
+<div class="acc-card active">
+    <div class="acc-head" onclick="toggleMenu(this)" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(157, 78, 221, 0.1); border-radius: 12px;">
+        <span><i class="fas fa-plus-circle"></i> پێشنیار بکە</span>
+        <i class="fas fa-chevron-left arrow-icon"></i>
+    </div>
+    <div class="acc-body" id="acc-body-content">
+        <div class="proposal-container" style="text-align: center; padding: 10px;">
+            <p style="color: #c77dff; font-size: 13px; margin-bottom: 15px;">ناوی ئەو درامایەی دەتەوێت وەرگێڕانی بۆ بکەین لێرە بینووسە</p>
+           <form id="drama-proposal-form">
+    <input type="text" id="drama-name-input" name="drama_name" class="purple-input" placeholder="ناوی دراما یان فیلم..." required 
+    style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(157, 78, 221, 0.4); background: rgba(0,0,0,0.5); color: white; text-align: center; outline: none; margin-bottom: 15px;">
+    <button type="submit" id="proposal-submit-btn" class="purple-btn">ناردنی پێشنیار</button>
+</form>
+<p id="proposal-result" style="margin-top: 15px; font-weight: bold; display: none; font-size: 14px;"></p>
+        </div>
+    </div>
+</div>
 
 
 
 
+<style>
+    /* دیزاینی گشتی */
+    body {
+        background-color: #0d0015;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        direction: rtl; /* بۆ ڕێکخستنی زمانە کوردییەکە */
+    }
 
+    .acc-body { transition: 0.3s ease; }
 
+    /* دیزاینی فۆرمە مۆرەکە */
+    .purple-glass-footer {
+        margin: 50px auto; max-width: 450px; padding: 40px 20px;
+        background: rgba(30, 10, 60, 0.4); backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border-radius: 30px; border: 1px solid rgba(157, 78, 221, 0.3);
+        text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+    }
+    
+    .purple-title { color: #e0aaff; margin-bottom: 10px; }
 
+    .purple-input {
+        width: 85%; padding: 12px; border-radius: 12px;
+        border: 1px solid rgba(157, 78, 221, 0.4); background: rgba(0,0,0,0.5);
+        color: white; text-align: center; outline: none;
+        transition: 0.3s;
+    }
+    .purple-input:focus {
+        border-color: #c77dff;
+        box-shadow: 0 0 10px rgba(199, 125, 255, 0.2);
+    }
 
+    .purple-btn {
+        position: relative; background: transparent; color: white;
+        border: none; padding: 12px 40px; border-radius: 12px;
+        margin-top: 25px; cursor: pointer; font-weight: bold;
+        font-size: 16px; overflow: hidden; z-index: 1;
+        transition: 0.3s; letter-spacing: 1px;
+    }
 
+    .purple-btn::before {
+        content: ''; position: absolute;
+        top: -50%; left: -50%; width: 200%; height: 200%;
+        background: conic-gradient(from 0deg, transparent 0%, transparent 30%, #9d4edd 50%, #e0aaff 55%, #9d4edd 60%, transparent 100%);
+        animation: rotate-border 3s linear infinite; z-index: -2;
+    }
+
+    .purple-btn::after {
+        content: ''; position: absolute; inset: 3px;
+        background: #240046; border-radius: 10px; z-index: -1; transition: 0.3s;
+    }
+
+    .purple-btn:hover { transform: scale(1.05); color: #fff; text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+    .purple-btn:hover::after { background: #3c096c; }
+
+    @keyframes rotate-border {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .purple-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    .purple-btn:disabled::before { animation: none; background: #555; }
+
+    
+</style>
+<script>
+    // ئەمە فۆرمەکە بەستراوەتەوە بە Formspree کە زۆر جێگیرترە
+    document.getElementById('drama-proposal-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var form = this;
+        var btn = document.getElementById('proposal-submit-btn');
+        var resultMsg = document.getElementById('proposal-result');
+        var originalBtnText = btn.innerText;
+
+        btn.innerText = "جاری ناردن...";
+        btn.disabled = true;
+
+        var formData = new FormData(form);
+
+        // لینکەکانی Formspree کە بۆ بەشەکەی تریش بەکارت هێناوە
+        var url1 = "https://formspree.io/f/xojwqwzg"; // ئایدی تۆ
+        var url2 = "https://formspree.io/f/xkobnbvj"; // ئایدی هاوڕێکەت
+
+        Promise.all([
+            fetch(url1, { method: 'POST', body: formData, headers: {'Accept': 'application/json'} }),
+            fetch(url2, { method: 'POST', body: formData, headers: {'Accept': 'application/json'} })
+        ]).then(function (responses) {
+            resultMsg.style.display = "block";
+            if (responses.every(r => r.ok)) {
+                resultMsg.style.color = "#2ecc71";
+                resultMsg.textContent = "✅ پێشنیارەکەت گەیشت! سوپاس.";
+                form.reset();
+                btn.style.display = "none"; // دوگمەکە دەشارێتەوە دوای ناردن
+            } else {
+                resultMsg.style.color = "#ff4d4d";
+                resultMsg.textContent = "هەڵەیەک ڕوویدا، تکایە دووبارە هەوڵ بدەرەوە.";
+                btn.disabled = false;
+                btn.innerText = originalBtnText;
+            }
+        }).catch(function (error) {
+            resultMsg.style.display = "block";
+            resultMsg.style.color = "#ff4d4d";
+            resultMsg.textContent = "کێشەی هێڵ هەیە، تکایە ئینتەرنێتەکەت بپشکنە.";
+            btn.disabled = false;
+            btn.innerText = originalBtnText;
+        });
+    });
+
+</script>
 
 
 
