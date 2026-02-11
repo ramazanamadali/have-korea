@@ -808,10 +808,11 @@
         </div>
 
         <div class="categories">
-            <button class="cat-btn active" onclick="app.filter('all', this)">هەمووی</button>
-            <button class="cat-btn" onclick="app.filter('drama', this)">دراما</button>
-            <button class="cat-btn" onclick="app.filter('movie', this)">فلیم</button>
-        </div>
+    <button class="cat-btn active" onclick="app.filter('all', this)">هەمووی</button>
+    <button class="cat-btn" onclick="app.filter('drama', this)">دراما</button>
+    <button class="cat-btn" onclick="app.filter('movie', this)">فلیم</button>
+    <button class="cat-btn" onclick="app.filter('chinese', this)">چینی</button>
+</div>
         <!-- ناڤباری فلتەر (تەنها بۆ دراما و فیلم) -->
 <div class="filter-navbar" id="filter-navbar" style="display: none;">
     <button class="filter-toggle-btn" onclick="toggleFilterMenu()">
@@ -1205,6 +1206,8 @@
             currentEpisodeIndex: 0,
 
         init: function() {
+             this.currentFilter = 'all'; // ← ئەمە زیاد بکە لە سەرەتادا
+    
                 // ڕێکخستنی داتا بەپێی ئایدی (لە گەورەوە بۆ بچووک)
                 this.data.sort((a, b) => b.id - a.id);
                 this.renderGrid(this.data);
@@ -1368,19 +1371,33 @@ renderCredits: function(item) {
                 document.getElementById('home-view').style.display = 'block';
             },
 
-            search: function(query) {
-                const filtered = this.data.filter(i => i.title.toLowerCase().includes(query.toLowerCase()));
-                this.renderGrid(filtered);
-                if(document.getElementById('player-modal').style.display === 'block') this.goHome();
-            },
-
-          filter: function(type, btnElement) {
+           search: function(query) {
+    let filtered = this.data;
+    
+    // یەکەم: فلتەر بەپێی جۆری هەڵبژاردراو (دراما، فیلم، یان هەموویان)
+    if (this.currentFilter && this.currentFilter !== 'all') {
+        filtered = filtered.filter(i => i.type === this.currentFilter);
+    }
+    
+    // دووەم: فلتەر بەپێی ناوی گەڕاو
+    if (query) {
+        filtered = filtered.filter(i => i.title.toLowerCase().includes(query.toLowerCase()));
+    }
+    
+    this.renderGrid(filtered);
+    if(document.getElementById('player-modal').style.display === 'block') this.goHome();
+},
+filter: function(type, btnElement) {
+    // تۆماری جۆری هەڵبژاردراو
+    this.currentFilter = type;
+    
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
 
     const filterNav = document.getElementById('filter-navbar');
     
-    if (type === 'drama' || type === 'movie') {
+    // فلتەری ژانر و ساڵ تەنها بۆ دراما، فیلم، و چینی نیشان بدە
+    if (type === 'drama' || type === 'movie' || type === 'chinese') {
         filterNav.style.display = 'flex';
     } else {
         filterNav.style.display = 'none';
@@ -1396,7 +1413,7 @@ renderCredits: function(item) {
     filtered.sort((a, b) => b.id - a.id);
     this.renderGrid(filtered);
 
-    // گۆڕینەوەی سەردێڕی بەش لەگەڵ لۆگۆی جیاواز
+    // گۆڕینەوەی سەردێڕی بەش
     const sectionHeader = document.querySelector('.section-header');
     
     if (type === 'all') {
@@ -1414,12 +1431,15 @@ renderCredits: function(item) {
             <i class="fas fa-film"></i>
             <span>فیلم</span>
         `;
+    } else if (type === 'chinese') {
+        sectionHeader.innerHTML = `
+            <i class="fas fa-dragon"></i>
+            <span>چینی</span>
+        `;
     }
 
     if(document.getElementById('player-modal').style.display === 'block') this.goHome();
-},  // ⬅️ ئەم کۆمایە (,) گرنگە
-
-
+},
 
 
 showPersonWorks: function(role, personName) {
