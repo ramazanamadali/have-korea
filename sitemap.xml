@@ -1,26 +1,9 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://have-korea.netlify.app/</loc>
-    <lastmod>2024-05-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
+   <url>
+      <loc>https://have-korea.netlify.app/</loc>
+      <lastmod>2026-02-10</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+   </url>
 </urlset>
-
-
-
-
-
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://have-korea.netlify.app/</loc>
-    <lastmod>2024-05-20</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-</urlset>
->>>>>>> ca29b48bc8dd8c180a10a754da93bf35e30dbdfd
