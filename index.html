@@ -1763,7 +1763,7 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-const firebaseDB = firebase.database(); // ← گۆڕدرا لە database بۆ firebaseDB
+const firebaseDB = firebase.database();
 
 // زانیاریی بەکارهێنەر
 let currentUser = {
@@ -1773,16 +1773,17 @@ let currentUser = {
 
 let currentPartyId = null;
 let isHost = false;
-let videoElement = null;
 
 // گوێگرتن لە دوگمەکان
-document.getElementById('create-party-btn').addEventListener('click', createParty);
-document.getElementById('join-party-btn').addEventListener('click', joinParty);
-document.getElementById('leave-party-btn').addEventListener('click', leaveParty);
-document.getElementById('send-chat-btn').addEventListener('click', sendMessage);
-
-document.getElementById('chat-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') sendMessage();
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('create-party-btn').addEventListener('click', createParty);
+    document.getElementById('join-party-btn').addEventListener('click', joinParty);
+    document.getElementById('leave-party-btn').addEventListener('click', leaveParty);
+    document.getElementById('send-chat-btn').addEventListener('click', sendMessage);
+    
+    document.getElementById('chat-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
 });
 
 // ======================================
@@ -1798,19 +1799,19 @@ function createParty() {
     isHost = true;
     
     // دروستکردنی ژوور لە Firebase
-    firebaseDB.ref('parties/' + currentPartyId).set({ // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId).set({
         host: currentUser.id,
         createdAt: Date.now(),
         videoState: {
             currentTime: 0,
             isPlaying: false,
-            currentEpisode: app.currentEpisodeIndex,
+            currentEpisode: app.currentEpisodeIndex || 0,
             currentServer: 0
         }
     });
     
     // زیادکردنی خۆت وەک ئەندام
-    firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).set({ // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).set({
         name: currentUser.name,
         joinedAt: Date.now()
     });
@@ -1819,8 +1820,10 @@ function createParty() {
     alert('ژوورەکە دروستکرا! کۆدی ژوور: ' + currentPartyId);
     
     // کۆپی کردنی کۆد
-    navigator.clipboard.writeText(currentPartyId);
-    alert('کۆدەکە کۆپی کرا! بینێرە بۆ هاوڕێکەت');
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(currentPartyId);
+        alert('کۆدەکە کۆپی کرا! بینێرە بۆ هاوڕێکەت');
+    }
 }
 
 function joinParty() {
@@ -1835,19 +1838,16 @@ function joinParty() {
     isHost = false;
     
     // پشکنینی بوونی ژوور
-    firebaseDB.ref('parties/' + currentPartyId).once('value', (snapshot) => { // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId).once('value', (snapshot) => {
         if (snapshot.exists()) {
             // زیادکردنی خۆت وەک ئەندام
-            firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).set({ // ← گۆڕدرا
+            firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).set({
                 name: currentUser.name,
                 joinedAt: Date.now()
             });
             
             joinedParty();
             alert('بە سەرکەوتوویی پەیوەست بوویت!');
-            
-            // هاوکات کردنی ڤیدیۆ
-            syncVideoState();
         } else {
             alert('ژوورەکە نەدۆزرایەوە!');
         }
@@ -1869,10 +1869,10 @@ function joinedParty() {
 
 function leaveParty() {
     if (currentPartyId) {
-        firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).remove(); // ← گۆڕدرا
+        firebaseDB.ref('parties/' + currentPartyId + '/members/' + currentUser.id).remove();
         
         if (isHost) {
-            firebaseDB.ref('parties/' + currentPartyId).remove(); // ← گۆڕدرا
+            firebaseDB.ref('parties/' + currentPartyId).remove();
         }
     }
     
@@ -1889,7 +1889,7 @@ function leaveParty() {
 }
 
 function listenToPartyChanges() {
-    firebaseDB.ref('parties/' + currentPartyId + '/members').on('value', (snapshot) => { // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId + '/members').on('value', (snapshot) => {
         const members = snapshot.val() || {};
         const membersList = document.getElementById('members-list');
         const memberCount = document.getElementById('member-count');
@@ -1910,8 +1910,6 @@ function listenToPartyChanges() {
 }
 
 function listenToVideoSync() {
-    const iframe = document.getElementById('video-frame');
-    
     // تەنها خاوەنی ژوور دەتوانێت گۆڕانکاری بکات
     if (isHost) {
         const originalPlayEpisode = app.playEpisode;
@@ -1919,7 +1917,7 @@ function listenToVideoSync() {
             originalPlayEpisode.call(this, epIndex, serverIndex);
             
             if (currentPartyId) {
-                firebaseDB.ref('parties/' + currentPartyId + '/videoState').update({ // ← گۆڕدرا
+                firebaseDB.ref('parties/' + currentPartyId + '/videoState').update({
                     currentEpisode: epIndex,
                     currentServer: serverIndex,
                     timestamp: Date.now()
@@ -1928,9 +1926,9 @@ function listenToVideoSync() {
         };
     } else {
         // گوێگرتن لە گۆڕانکاریەکان
-        firebaseDB.ref('parties/' + currentPartyId + '/videoState').on('value', (snapshot) => { // ← گۆڕدرا
+        firebaseDB.ref('parties/' + currentPartyId + '/videoState').on('value', (snapshot) => {
             const state = snapshot.val();
-            if (state) {
+            if (state && app.playEpisode) {
                 // گۆڕینی ئەڵقە و سێرڤەر
                 if (state.currentEpisode !== app.currentEpisodeIndex) {
                     app.playEpisode(state.currentEpisode, state.currentServer || 0);
@@ -1943,7 +1941,7 @@ function listenToVideoSync() {
 function listenToChat() {
     const chatMessages = document.getElementById('chat-messages');
     
-    firebaseDB.ref('parties/' + currentPartyId + '/chat').limitToLast(50).on('child_added', (snapshot) => { // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId + '/chat').limitToLast(50).on('child_added', (snapshot) => {
         const msg = snapshot.val();
         
         // پاککردنەوەی پەیامی دەستپێک
@@ -1968,7 +1966,7 @@ function sendMessage() {
     
     if (!text || !currentPartyId) return;
     
-    firebaseDB.ref('parties/' + currentPartyId + '/chat').push({ // ← گۆڕدرا
+    firebaseDB.ref('parties/' + currentPartyId + '/chat').push({
         userId: currentUser.id,
         userName: currentUser.name,
         text: text,
