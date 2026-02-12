@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   <meta name="google-site-verification" content="6YSe4Dgn0dQ-veiH6_m_GCrHkEshg-NxCOkEHj4fA-o" />
+    <meta name="google-site-verification" content="6YSe4Dgn0dQ-veiH6_m_GCrHkEshg-NxCOkEHj4fA-o" />
+    
     <title>have Korea | هاڤێ کۆریا - درامای کۆری بە ژێرنووسی کوردی</title>
+    
     <meta name="description" content="سایتی هاڤێ کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
     <meta name="keywords" content="kurdish subtitle, ژێرنووسی کوردی, درامای کۆری, فلیمی کۆری, kurdsub, have Korea, دراما و فیلم">
     <meta name="author" content="have Korea">
@@ -13,7 +15,7 @@
     <meta property="og:title" content="have Korea | هاڤێ کۆریا">
     <meta property="og:description" content="باشترین سەرچاوە بۆ بینینی دراما کۆرییەکان بە کوردی">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://have-korea.netlify.app/logologo.png">
+    <meta property="og:image" content="https://have-korea.netlify.app/havelogo.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://have-korea.netlify.app">
@@ -21,11 +23,13 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="have Korea | هاڤێ کۆریا">
     <meta name="twitter:description" content="باشترین سەرچاوە بۆ بینینی دراما کۆرییەکان بە کوردی">
-    <meta name="twitter:image" content="https://have-korea.netlify.app/logologo.png">
+    <meta name="twitter:image" content="https://have-korea.netlify.app/havelogo.png">
 
-    <link rel="icon" type="image/png" href="logologo.png">
-    <link rel="apple-touch-icon" href="logologo.png">
+    <link rel="icon" type="image/png" href="https://have-korea.netlify.app/havelogo.png" sizes="96x96">
+    <link rel="shortcut icon" href="https://have-korea.netlify.app/havelogo.png">
+    <link rel="apple-touch-icon" href="https://have-korea.netlify.app/havelogo.png">
 
+    <!-- ✅ لێرە هێنرایەوە - ناو head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
     
@@ -822,38 +826,49 @@
     
     <div class="filter-dropdown" id="filter-dropdown">
     <div class="filter-dropdown-content">
-        <div class="filter-section">
-            <h4><i class="fas fa-film"></i> ژانەر</h4>
-            <div class="filter-options">
-                <label><input type="checkbox" value="ڕۆمانسی"> ڕۆمانسی</label>
-                <label><input type="checkbox" value="ئەکشن"> ئەکشن</label>
-                <label><input type="checkbox" value="کۆمیدی"> کۆمیدی</label>
-                <label><input type="checkbox" value="تاوانکاری"> تاوانکاری</label>
-                <label><input type="checkbox" value="خەیاڵی"> خەیاڵی</label>
-                <label><input type="checkbox" value="دراما"> دراما</label>
-            </div>
+    <!-- دوگمەکانی سەرەکی: ژانەر و ساڵ -->
+    <div class="filter-main-buttons">
+        <button class="filter-main-btn" onclick="toggleFilterSection('genre')">
+            <i class="fas fa-film"></i> ژانەر
+            <i class="fas fa-chevron-left filter-arrow"></i>
+        </button>
+        <button class="filter-main-btn" onclick="toggleFilterSection('year')">
+            <i class="fas fa-calendar-alt"></i> ساڵ
+            <i class="fas fa-chevron-left filter-arrow"></i>
+        </button>
+    </div>
+
+    <!-- بەشی ژانەر (شاراوە لە سەرەتا) -->
+    <div class="filter-section" id="genre-section" style="display: none;">
+        <div class="filter-options">
+            <label><input type="checkbox" value="ڕۆمانسی"> ڕۆمانسی</label>
+            <label><input type="checkbox" value="ئەکشن"> ئەکشن</label>
+            <label><input type="checkbox" value="کۆمیدی"> کۆمیدی</label>
+            <label><input type="checkbox" value="تاوانکاری"> تاوانکاری</label>
+            <label><input type="checkbox" value="خەیاڵی"> خەیاڵی</label>
+            <label><input type="checkbox" value="دراما"> دراما</label>
         </div>
-        
-        <div class="filter-section">
-            <h4><i class="fas fa-calendar-alt"></i> ساڵ</h4>
-            <div class="filter-options">
-                <label><input type="checkbox" value="2026"> 2026</label>
-                <label><input type="checkbox" value="2025"> 2025</label>
-                <label><input type="checkbox" value="2024"> 2024</label>
-                <label><input type="checkbox" value="2023"> 2023</label>
-                <label><input type="checkbox" value="2022"> 2022</label>
-                <label><input type="checkbox" value="2021"> 2021</label>
-                <label><input type="checkbox" value="2020"> 2020</label>
-                <label><input type="checkbox" value="2019"> 2019</label>
-                <label><input type="checkbox" value="2018"> 2018</label>
-                <label><input type="checkbox" value="2017"> 2017</label>
-            </div>
+    </div>
+
+    <!-- بەشی ساڵ (شاراوە لە سەرەتا) -->
+    <div class="filter-section" id="year-section" style="display: none;">
+        <div class="filter-options">
+            <label><input type="checkbox" value="2026"> 2026</label>
+            <label><input type="checkbox" value="2025"> 2025</label>
+            <label><input type="checkbox" value="2024"> 2024</label>
+            <label><input type="checkbox" value="2023"> 2023</label>
+            <label><input type="checkbox" value="2022"> 2022</label>
+            <label><input type="checkbox" value="2021"> 2021</label>
+            <label><input type="checkbox" value="2020"> 2020</label>
+            <label><input type="checkbox" value="2019"> 2019</label>
+            <label><input type="checkbox" value="2018"> 2018</label>
+            <label><input type="checkbox" value="2017"> 2017</label>
         </div>
-        
-        <div class="filter-actions">
-            <button onclick="applyFilters()" class="apply-btn">جێبەجێکردن</button>
-            <button onclick="clearFilters()" class="clear-btn">سڕینەوە</button>
-        </div>
+    </div>
+    
+    <div class="filter-actions">
+        <button onclick="applyFilters()" class="apply-btn">جێبەجێکردن</button>
+        <button onclick="clearFilters()" class="clear-btn">سڕینەوە</button>
     </div>
 </div>
     </nav>
@@ -1145,7 +1160,7 @@
   // دەستپێکی درامای تازە (Surly)
   {
    
-    id: 8,
+   id: 8,
     title: "surely tomorrow 2025",
     type: "drama",
     genre: "ڕۆمانسی - درامایی",
@@ -1174,7 +1189,7 @@
           { name: "stream", link: "https://streamtape.com/e/M7ejd0zVd6tm8bl/Watch_Surely_Tomorrow_Episode_1_English_Sub_KissAsian_Surely_Tomorrow.mkv" },
           { name: "mixdrop", link: "https://mixdrop.top/e/wlmn39wra8o7n9" }
         ]
-      }, // <--- ئاگاداربە: ئەم کۆمایە زۆر گرنگە بۆ جیاکردنەوەی ئەڵقەکان
+      },
       {
         ep: 2,
         servers: [
@@ -1183,8 +1198,7 @@
           { name: "mixdrop", link: "https://mixdrop.top/e/9wqngndnhexwvg" }
         ]
       },
-
- {
+      {
         ep: 3,
         servers: [
           { name: "vip have korea", link: "https://vidmoly.net/embed-cxqpuyrz05gl.html" },
@@ -1193,9 +1207,49 @@
         ]
       }
     ]
+  },
+
+  {
+    id: 9,
+    title: "ناوی دراما ",
+    type: "chinese",
+    genre: "ڕۆمانسی - درامایی",
+    desc: "کورتەی چیرۆکی    ...",
+    image: "وێنەکە.png",
+    translators: [
+        {
+            name: "سەنا ئەحمەد",
+            avatar: "سانا.png"
+        },
+        {
+            name: "هێلین",
+            avatar: "admin1.png"
+        }
+    ],
+    technician: {
+        name: "کێڵوا",
+        avatar: "admin2.png"
+    },
+    episodes: [
+      {
+        ep: 1,
+        servers: [
+          { name: "vip have korea", link: "لینکی ئەڵقە 1" },
+          { name: "stream", link: "لینکی ئەڵقە 1" },
+          { name: "mixdrop", link: "لینکی ئەڵقە 1" }
+        ]
+      },
+      {
+        ep: 2,
+        servers: [
+          { name: "vip have korea", link: "لینکی ئەڵقە 2" },
+          { name: "stream", link: "لینکی ئەڵقە 2" },
+          { name: "mixdrop", link: "لینکی ئەڵقە 2" }
+        ]
+      }
+    ]
   }
 ];
-
 
 
 
@@ -1240,7 +1294,7 @@
                     
                     card.innerHTML = `
                         <img src="${item.image}" alt="${item.title}" class="card-img" loading="lazy">
-                        <span class="card-tag">${item.type === 'drama' ? 'Drama' : 'Movie'}</span>
+                        <span class="card-tag">${item.type === 'drama' ? 'Drama' : item.type === 'chinese' ? 'Chinese' : 'Movie'}</span>
                         <div class="card-overlay">
                             <div class="card-title">${item.title}</div>
                             
@@ -1269,7 +1323,7 @@ document.getElementById('sidebar-trigger').style.display = 'none';
                 document.getElementById('movie-title').innerText = item.title;
                 document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
                 document.getElementById('movie-desc').innerText = item.desc ? item.desc : 'کورتەی چیرۆک بەردەست نییە.';
-                document.getElementById('movie-type-display').innerText = item.type === 'drama' ? ' دراما' : 'فلیم';
+               document.getElementById('movie-type-display').innerText = item.type === 'drama' ? 'دراما' : item.type === 'chinese' ? 'چینی' : 'فلیم';
 // **زیادکردنی وەرگێر و تەکنیکار**
     this.renderCredits(item);
 
@@ -1547,8 +1601,10 @@ function applyFilters() {
         const btnText = activeBtn.textContent.trim();
         if (btnText === 'دراما') {
             currentType = 'drama';
-        } else if (btnText === 'فلیم') {
+      } else if (btnText === 'فلیم') {
             currentType = 'movie';
+        } else if (btnText === 'چینی') {
+            currentType = 'chinese';
         }
     }
     
@@ -1581,10 +1637,57 @@ function applyFilters() {
 function clearFilters() {
     const checkboxes = document.querySelectorAll('.filter-options input[type="checkbox"]');
     checkboxes.forEach(cb => cb.checked = false);
-    app.renderGrid(app.data);
+    
+    // دۆزینەوەی دوگمەی ئەکتیڤ لە ناڤبار
+    const activeBtn = document.querySelector('.cat-btn.active');
+    let currentType = 'all';
+    
+    if (activeBtn) {
+        const btnText = activeBtn.textContent.trim();
+        if (btnText === 'دراما') {
+            currentType = 'drama';
+        } else if (btnText === 'فلیم') {
+            currentType = 'movie';
+        } else if (btnText === 'چینی') {
+            currentType = 'chinese';
+        }
+    }
+    
+    // فلتەرکردن بەپێی جۆرەکە
+    let filtered;
+    if (currentType === 'all') {
+        filtered = app.data;
+    } else {
+        filtered = app.data.filter(item => item.type === currentType);
+    }
+    
+    app.renderGrid(filtered);
     toggleFilterMenu();
 }
-
+function toggleFilterSection(section) {
+    const genreSection = document.getElementById('genre-section');
+    const yearSection = document.getElementById('year-section');
+    const genreBtn = document.querySelector('.filter-main-btn:nth-child(1)');
+    const yearBtn = document.querySelector('.filter-main-btn:nth-child(2)');
+    
+    if (section === 'genre') {
+        if (genreSection.style.display === 'none') {
+            genreSection.style.display = 'block';
+            genreBtn.classList.add('active');
+        } else {
+            genreSection.style.display = 'none';
+            genreBtn.classList.remove('active');
+        }
+    } else if (section === 'year') {
+        if (yearSection.style.display === 'none') {
+            yearSection.style.display = 'block';
+            yearBtn.classList.add('active');
+        } else {
+            yearSection.style.display = 'none';
+            yearBtn.classList.remove('active');
+        }
+    }
+}
 app.init();
 </script>
     
@@ -2057,6 +2160,68 @@ app.init();
         }
     }
 
+/* بۆ شاشەی زۆر بچووک */
+    @media (max-width: 400px) {
+        .filter-options {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+        }
+        
+        .filter-options label {
+            padding: 8px 3px;
+            font-size: 10px;
+        }
+
+        .filter-options input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+        }
+    }
+
+    /* دوگمەکانی سەرەکی بۆ ژانەر و ساڵ */
+    .filter-main-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .filter-main-btn {
+        width: 100%;
+        background: rgba(140, 0, 255, 0.15);
+        border: 1.5px solid rgba(140, 0, 255, 0.3);
+        color: white;
+        padding: 14px 20px;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+    }
+
+    .filter-main-btn:hover {
+        background: rgba(140, 0, 255, 0.25);
+        border-color: var(--accent-color);
+        transform: translateX(-3px);
+    }
+
+    .filter-main-btn.active {
+        background: rgba(140, 0, 255, 0.3);
+        border-color: var(--accent-light);
+    }
+
+    .filter-arrow {
+        transition: transform 0.3s ease;
+        font-size: 12px;
+    }
+
+    .filter-main-btn.active .filter-arrow {
+        transform: rotate(-90deg);
+    }
+
 
 /* ستایلی وەرگێر و تەکنیکار */
 .credits-wrapper {
@@ -2432,6 +2597,11 @@ app.init();
         gap: 12px;
     }
 }
+
+
+
+
+
 
 </style>
 
