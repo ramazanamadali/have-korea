@@ -1,9 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   
+   <!-- لاپەڕەی سەرەکی -->
    <url>
       <loc>https://have-korea.netlify.app/</loc>
-      <lastmod>2026-02-10</lastmod>
+      <lastmod>2026-02-13</lastmod>
       <changefreq>daily</changefreq>
       <priority>1.0</priority>
    </url>
+
+   <!-- S line 2025 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=s-line-2025</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+   </url>
+
+   <!-- Trigger 2025 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=trigger-2025</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+   </url>
+
+   <!-- Daddy You Daughter Me 2017 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=daddy-you-daughter-me-2017</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+
+   <!-- Devils 2023 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=devils-2023</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.8</priority>
+   </url>
+
+   <!-- Bloody Flower 2026 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=bloody-flower-2026</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+   </url>
+
+   <!-- Surely Tomorrow 2025 kurdish subtitle -->
+   <url>
+      <loc>https://have-korea.netlify.app/?drama=surely-tomorrow-2025</loc>
+      <lastmod>2026-02-13</lastmod>
+      <changefreq>weekly</changefreq>
+      <priority>0.9</priority>
+   </url>
+
 </urlset>

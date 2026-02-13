@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://have-korea.netlify.app/sitemap.xml

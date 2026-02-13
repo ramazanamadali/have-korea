@@ -9,6 +9,22 @@
     
     <meta name="description" content="سایتی هاڤێ کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
     <meta name="keywords" content="kurdish subtitle, ژێرنووسی کوردی, درامای کۆری, فلیمی کۆری, kurdsub, have Korea, دراما و فیلم">
+    <!-- ✅ SEO بۆ گەڕانی گووگڵ -->
+    <script>
+    window.updatePageMeta = function(drama) {
+        document.title = drama.title + " kurdish subtitle - ژێرنووسی کوردی | have Korea";
+        
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if(metaDesc) {
+            metaDesc.content = drama.title + " kurdish subtitle, " + drama.title + " کوردی, " + drama.title + " ژێرنووسی کوردی - سەیری ئۆنلاین لە have Korea";
+        }
+        
+        let metaKeywords = document.querySelector('meta[name="keywords"]');
+        if(metaKeywords) {
+            metaKeywords.content = drama.title + " kurdish, " + drama.title + " کوردی, " + drama.title + " subtitle, kurdish drama, ژێرنووسی کوردی";
+        }
+    };
+    </script>
     <meta name="author" content="have Korea">
     <meta name="robots" content="index, follow">
 
@@ -847,6 +863,13 @@
             <label><input type="checkbox" value="تاوانکاری"> تاوانکاری</label>
             <label><input type="checkbox" value="خەیاڵی"> خەیاڵی</label>
             <label><input type="checkbox" value="دراما"> دراما</label>
+ <label><input type="checkbox" value="هەستبزوێن"> هەستبزوێن</label>
+ <label><input type="checkbox" value="پزیشکی"> پزیشکی</label>
+  <label><input type="checkbox" value="سەرکێشی"> سەرکێشی</label>
+   
+
+
+
         </div>
     </div>
 
@@ -927,7 +950,7 @@
         title: "S line 2025",
         type: "drama",
         genre: "ڕۆمانسی • خەیاڵی", 
-        desc: "چاویلەکەیەکی ئەفسوناوی هەیە هەر کەسێک لە چاوی بکات دەبێتە کەسێکی جیاواز و دەتوانێت (هێڵی سوور) ببینێت، ئایا کێشەکانی پێ چارەسەر دەکات یان دەبێتە هۆکاری مردنی خۆی و کەسانی تر؟!",
+        desc: "   ",
         image: "sline.png",
 
 
@@ -1112,6 +1135,42 @@
         ]
     },
    
+
+ {
+   
+        id:10,
+        title: "devils 2023",
+        type: "movie",
+        genre: "ئەکشن • هەستبزوێن • تاوانکاری•",
+        desc: "لێکۆڵەرێکی پۆلیس لە کاتی گەڕان بە دوای بکوژێکی زنجیرەیی کە هاوکارەکەی کوشتووە، تووشی ڕووداوێک دەبێت. کاتێک بەئاگا دێتەوە، دەبینێت جەستەی لەگەڵ بکوژەکە گۆڕدراوەتەوە! ئێستا دەبێت لەناو جەستەی بکوژەکە جەنگێک بکات بۆ گەڕاندنەوەی ناسنامەی خۆی و ڕێگریکردن لە تاوانێکی نوێ.",
+        image: "devils.png",
+
+// **زیادکردنی وەرگێر و تەکنیکار**
+        translators: [
+    {
+        name: "کێڵوا",
+            avatar: "admin2.png"
+    }
+],
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+
+
+        episodes: [
+            { 
+                ep: 1, 
+                name: "تەواوی فلیم", 
+                servers: [
+                    { name: "have korea vip", link: "https://vidmoly.net/embed-insli16l2uh3.html" },
+                    { name: "streamtabe", link: "https://streamtape.com/e/ZwoeVJW1GVHq20Y/Watch_Devils_2023_English_Sub_KissAsian_Devils_2023_DoodStream1.mkv" },
+                    { name: "Mixdrop", link:"https://mixdrop.top/e/wlmlg7gxarjpve" }
+                ] 
+            }
+        ]
+    },
+
   {
     id: 5,
     title: "Bloody Flower 2026 ",
@@ -1149,9 +1208,9 @@
       {
         ep: 3,
         servers: [
-          { name: "vip have korea", link: "لینکەکەی لێرە دابنێ" },
-          { name: "stream", link: "لینکەکەی لێرە دابنێ" },
-          { name: "mixdrop", link: "" }
+          { name: "vip have korea", link: "https://vidmoly.net/embed-9fedqggnoc0o.html" },
+          { name: "stream", link: "https://streamtape.com/e/XjdPx200zAiDl8M/Bloody.Flower.S01E03.1080p.DSNP.WEB-DL.AAC2.0.H.264-MrHulk_%5BDRAMADAY.me%5D.mkv" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/r696lg17ao8r7k" }
         ]
       }
     ]
@@ -1209,9 +1268,9 @@
        {
         ep: 4,
         servers: [
-          { name: "vip have korea", link: "https://vidmoly.net/embed-82jmk2agc7nm.html" },
-          { name: "mixdrop", link: "https://mixdrop.top/e/r6909e6oho94p1" },
-          { name: "streamtabe", link: "" }
+          { name: "vip have korea", link: "" },
+          { name: "mixdrop", link: "https://mixdrop.top/e/nlxlgjwohlzm97" },
+          { name: "streamtabe", link: "https://streamtape.com/e/9XwpwXoMqehaggy/899.mkv" }
         ]
       },
     ]
@@ -1318,15 +1377,41 @@
                 });
             },
 
-            openPlayer: function(item) {
-                this.currentMovie = item;
-                this.currentEpisodeIndex = 0;
+           openPlayer: function(item) {
+    this.currentMovie = item;
+    this.currentEpisodeIndex = 0;
 
-                // گۆڕینی ناوی تابی برۆسەرەکە بۆ ناوی دراماکە + Kurdish
-                document.title = item.title + " Kurdish";
-document.getElementById('sidebar-trigger').style.display = 'none';
-                document.getElementById('home-view').style.display = 'none';
-                document.getElementById('player-modal').style.display = 'block';
+    // ✅ نوێکردنەوەی تایتڵ و مێتا بۆ SEO
+    document.title = item.title + " kurdish subtitle - ژێرنووسی کوردی | have Korea";
+    
+    // نوێکردنەوەی description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if(metaDesc) {
+        metaDesc.content = item.title + " kurdish subtitle, " + item.title + " کوردی - " + (item.desc || 'سەیری ئۆنلاین بە کوالێتی بەرز');
+    }
+    
+    // زیادکردنی Schema بۆ گووگڵ
+    let schema = document.getElementById('drama-schema');
+    if(!schema) {
+        schema = document.createElement('script');
+        schema.id = 'drama-schema';
+        schema.type = 'application/ld+json';
+        document.head.appendChild(schema);
+    }
+    schema.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Movie",
+        "name": item.title + " kurdish subtitle",
+        "description": item.desc || "سەیری ئۆنلاین بە ژێرنووسی کوردی",
+        "genre": item.genre,
+        "inLanguage": "ku",
+        "subtitleLanguage": "Kurdish",
+        "thumbnailUrl": item.image
+    });
+
+    document.getElementById('sidebar-trigger').style.display = 'none';
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('player-modal').style.display = 'block';
                 
                 document.getElementById('movie-title').innerText = item.title;
                 document.getElementById('movie-genre').innerHTML = `<i class="fas fa-tags"></i> ژانەر: ${item.genre ? item.genre : 'دیاری نەکراوە'}`;
@@ -1424,10 +1509,10 @@ renderCredits: function(item) {
                 }
             },
 
-            goHome: function() {
-                // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
-                document.title = "have Korea | هاڤێ کۆریا";
-                document.getElementById('sidebar-trigger').style.display = 'block';
+           goHome: function() {
+    // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
+    document.title = "have Korea | هاڤێ کۆریا";
+    document.getElementById('sidebar-trigger').style.display = 'block';
                 document.getElementById('video-frame').src = "";
                 document.getElementById('player-modal').style.display = 'none';
                 document.getElementById('home-view').style.display = 'block';
@@ -2621,6 +2706,8 @@ app.init();
     </div>
 </footer>
 
+   
+</script>
 <style>
     /* دروستکردنی پاشبنەمایەکی زیندوو */
     .magic-bg-motion {
@@ -4242,6 +4329,63 @@ app.setupRatingEvents = function(item, hasVoted) {
         }
     });
 };
+</script>
+
+<!-- لە کۆتایی فایل، پێش </body> زیادی بکە -->
+
+<!-- SEO Content - Auto-generated from database -->
+<div id="auto-seo" style="display:none;"></div>
+
+<script>
+// ✅ دروستکردنی ئۆتۆماتیکی SEO
+document.addEventListener('DOMContentLoaded', function() {
+    const seoContainer = document.getElementById('auto-seo');
+    
+    // کۆکردنەوەی ناوەکان
+    const dramaList = database
+        .filter(d => d.type === 'drama')
+        .map(d => `${d.title} kurdish subtitle`)
+        .join('، ');
+    
+    const movieList = database
+        .filter(d => d.type === 'movie')
+        .map(d => `${d.title} kurdish subtitle`)
+        .join('، ');
+    
+    const chineseList = database
+        .filter(d => d.type === 'chinese')
+        .map(d => `${d.title} kurdish subtitle`)
+        .join('، ');
+    
+    // دروستکردنی HTML
+    seoContainer.innerHTML = `
+        <article>
+            <h1>have Korea - دراما و فیلمی کۆری بە ژێرنووسی کوردی</h1>
+            
+            <section>
+                <h2>دراما کۆری بە کوردی (${database.filter(d => d.type === 'drama').length} دراما)</h2>
+                <p>${dramaList || 'بەم زووانە دراما زیاد دەکرێت'}</p>
+            </section>
+            
+            <section>
+                <h2>فیلمی کۆری بە کوردی (${database.filter(d => d.type === 'movie').length} فیلم)</h2>
+                <p>${movieList || 'بەم زووانە فیلم زیاد دەکرێت'}</p>
+            </section>
+            
+            ${chineseList ? `
+            <section>
+                <h2>دراما چینی بە کوردی (${database.filter(d => d.type === 'chinese').length} دراما)</h2>
+                <p>${chineseList}</p>
+            </section>
+            ` : ''}
+            
+            <section>
+                <h2>تایبەتمەندییەکان</h2>
+                <p>باشترین سایتی کوردی بۆ korean drama kurdish subtitle - کوالێتی HD 1080p - وەرگێڕانی پڕۆفیشناڵ - نوێترین دراماکان - بەخۆڕایی تەواو - هەموو ژانرەکان: ڕۆمانسی، ئەکشن، کۆمیدی، تاوانکاری، خەیاڵی، پزیشکی</p>
+            </section>
+        </article>
+    `;
+});
 </script>
 
 
