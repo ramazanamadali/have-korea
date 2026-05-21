@@ -50,6 +50,7 @@
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyAo4iUF9LvMTI2UdPpCqj8TXlSIRA0xyK4",
@@ -1148,58 +1149,256 @@
   <div class="movie-grid" id="grid"></div>
 <div id="pagination-container" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:30px 0 10px;"></div>
 </div>
-    <div id="player-modal">
-        <div class="player-content">
-            <button class="back-btn" onclick="app.goHome()">
-                <i class="fas fa-arrow-right"></i> گەڕانەوە
-            </button>
+  <div id="player-modal">
+<!-- باگراوندی Hero -->
+  <div id="hero-backdrop" style="
+    position:fixed;inset:0;
+    background-size:cover;background-position:center top;
+    background-repeat:no-repeat;
+    z-index:0;
+    transition:background-image 0.5s ease;
+  "></div>
 
-            <div class="video-wrapper">
-                <iframe id="video-frame" src="" allowfullscreen allow="autoplay"></iframe>
-            </div>
+  <!-- تەڵخی سەرەوە -->
+  <div style="
+    position:fixed;inset:0;z-index:1;
+    background:linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.3) 0%,
+      rgba(0,0,0,0.5) 30%,
+      rgba(5,5,8,0.92) 65%,
+      rgba(5,5,8,1) 100%
+    );
+  "></div>
 
-            <div class="info-box">
-                <h1 id="movie-title" class="info-title">ناونیشانی فلیم</h1>
-                
-                <div class="info-meta">
-                    <span id="movie-genre"><i class="fas fa-tags"></i> ژانەر: -</span>
-                    <span>|</span>
-                    <span id="movie-type-display">دراما</span>
-                </div>
-               <p id="movie-desc" class="info-desc">کورتەی چیرۆک لێرە دەردەکەوێت...</p>
-<div id="credits-container" style="margin-bottom: 20px;"></div>
-<div id="episode-container" style="margin-bottom:24px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-       <div style="display:inline-flex;align-items:center;gap:8px;
-    background:rgba(140,0,255,0.08);
-    border:1px solid rgba(140,0,255,0.25);
-    border-radius:50px;
-    padding:6px 14px 6px 10px;">
-    <i class="fas fa-play-circle" style="color:var(--accent-color);font-size:13px;filter:drop-shadow(0 0 6px var(--accent-color));"></i>
-    <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:0px;">ئەلقە</span>
-</div>
+  <!-- ناوەڕۆکی سەرەکی -->
+  <div style="position:relative;z-index:2;min-height:100vh;overflow-y:auto;padding-bottom:80px;">
+
+    <div style="position:sticky;top:0;z-index:50;padding:14px 16px 10px;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.5),transparent);">
+
+  <!-- شوشەی گلاس -->
+  <div style="
+    display:flex;align-items:center;justify-content:space-between;
+    background:rgba(255,255,255,0.06);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.12);
+    border-top:1px solid rgba(255,255,255,0.2);
+    border-radius:20px;
+    padding:10px 14px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.3),
+               inset 0 1px 0 rgba(255,255,255,0.1);
+  ">
+<button onclick="app.goHome()" style="
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.08);
+  border:none;
+  color:#fff;padding:6px 12px;
+  border-radius:50px;font-size:11px;font-weight:800;
+  cursor:pointer;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+  transition:all 0.3s ease;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),
+             inset 0 -1px 0 rgba(0,0,0,0.2);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+">
+  <div style="
+    width:22px;height:22px;border-radius:50%;
+    background:rgba(255,255,255,0.1);
+    border:1px solid rgba(255,255,255,0.2);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  ">
+    <i class="fas fa-arrow-right" style="font-size:9px;"></i>
+  </div>
+  گەڕانەوە
+</button>
+<!-- لۆگۆ -->
+    <div onclick="app.goHome()" style="display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;">
+      <img src="logo2.png" alt="Logo" style="
+        width:34px;height:34px;border-radius:50%;object-fit:cover;
+        border:2px solid rgba(179,102,255,0.6);
+        box-shadow:0 0 12px rgba(140,0,255,0.45);
+        flex-shrink:0;
+      ">
+      <div style="display:flex;flex-direction:column;line-height:1.2;">
+        <span style="
+          font-size:13px;font-weight:800;color:#fff;
+          letter-spacing:1.5px;
+          font-family:'Rajdhani',sans-serif;
+        ">HAVE KOREA</span>
+        <span style="
+          font-family:'Noto Kufi Arabic',serif;
+          font-size:11px;font-weight:700;
+          background:linear-gradient(90deg,#ffffff,#c499ff,#8c00ff);
+          background-size:200% auto;
+          -webkit-background-clip:text;background-clip:text;
+          -webkit-text-fill-color:transparent;
+          color:transparent;
+          animation:shineText 4s linear infinite;
+        ">هاڤێ کۆریا</span>
+      </div>
     </div>
-    <div id="episode-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-</div>
 
-<div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <div style="display:inline-flex;align-items:center;gap:8px;
-    background:rgba(140,0,255,0.08);
-    border:1px solid rgba(140,0,255,0.25);
-    border-radius:50px;
-    padding:6px 14px 6px 10px;">
-    <i class="fas fa-server" style="color:var(--accent-color);font-size:13px;filter:drop-shadow(0 0 6px var(--accent-color));"></i>
-    <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:0px;">سێرڤەر</span>
+
+
+
+
+
+
+
+    
+
+
+
+
+  </div>
 </div>
-    </div>
-    <div id="server-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-</div>
-            </div>
+    <!-- بەشی Hero: پۆستەر + زانیاری -->
+    <div style="
+      display:flex;align-items:flex-end;gap:18px;
+      padding:0 16px 30px;
+      min-height:260px;
+    ">
+      <!-- پۆستەر -->
+      <div style="
+        flex-shrink:0;
+        width:120px;height:178px;
+        border-radius:14px;overflow:hidden;
+        box-shadow:0 8px 30px rgba(0,0,0,0.8);
+        border:2px solid rgba(255,255,255,0.15);
+      ">
+        <img id="hero-poster-img" src="" alt=""
+          style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+
+      <!-- زانیاری -->
+      <div style="flex:1;min-width:0;padding-bottom:4px;">
+        <h1 id="movie-title" style="
+          color:#fff;font-size:22px;font-weight:900;
+          margin:0 0 8px;line-height:1.2;
+          text-shadow:0 2px 12px rgba(0,0,0,0.8);
+          font-family:'Rajdhani',sans-serif;letter-spacing:1px;
+        ">ناونیشانی فلیم</h1>
+
+        <!-- باجی IMDB + TMDB -->
+        <div id="hero-ratings" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px;"></div>
+
+        <!-- ژانەر -->
+        <div class="info-meta" style="margin-bottom:8px;">
+          <span id="movie-genre"><i class="fas fa-tags"></i> ژانەر: -</span>
+          <span id="movie-type-display" style="display:none;">دراما</span>
         </div>
+<!-- دوگمەی سەیرکردن -->
+<button onclick="document.getElementById('video-frame').scrollIntoView({behavior:'smooth', block:'center'})"
+  style="
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,0.25);
+    color:#fff;padding:10px 22px;
+    border-radius:50px;font-size:13px;font-weight:800;
+    cursor:pointer;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.2);
+    transition:all 0.3s ease;
+  "
+  onmouseover="this.style.background='rgba(255,255,255,0.18)';this.style.borderColor='rgba(255,255,255,0.4)';this.style.transform='translateY(-2px)'"
+  onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.25)';this.style.transform='translateY(0)'">
+  <div style="
+    width:26px;height:26px;border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.3);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  ">
+    <i class="fas fa-play" style="font-size:9px;margin-right:-1px;"></i>
+  </div>
+  سەیرکردن
+</button>
+      </div>
     </div>
 
 
+
+
+
+
+
+
+
+
+    
+
+    <!-- بەشی خوارەوە -->
+    <div id="player-bottom" style="padding:0 16px;display:flex;flex-direction:column;gap:20px;">
+
+      <!-- چیرۆک -->
+      <p id="movie-desc" class="info-desc" style="margin:0;">کورتەی چیرۆک لێرە دەردەکەوێت...</p>
+
+      <!-- کرێدیت -->
+      <div id="credits-container" style="margin-bottom:4px;"></div>
+
+      <!-- ڤیدیۆ پلەیەر ← خوارەوە -->
+      <div class="video-wrapper">
+        <iframe id="video-frame" src="" allowfullscreen allow="autoplay"></iframe>
+      </div>
+      <!-- ئەلقە ← سەرەوەی ڤیدیۆ -->
+      <div id="episode-container">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <div style="display:inline-flex;align-items:center;gap:8px;
+            background:rgba(140,0,255,0.08);
+            border:1px solid rgba(140,0,255,0.25);
+            border-radius:50px;padding:6px 14px 6px 10px;">
+            <i class="fas fa-play-circle" style="color:var(--accent-color);font-size:13px;
+              filter:drop-shadow(0 0 6px var(--accent-color));"></i>
+            <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:0px;">ئەلقە</span>
+          </div>
+        </div>
+        <div id="episode-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+      </div>
+
+      <!-- سێرڤەر ← ژێری ئەلقە -->
+      <div style="margin-top:4px;">
+        <div style="position:relative;">
+          <div style="
+            position:absolute;left:0;top:0;bottom:0;width:32px;
+            background:linear-gradient(to right,rgba(5,5,8,0.9),transparent);
+            z-index:2;border-radius:14px 0 0 14px;
+            display:flex;align-items:center;justify-content:center;
+            pointer-events:none;">
+            <i class="fas fa-chevron-left" style="color:rgba(255,255,255,0.4);font-size:10px;"></i>
+          </div>
+          <div style="
+            position:absolute;right:0;top:0;bottom:0;width:32px;
+            background:linear-gradient(to left,rgba(5,5,8,0.9),transparent);
+            z-index:2;border-radius:0 14px 14px 0;
+            display:flex;align-items:center;justify-content:center;
+            pointer-events:none;">
+            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.4);font-size:10px;"></i>
+          </div>
+          <div id="server-list" style="
+            display:flex;
+            gap:8px;
+            overflow-x:auto;
+            scroll-snap-type:x mandatory;
+            -webkit-overflow-scrolling:touch;
+            scrollbar-width:none;
+            padding:10px 36px;
+            background:rgba(255,255,255,0.03);
+            border:1px solid rgba(255,255,255,0.07);
+            border-radius:14px;
+          "></div>
+        </div>
+      </div>
+
+
+      <!-- نمرەدان و تڕایلەر ئۆتۆماتیک لێرە زیاد دەبێت -->
+
+    </div><!-- /player-bottom -->
+  </div><!-- /ناوەڕۆک -->
+</div><!-- /player-modal -->
 
     <script>
         // ========================================================
@@ -1882,7 +2081,67 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
     document.getElementById('sidebar-trigger').style.display = 'none';
     document.getElementById('home-view').style.display = 'none';
     document.getElementById('player-modal').style.display = 'block';
-                
+                // پۆستەر
+document.getElementById('hero-poster-img').src = item.image;
+
+// باگراوند لە TMDB
+const TMDB_KEY = '1e5953c4d635318acd9b1cb9c7010caa';
+const mediaType = (item.type === 'movie' || item.subtype === 'movie'
+  || item.type === 'chinese' || item.type === 'japanese') ? 'movie' : 'tv';
+
+if (item.tmdb_id) {
+  fetch(`https://api.themoviedb.org/3/${mediaType}/${item.tmdb_id}?api_key=${TMDB_KEY}`)
+    .then(r => r.json())
+    .then(data => {
+      const bd = document.getElementById('hero-backdrop');
+      if (data.backdrop_path) {
+        bd.style.backgroundImage = `url(https://image.tmdb.org/t/p/w1280${data.backdrop_path})`;
+      } else {
+        bd.style.backgroundImage = `url(${item.image})`;
+        bd.style.backgroundPosition = 'center center';
+        bd.style.backgroundSize = 'cover';
+        bd.style.filter = 'blur(8px) brightness(0.5)';
+      }
+    })
+    .catch(() => {
+      const bd = document.getElementById('hero-backdrop');
+      bd.style.backgroundImage = `url(${item.image})`;
+      bd.style.filter = 'blur(8px) brightness(0.5)';
+    });
+} else {
+  const bd = document.getElementById('hero-backdrop');
+  bd.style.backgroundImage = `url(${item.image})`;
+  bd.style.filter = 'blur(8px) brightness(0.5)';
+}
+
+// IMDB + TMDB نمرەکان
+app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
+  const ratingsDiv = document.getElementById('hero-ratings');
+  if (!ratingsDiv) return;
+  ratingsDiv.innerHTML = '';
+  if (imdb) ratingsDiv.innerHTML += `
+    <div style="display:inline-flex;align-items:center;gap:5px;
+      background:rgba(0,0,0,0.5);border:1px solid rgba(245,197,24,0.4);
+      border-radius:8px;padding:4px 10px;">
+      <svg width="32" height="16" viewBox="0 0 32 16">
+        <rect width="32" height="16" rx="3" fill="#f5c518"/>
+        <text x="16" y="12" text-anchor="middle" font-family="Arial Black"
+          font-weight="900" font-size="8" fill="#000">IMDb</text>
+      </svg>
+      <span style="font-size:13px;font-weight:800;color:#fff;">${imdb}</span>
+    </div>`;
+  if (tmdb) ratingsDiv.innerHTML += `
+    <div style="display:inline-flex;align-items:center;gap:5px;
+      background:rgba(0,0,0,0.5);border:1px solid rgba(1,180,228,0.4);
+      border-radius:8px;padding:4px 10px;">
+      <svg width="32" height="16" viewBox="0 0 32 16">
+        <rect width="32" height="16" rx="3" fill="#032541"/>
+        <text x="16" y="12" text-anchor="middle" font-family="Arial Black"
+          font-weight="900" font-size="7" fill="#01b4e4">TMDB</text>
+      </svg>
+      <span style="font-size:13px;font-weight:800;color:#fff;">${tmdb}</span>
+    </div>`;
+});
                 document.getElementById('movie-title').innerText = item.title;
                 (function() {
     const ac  = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
@@ -2865,25 +3124,87 @@ ${actor.images?.profiles?.length > 1 ? `
     container.innerHTML = html;
 },
 
+renderEpisodes: function() {
+    const listContainer = document.getElementById('episode-list');
+    listContainer.innerHTML = '';
+    
+    const episodes = this.currentMovie.episodes;
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex = ac.replace('#','').trim();
+    const r = parseInt(hex.substring(0,2),16);
+    const g = parseInt(hex.substring(2,4),16);
+    const b = parseInt(hex.substring(4,6),16);
 
-            renderEpisodes: function() {
-                const listContainer = document.getElementById('episode-list');
-                listContainer.innerHTML = '';
-                
-                const episodes = this.currentMovie.episodes;
-                
-                episodes.forEach((ep, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = `action-btn ${index === 0 ? 'active' : ''}`;
-                    btn.innerHTML = ep.name ? ep.name : `ئەلقەی ${ep.ep}`;
-                    btn.onclick = () => {
-                        this.playEpisode(index, 0); 
-                        document.querySelectorAll('#episode-list .action-btn').forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-                    };
-                    listContainer.appendChild(btn);
-                });
-            },
+    episodes.forEach((ep, index) => {
+        const btn = document.createElement('button');
+        btn.className = `action-btn ${index === 0 ? 'active' : ''}`;
+
+        // ژمارەی ئەلقە بەبێ وێنە
+        btn.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                <span style="font-size:9px;font-weight:700;
+                    color:rgba(255,255,255,0.45);
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+                    letter-spacing:0px;">
+                    ئەلقە
+                </span>
+                <span style="font-size:22px;font-weight:900;
+                    font-family:'Barlow Condensed','Rajdhani',sans-serif;
+                    letter-spacing:1px;line-height:1;">
+                    ${String(ep.ep).padStart(2,'0')}
+                </span>
+            </div>
+        `;
+
+        // ستایلی باوەکە
+        btn.style.cssText = `
+            min-width:75px;
+            height:75px;
+            border-radius:16px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:8px;
+            border:1px solid rgba(${r},${g},${b},0.25);
+            background:rgba(${r},${g},${b},0.06);
+            color:rgba(255,255,255,0.6);
+            cursor:pointer;
+            transition:all 0.3s ease;
+            position:relative;
+            overflow:hidden;
+        `;
+
+        // ئەگەر ئەکتیڤبوو
+        if (index === 0) {
+            btn.style.background = `rgba(${r},${g},${b},0.22)`;
+            btn.style.borderColor = `rgba(${r},${g},${b},0.7)`;
+            btn.style.color = '#fff';
+            btn.style.boxShadow = `0 0 18px rgba(${r},${g},${b},0.3)`;
+        }
+
+        btn.onclick = () => {
+            this.playEpisode(index, 0);
+
+            // ڕیسێتی هەموو دوگمەکان
+            document.querySelectorAll('#episode-list .action-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.background = `rgba(${r},${g},${b},0.06)`;
+                b.style.borderColor = `rgba(${r},${g},${b},0.25)`;
+                b.style.color = 'rgba(255,255,255,0.6)';
+                b.style.boxShadow = 'none';
+            });
+
+            // ئەکتیڤکردنی دوگمەی هەڵبژێردراو
+            btn.classList.add('active');
+            btn.style.background = `rgba(${r},${g},${b},0.22)`;
+            btn.style.borderColor = `rgba(${r},${g},${b},0.7)`;
+            btn.style.color = '#fff';
+            btn.style.boxShadow = `0 0 18px rgba(${r},${g},${b},0.3)`;
+        };
+
+        listContainer.appendChild(btn);
+    });
+},
 
             playEpisode: function(epIndex, serverIndex) {
                 this.currentEpisodeIndex = epIndex;
@@ -2895,8 +3216,21 @@ ${actor.images?.profiles?.length > 1 ? `
                 if(episode.servers && episode.servers.length > 0) {
                     episode.servers.forEach((srv, idx) => {
                         const btn = document.createElement('button');
-                        btn.className = `action-btn ${idx === serverIndex ? 'active' : ''}`;
-                        btn.innerHTML = `<i class="fas fa-server"></i> ${srv.name}`;
+                      btn.className = `action-btn ${idx === serverIndex ? 'active' : ''}`;
+btn.style.cssText = `
+  flex-shrink:0;
+  scroll-snap-align:center;
+  padding:11px 20px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:800;
+  white-space:nowrap;
+  font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+`;
+btn.innerHTML = `<i class="fas fa-server"></i> ${srv.name}`;
                         
                         btn.onclick = () => {
                             document.getElementById('video-frame').src = srv.link;
@@ -2913,14 +3247,45 @@ ${actor.images?.profiles?.length > 1 ? `
                 }
             },
 goHome: function() {
-    // گەڕاندنەوەی ناوی برۆسەرەکە بۆ ناوی سەرەکی
-    document.body.style.overflow = ''; // ← زیادکراو
+    document.body.style.overflow = '';
     document.title = "have Korea | هاڤێ کۆریا";
     document.getElementById('sidebar-trigger').style.display = 'block';
-                document.getElementById('video-frame').src = "";
-                document.getElementById('player-modal').style.display = 'none';
-                document.getElementById('home-view').style.display = 'block';
-            },
+    document.getElementById('video-frame').src = "";
+    document.getElementById('player-modal').style.display = 'none';
+    document.getElementById('home-view').style.display = 'block';
+
+    // ← ئەمانەی نوێ زیادکراون
+    const bd = document.getElementById('hero-backdrop');
+    if (bd) { bd.style.backgroundImage = ''; bd.style.filter = ''; }
+    const hr = document.getElementById('hero-ratings');
+    if (hr) hr.innerHTML = '';
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
            search: function(query) {
     let filtered = this.data;
@@ -4125,7 +4490,234 @@ body {
     pointer-events: none;
 }
 
+/* ========== COMMENT SECTION ========== */
+.comment-section {
+    margin-top: 28px;
+    padding: 0 16px;
+}
+.comment-section-header {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(140,0,255,0.08);
+    border: 1px solid rgba(140,0,255,0.25);
+    border-radius: 50px;
+    padding: 6px 14px 6px 10px;
+    margin-bottom: 16px;
+}
+.comment-section-header i {
+    color: var(--accent-color);
+    font-size: 13px;
+}
+.comment-section-header span {
+    font-size: 12px;
+    font-weight: 800;
+    color: rgba(255,255,255,0.7);
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
 
+/* باکسی نووسینی کۆمێنت */
+.comment-input-wrap {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+.comment-input-wrap img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(140,0,255,0.5);
+    flex-shrink: 0;
+}
+.comment-input-box {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(140,0,255,0.25);
+    border-radius: 14px;
+    padding: 10px 14px;
+    color: #fff;
+    font-size: 13px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    resize: none;
+    outline: none;
+    min-height: 44px;
+    max-height: 120px;
+    direction: rtl;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    overflow-y: auto;
+}
+.comment-input-box:focus {
+    border-color: rgba(140,0,255,0.6);
+    box-shadow: 0 0 15px rgba(140,0,255,0.15);
+}
+.comment-input-box::placeholder {
+    color: rgba(255,255,255,0.3);
+}
+.comment-send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    border: none;
+    color: #fff;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(140,0,255,0.4);
+}
+.comment-send-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(140,0,255,0.6);
+}
+.comment-send-btn:disabled {
+    background: rgba(255,255,255,0.1);
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* نیشاندەری داخلبوون */
+.comment-login-prompt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(140,0,255,0.06);
+    border: 1px solid rgba(140,0,255,0.2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+}
+.comment-login-prompt i {
+    color: rgba(140,0,255,0.8);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+.comment-login-prompt p {
+    margin: 0;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    line-height: 1.6;
+}
+.comment-login-prompt button {
+    margin-right: auto;
+    background: rgba(140,0,255,0.2);
+    border: 1px solid rgba(140,0,255,0.4);
+    color: #fff;
+    padding: 7px 16px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s;
+    flex-shrink: 0;
+}
+.comment-login-prompt button:hover {
+    background: rgba(140,0,255,0.35);
+}
+
+/* کارتی کۆمێنت */
+.comment-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+    animation: commentFadeIn 0.3s ease;
+}
+@keyframes commentFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.comment-item img {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid rgba(140,0,255,0.4);
+    flex-shrink: 0;
+}
+.comment-bubble {
+    flex: 1;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 0 14px 14px 14px;
+    padding: 10px 13px;
+    position: relative;
+}
+.comment-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--accent-light);
+    margin-bottom: 4px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
+.comment-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.82);
+    line-height: 1.6;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    direction: rtl;
+    word-break: break-word;
+}
+.comment-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+.comment-time {
+    font-size: 10px;
+    color: rgba(255,255,255,0.3);
+}
+.comment-delete-btn {
+    background: none;
+    border: none;
+    color: rgba(255,80,80,0.5);
+    font-size: 11px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: none;
+}
+.comment-delete-btn:hover {
+    color: #ff5050;
+    background: rgba(255,80,80,0.1);
+}
+
+/* لۆدینگ */
+.comments-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
+.comments-loading::before {
+    content: '';
+    width: 18px; height: 18px;
+    border: 2px solid rgba(140,0,255,0.3);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: border-spin 0.8s linear infinite;
+}
+.comments-empty {
+    text-align: center;
+    padding: 25px 20px;
+    color: rgba(255,255,255,0.25);
+    font-size: 13px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
 
 
 @media (max-width: 768px) {
@@ -7827,6 +8419,7 @@ app.openPlayer = async function(item) {
     await originalOpenPlayer.call(this, item);
     setTimeout(() => this.renderRatingSection(item), 100);
     setTimeout(() => this.renderTrailerSection(item), 150);
+setTimeout(() => this.renderCommentSection(item), 200);
 };
 
 app.renderRatingSection = async function(item) {
@@ -7973,6 +8566,195 @@ app.setupRatingEvents = function(item, hasVoted) {
         }
     });
 };
+
+
+
+// ========== COMMENT SYSTEM ==========
+const db = firebase.firestore();
+
+app.renderCommentSection = function(item) {
+    const old = document.querySelector('.comment-section');
+    if (old) old.remove();
+
+    const ac = getComputedStyle(document.documentElement)
+        .getPropertyValue('--accent-color').trim() || '#8c00ff';
+
+    const user = auth.currentUser;
+    const userAvatar = user?.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+
+    const inputArea = user ? `
+        <div class="comment-input-wrap">
+            <img src="${userAvatar}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+            <textarea class="comment-input-box" id="comment-input-${item.id}"
+                placeholder="کۆمێنتت بنووسە..." rows="1"
+                oninput="autoResizeComment(this)"></textarea>
+            <button class="comment-send-btn" id="comment-send-${item.id}"
+                onclick="submitComment(${item.id})">
+                <i class="fas fa-paper-plane" style="font-size:13px;transform:scaleX(-1);"></i>
+            </button>
+        </div>
+    ` : `
+        <div class="comment-login-prompt">
+            <i class="fas fa-comment-slash"></i>
+            <p>بۆ نووسینی کۆمێنت، داخل ببە</p>
+            <button onclick="openMenuModal('account');closeCommentIfOpen()">
+                <i class="fas fa-sign-in-alt" style="margin-left:5px;"></i> داخلبوون
+            </button>
+        </div>
+    `;
+
+    const html = `
+        <div class="comment-section">
+            <div class="comment-section-header">
+                <i class="fas fa-comments"></i>
+                <span>کۆمێنتەکان</span>
+                <span id="comment-count-${item.id}" style="
+                    background:rgba(140,0,255,0.3);
+                    color:#fff;font-size:10px;font-weight:800;
+                    padding:1px 7px;border-radius:20px;margin-right:4px;">0</span>
+            </div>
+            ${inputArea}
+            <div id="comments-list-${item.id}">
+                <div class="comments-loading">چاوەڕوانبە...</div>
+            </div>
+        </div>
+    `;
+
+    const playerBottom = document.getElementById('player-bottom');
+    if (playerBottom) playerBottom.insertAdjacentHTML('beforeend', html);
+
+    this.loadComments(item.id);
+};
+
+app.loadComments = function(movieId) {
+    const listEl = document.getElementById(`comments-list-${movieId}`);
+    if (!listEl) return;
+
+    db.collection('comments')
+        .where('movieId', '==', movieId)
+        .orderBy('createdAt', 'desc')
+        .limit(50)
+        .onSnapshot(snapshot => {
+            const countEl = document.getElementById(`comment-count-${movieId}`);
+            if (countEl) countEl.innerText = snapshot.size;
+
+            if (snapshot.empty) {
+                listEl.innerHTML = `<div class="comments-empty">
+                    <i class="fas fa-comment" style="font-size:28px;margin-bottom:8px;display:block;opacity:0.3;"></i>
+                    هێشتا کۆمێنتێک نییە. یەکەمین بە!
+                </div>`;
+                return;
+            }
+
+            const user = auth.currentUser;
+            let html = '';
+            snapshot.forEach(doc => {
+                const c = doc.data();
+                const isOwner = user && user.uid === c.userId;
+                const timeStr = c.createdAt?.toDate
+                    ? formatCommentTime(c.createdAt.toDate())
+                    : 'ئێستا';
+
+                html += `
+                    <div class="comment-item" id="comment-${doc.id}">
+                        <img src="${c.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}"
+                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                        <div class="comment-bubble">
+                            <div class="comment-name">${escapeHtml(c.userName || 'بەکارهێنەر')}</div>
+                            <div class="comment-text">${escapeHtml(c.text)}</div>
+                            <div class="comment-meta">
+                                <span class="comment-time">${timeStr}</span>
+                                ${isOwner ? `<button class="comment-delete-btn" style="display:inline-block;"
+                                    onclick="deleteComment('${doc.id}', ${movieId})">
+                                    <i class="fas fa-trash-alt" style="margin-left:3px;"></i> سڕینەوە
+                                </button>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            listEl.innerHTML = html;
+        }, err => {
+            console.error('Comments error:', err);
+            listEl.innerHTML = `<div class="comments-empty">کێشەیەک ڕوویدا</div>`;
+        });
+};
+
+async function submitComment(movieId) {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const input = document.getElementById(`comment-input-${movieId}`);
+    const btn = document.getElementById(`comment-send-${movieId}`);
+    const text = input?.value.trim();
+
+    if (!text || text.length < 1) return;
+    if (text.length > 500) {
+        input.style.borderColor = 'rgba(255,80,80,0.6)';
+        setTimeout(() => input.style.borderColor = '', 1500);
+        return;
+    }
+
+    btn.disabled = true;
+    input.disabled = true;
+
+    try {
+        await db.collection('comments').add({
+            movieId: movieId,
+            userId: user.uid,
+            userName: user.displayName || user.email?.split('@')[0] || 'بەکارهێنەر',
+            avatar: user.photoURL || '',
+            text: text,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        input.value = '';
+        input.style.height = '44px';
+    } catch (err) {
+        console.error('Submit comment error:', err);
+    } finally {
+        btn.disabled = false;
+        input.disabled = false;
+        input.focus();
+    }
+}
+
+async function deleteComment(commentId, movieId) {
+    if (!confirm('دڵنیایت لە سڕینەوەی کۆمێنتەکە؟')) return;
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+        await db.collection('comments').doc(commentId).delete();
+    } catch (err) {
+        console.error('Delete error:', err);
+    }
+}
+
+function autoResizeComment(el) {
+    el.style.height = '44px';
+    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function formatCommentTime(date) {
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return 'ئێستا';
+    if (diff < 3600) return Math.floor(diff/60) + ' خولەک پێش';
+    if (diff < 86400) return Math.floor(diff/3600) + ' کاتژمێر پێش';
+    if (diff < 604800) return Math.floor(diff/86400) + ' ڕۆژ پێش';
+    return date.toLocaleDateString('ar-IQ');
+}
+
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function closeCommentIfOpen() {
+    // هیچی پێویست نییە، تەنها بۆ ناو onclick
+}
 </script>
 
 
