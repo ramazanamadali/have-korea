@@ -8631,10 +8631,11 @@ app.loadComments = function(movieId) {
     if (!listEl) return;
 
     db.collection('comments')
-        .where('movieId', '==', movieId)
+        .where('movieId', '==', Number(movieId))
         .orderBy('createdAt', 'desc')
         .limit(50)
-        .onSnapshot(snapshot => {
+        .get()
+        .then(snapshot => {
             const countEl = document.getElementById(`comment-count-${movieId}`);
             if (countEl) countEl.innerText = snapshot.size;
 
@@ -8674,7 +8675,8 @@ app.loadComments = function(movieId) {
                 `;
             });
             listEl.innerHTML = html;
-        }, err => {
+        })
+        .catch(err => {
             console.error('Comments error:', err);
             listEl.innerHTML = `<div class="comments-empty">کێشەیەک ڕوویدا</div>`;
         });
