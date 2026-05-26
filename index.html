@@ -63,6 +63,7 @@
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
+  const db = firebase.firestore();
 </script>
     <!-- ✅ لێرە هێنرایەوە - ناو head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -360,7 +361,7 @@
             box-shadow: 0 0 15px var(--accent-color);
         }
         
-      .section-header i {
+     .section-header i {
     font-size: 26px;
     background: linear-gradient(45deg, #8c00ff, #00d2ff, #8c00ff);
     background-size: 200% 200%;
@@ -368,21 +369,6 @@
     background-clip: text;
     -webkit-text-fill-color: transparent;
     filter: drop-shadow(0 0 20px rgba(140, 0, 255, 0.8));
-
-    /* گۆڕینی ناوی ئەنیمەیشنەکە بۆ softPulse */
-    animation: softPulse 2.5s ease-in-out infinite;
-}
-
-@keyframes softPulse {
-    0%, 100% { 
-        transform: scale(1);
-        background-position: 0% 50%;
-    }
-    50% { 
-        transform: scale(1.15); /* تەنها ١٥٪ گەورە دەبێت */
-        background-position: 100% 50%;
-        filter: drop-shadow(0 0 35px rgba(0, 210, 255, 0.9));
-    }
 }
 
         .movie-grid {
@@ -913,27 +899,247 @@
             font-weight: bold;
             color: white;
         }
+/* ═══════════════════════════════════════
+   مۆبایل — دیزاینی نوێ و پرۆفیشناڵ
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
 
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            .navbar { 
-                padding: 15px; 
-                height: auto; 
-                flex-direction: column; 
-                gap: 15px; 
-                background: rgba(10, 10, 15, 0.95);
-            }
-            .logo { width: 100%; justify-content: center; margin-bottom: 5px; }
-            .logo img { height: 45px; }
-            .search-box { width: 100%; max-width: none; }
-            .categories { width: 100%; overflow-x: auto; padding-bottom: 5px; justify-content: center; }
-            .cat-btn { white-space: nowrap; padding: 8px 20px; font-size: 12px; }
-            .main-container { margin-top: 190px; padding: 15px; }
-            .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .card { aspect-ratio: 2/3.2; }
-            .info-title { font-size: 24px; }
-            .info-desc { font-size: 14px; }
-        }
+  /* ── ناڤبار ── */
+  .navbar {
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border-bottom: 1px solid rgba(140,0,255,0.2);
+  }
+  .navbar > div:first-child {
+    width: 100%;
+    height: 62px !important;
+    display: grid !important;
+    grid-template-columns: 48px 1fr 48px !important;
+    align-items: center !important;
+    padding: 0 12px !important;
+  }
+
+  /* ── main ── */
+  .main-container {
+    margin-top: 62px !important;
+    padding: 12px 10px 10px !important;
+  }
+
+  /* ── گرید کارت ── */
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* ── کارت ── */
+  .card {
+    aspect-ratio: 2/3 !important;
+    border-radius: 10px !important;
+  }
+  .card-img { border-radius: 8px !important; }
+
+  .movie-grid > div > div:last-child {
+    padding: 4px 2px 0 !important;
+  }
+  .movie-grid > div > div:last-child > div > div:last-child > div:first-child {
+    font-size: 12px !important;
+    -webkit-line-clamp: 1 !important;
+    line-clamp: 1 !important;
+    margin-bottom: 3px !important;
+  }
+
+  /* ── سێکشن هێدەر ── */
+  .section-header {
+    font-size: 17px !important;
+    margin-bottom: 14px !important;
+    padding-bottom: 10px !important;
+  }
+
+  /* ── ناڤبارە خوارەوەکە ── */
+  .bottom-navbar { height: 60px !important; padding: 0 2px !important; }
+  .bn-item { min-width: 44px !important; padding: 5px 6px !important; gap: 2px !important; }
+  .bn-item svg { width: 20px !important; height: 20px !important; }
+  .bn-item span { font-size: 9px !important; }
+  body { padding-bottom: 66px !important; }
+
+  /* ── info box ── */
+  .info-title { font-size: 20px !important; }
+  .info-desc  { font-size: 13px !important; }
+
+  /* ══════════════════════════════════
+     پلەیەر مۆبایل - وەک ئاوێنە
+  ══════════════════════════════════ */
+
+  /* باگراوند */
+ #hero-backdrop {
+    position: fixed !important;
+    height: 100vh !important;
+    top: 0 !important;
+    filter: brightness(0.3) saturate(1.2) !important;
+    background-position: center top !important;
+    background-size: contain !important;
+background-repeat: no-repeat !important;
+background-position: center 8% !important;
+background-color: #050508 !important;
+}
+
+  /* تاریکی گرادیەنت */
+  #player-modal > div:nth-child(2) {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 35%,
+      rgba(5,5,8,0.6) 52%,
+      rgba(5,5,8,0.95) 65%,
+      rgba(5,5,8,1) 75%
+    ) !important;
+  }
+
+ #player-modal > div:last-child {
+    padding-top: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+    justify-content: flex-end !important;
+}
+
+  /* دوگمەی گەڕانەوە - فیکسد لە سەرەوە */
+  #player-modal > div:last-child > div:first-child {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 100 !important;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent) !important;
+    padding: 10px 12px 18px !important;
+  }
+
+  /* هیرۆ سێکشن - باگراوند تاریک */
+  #hero-section {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    min-height: 35vh !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    position: relative !important;
+    gap: 0 !important;
+  }
+
+  /* پۆستەر - شاراوە چونکە لە کارتەکەدایە */
+  #hero-section > div:first-child {
+    display: none !important;
+  }
+
+  /* زانیاری - شاراوە چونکە لە کارتەکەدایە */
+  #hero-section > div:last-child {
+    display: none !important;
+  }
+
+  /* کارتی گلاسی سەرەکی */
+  #player-bottom {
+    position: relative !important;
+    z-index: 10 !important;
+    background: rgba(12, 12, 18, 0.96) !important;
+    backdrop-filter: blur(40px) !important;
+    -webkit-backdrop-filter: blur(40px) !important;
+    border-radius: 24px 24px 0 0 !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 20px 16px 20px !important;
+    margin-top: 0 !important;
+    gap: 16px !important;
+  }
+
+  /* کارتی زانیاری سەرەوەی player-bottom */
+  #player-bottom::before {
+    content: '' !important;
+    display: block !important;
+  }
+
+  /* ناو و پۆستەر لە ناو کارتەکەدا */
+  #movie-title {
+    font-size: 20px !important;
+    font-weight: 900 !important;
+    color: #fff !important;
+    margin-bottom: 6px !important;
+    text-align: right !important;
+    line-height: 1.2 !important;
+  }
+
+  #hero-ratings {
+    justify-content: flex-end !important;
+    margin-bottom: 10px !important;
+    gap: 6px !important;
+  }
+
+  /* ژانەر */
+  .genre-meta-row {
+    border-radius: 14px !important;
+    padding: 10px 12px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    backdrop-filter: blur(16px) !important;
+  }
+  .type-chip { padding: 5px 12px !important; font-size: 11px !important; }
+  .gn-pill   { padding: 4px 10px !important; font-size: 10px !important; }
+
+  /* چیرۆک */
+  #movie-desc > div {
+    border-radius: 14px !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+  }
+  #movie-desc p { font-size: 12.5px !important; line-height: 1.75 !important; }
+
+  /* ئەلقەکان */
+  #episode-list .action-btn {
+    min-width: 60px !important;
+    height: 60px !important;
+    border-radius: 12px !important;
+  }
+
+  /* سێرڤەرەکان */
+  #server-list {
+    padding: 8px 26px !important;
+    border-radius: 12px !important;
+    gap: 6px !important;
+  }
+  #server-list .action-btn {
+    padding: 8px 13px !important;
+    font-size: 11px !important;
+    border-radius: 8px !important;
+  }
+
+  /* ── هیرۆ سلایدەر ── */
+  .hks-wrap { aspect-ratio: 4/3 !important; border-radius: 14px !important; }
+  .hks-title { font-size: clamp(13px, 4.5vw, 20px) !important; }
+  .hks-desc  { font-size: 10px !important; -webkit-line-clamp: 2 !important; line-clamp: 2 !important; }
+  .hks-content { bottom: 13px !important; right: 12px !important; left: 12px !important; }
+  .hks-btn { padding: 7px 13px !important; font-size: 11px !important; }
+
+  /* ── فلتەر ── */
+  .filter-navbar { margin-top: -62px !important; padding: 8px !important; }
+  .filter-dropdown { top: 52px !important; width: 96vw !important; }
+  .filter-toggle-btn { padding: 7px 14px !important; font-size: 12px !important; }
+
+  /* ── ستۆپ باری سایدبار ── */
+  .vertical-bars-btn {
+    top: 11px !important; left: 11px !important;
+    padding: 8px !important;
+    width: 36px !important; height: 36px !important;
+    align-items: center !important; justify-content: center !important;
+  }
+}
+
+/* شاشەی زۆر بچووک */
+@media (max-width: 360px) {
+  .movie-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 7px !important; }
+}
     </style>
 </head>
 
@@ -1035,6 +1241,509 @@
 </div>
 <div class="main-container" id="home-view">
     
+    <!-- ===== HERO SLIDER ===== -->
+<div id="hk-hero-slider" style="margin-bottom:28px;"></div>
+<script>
+window.addEventListener('DOMContentLoaded', function () {
+const allSliderItems = (typeof database !== 'undefined' ? database : [])
+    .filter(d => d.slider_image && d.slider_image.trim() !== '');
+
+const el = document.getElementById('hk-hero-slider');
+if (!el) return;
+
+// فانکشنی نوێکردنەوەی سلایدەر بەپێی فیلتەر
+window.updateHeroSlider = function(filterType) {
+    const sliderItems = filterType === 'all' 
+        ? allSliderItems 
+        : [];  // تەنها لە 'all' دا پیشان بدە
+    
+    if (sliderItems.length === 0) {
+        el.style.display = 'none';
+        return;
+    }
+    el.style.display = 'block';
+};
+
+const sliderItems = allSliderItems;
+if (sliderItems.length === 0) { el.style.display = 'none'; return; }
+
+  /* ───── ڕەنگی تیم ───── */
+  function getThemeRGB() {
+    const ac = getComputedStyle(document.documentElement)
+      .getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const h = ac.replace('#', '').trim();
+    return {
+      r: parseInt(h.substring(0, 2), 16),
+      g: parseInt(h.substring(2, 4), 16),
+      b: parseInt(h.substring(4, 6), 16),
+      hex: ac
+    };
+  }
+
+  const typeMap = { drama: 'دراما', movie: 'فیلم', chinese: 'چینی', japanese: 'ژاپۆنی' };
+  let cur = 0, timer, progTimer, progVal = 0;
+  const total = sliderItems.length;
+  const TMDB_KEY = '1e5953c4d635318acd9b1cb9c7010caa';
+
+  /* ───── CSS ───── */
+  const style = document.createElement('style');
+  style.textContent = `
+    .hks-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/7;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #07060c;
+      direction: rtl;
+      user-select: none;
+    }
+    @media (max-width: 768px) {
+      .hks-wrap { aspect-ratio: 16/9; border-radius: 14px; }
+    }
+    @media (max-width: 480px) {
+      .hks-wrap { aspect-ratio: 4/3; border-radius: 12px; }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    /* ── اسلایدەکان ── */
+    .hks-slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity .7s ease;
+      pointer-events: none;
+    }
+    .hks-slide.hks-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* ── وێنەی پشت ── */
+    .hks-bg {
+      position: absolute; inset: 0;
+      background-size: cover;
+      background-position: center 20%;
+      transform: scale(1.05);
+      transition: transform 8s linear;
+      will-change: transform;
+    }
+    .hks-slide.hks-active .hks-bg { transform: scale(1); }
+
+    /* ── تاریکی ── */
+    .hks-gradient {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to left,
+        rgba(0,0,0,.02) 0%,
+        rgba(0,0,0,.15) 30%,
+        rgba(0,0,0,.60) 60%,
+        rgba(0,0,0,.88) 100%
+      );
+    }
+    @media (max-width: 768px) {
+      .hks-gradient {
+        background: linear-gradient(
+          to top,
+          rgba(0,0,0,.92) 0%,
+          rgba(0,0,0,.55) 50%,
+          rgba(0,0,0,.20) 100%
+        );
+      }
+    }
+
+    /* ── ناوەڕۆک ── */
+    .hks-content {
+      position: absolute;
+      bottom: 28px; right: 22px;
+      left: 120px;
+      text-align: right;
+      z-index: 4;
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .hks-slide:not(.hks-active) .hks-content {
+      opacity: 0; transform: translateY(10px);
+    }
+    @media (max-width: 768px) {
+      .hks-content { bottom: 18px; right: 14px; left: 14px; }
+    }
+
+    /* باجی جۆر */
+    .hks-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 9px; font-weight: 800; letter-spacing: .6px;
+      padding: 3px 10px; border-radius: 6px;
+      margin-bottom: 8px;
+      font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* ژانەر */
+    .hks-genre {
+      font-size: 10px; color: rgba(255,255,255,.55);
+      font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+      margin-bottom: 6px;
+      display: -webkit-box; -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+
+    /* ناو */
+   .hks-title {
+  font-family: 'Rajdhani', 'Barlow Condensed', sans-serif;
+  font-size: clamp(18px, 4vw, 28px);
+  font-weight: 900; color: #fff;
+  letter-spacing: 1px; line-height: 1.15;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 12px rgba(0,0,0,.8);
+  display: -webkit-box; -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; overflow: hidden;
+  text-align: center;
+}
+
+    /* چیرۆک */
+    .hks-desc {
+      font-size: 11px; color: rgba(255,255,255,.70);
+      line-height: 1.65; margin-bottom: 12px;
+      font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+     @media (max-width: 480px) { .hks-desc { -webkit-line-clamp: 2; } }
+
+    /* ڕیز دوگمەو ئەمتیاز */
+    .hks-row {
+      display: flex; align-items: center; gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* دوگمەی بینین */
+    .hks-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: rgba(255,255,255,.14);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,.32);
+      color: #fff; padding: 8px 18px;
+      border-radius: 50px;
+      font-size: 12px; font-weight: 800; cursor: pointer;
+      font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+      transition: all .3s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hks-btn:active { transform: scale(.96); }
+
+    /* ئەمتیاز TMDB */
+    .hks-rating {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(0,0,0,.45);
+      border: 1px solid rgba(245,197,24,.35);
+      border-radius: 8px; padding: 4px 10px;
+    }
+    .hks-rating svg { width: 12px; height: 12px; fill: #ffd700; }
+    .hks-rating span {
+      font-size: 12px; font-weight: 800; color: #fff;
+    }
+
+    /* ── ناڤبارەکان ── */
+    .hks-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 34px; height: 34px; z-index: 10;
+      background: rgba(255,255,255,.09);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: all .3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hks-nav:active { transform: translateY(-50%) scale(.9); }
+    .hks-nav svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; }
+    .hks-nav-r { right: 12px; }
+    .hks-nav-l { left: 12px; }
+    @media (max-width: 768px) {
+      .hks-nav { width: 30px; height: 30px; }
+      .hks-nav-r { right: 8px; }
+      .hks-nav-l { left: 8px; }
+    }
+
+    /* ── نوکتەکان ── */
+    .hks-dots {
+      position: absolute; bottom: 10px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 5px; z-index: 10;
+    }
+    .hks-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,.28); cursor: pointer;
+      transition: all .35s ease;
+    }
+    .hks-dot.hks-dot-on {
+      width: 20px; border-radius: 3px;
+    }
+
+    /* ── بار ── */
+    .hks-bar {
+      position: absolute; bottom: 0; left: 0;
+      height: 2.5px; width: 0%;
+      z-index: 10;
+      transition: width .1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+  `;
+  document.head.appendChild(style);
+
+  /* ───── HTML ───── */
+  function buildHTML() {
+    const { r, g, b, hex } = getThemeRGB();
+const slides = sliderItems.map((item, i) => `
+      <div class="hks-slide ${i === 0 ? 'hks-active' : ''}" data-i="${i}">
+        <div class="hks-bg" style="background-image:url('${item.slider_image}')"></div>
+        <div class="hks-gradient"></div>
+
+        <!-- نمرەکان لە گۆشەی سەرەوەی چەپ -->
+        <div style="position:absolute;top:12px;left:12px;z-index:10;display:flex;flex-direction:column;gap:5px;">
+          
+          <div class="hks-imdb-${item.id}" style="display:none;align-items:center;gap:5px;
+            background:rgba(0,0,0,0.45);border:1px solid rgba(245,197,24,0.35);
+            border-radius:8px;padding:4px 8px;">
+            <svg width="28" height="14" viewBox="0 0 28 14">
+              <rect width="28" height="14" rx="2" fill="#f5c518"/>
+              <text x="14" y="10.5" text-anchor="middle" font-family="Arial Black" font-weight="900" font-size="7.5" fill="#000">IMDb</text>
+            </svg>
+            <span class="hks-imdb-val-${item.id}" style="font-size:12px;font-weight:800;color:#fff;"></span>
+          </div>
+
+          <div class="hks-tmdb-${item.id}" style="display:none;align-items:center;gap:5px;
+            background:rgba(0,0,0,0.45);border:1px solid rgba(1,180,228,0.35);
+            border-radius:8px;padding:4px 8px;">
+            <svg width="28" height="14" viewBox="0 0 28 14">
+              <rect width="28" height="14" rx="2" fill="#032541"/>
+              <text x="14" y="10.5" text-anchor="middle" font-family="Arial Black" font-weight="900" font-size="7" fill="#01b4e4">TMDB</text>
+            </svg>
+            <span class="hks-tmdb-val-${item.id}" style="font-size:12px;font-weight:800;color:#fff;"></span>
+          </div>
+
+        </div>
+
+        <div class="hks-content">
+          <div class="hks-title">${item.title}</div>
+          ${item.desc ? `<div class="hks-desc">${item.desc}</div>` : ''}
+          <div class="hks-row" style="align-items:flex-end;justify-content:space-between;">
+
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
+              <button class="hks-btn"
+                onclick="if(typeof app!=='undefined')app.openPlayer(database.find(d=>d.id===${item.id}))">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="#fff">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                بینین
+              </button>
+            </div>
+
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:5px;">
+              <span style="font-size:9px;font-weight:800;color:rgba(255,255,255,0.5);
+                letter-spacing:0.5px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+                ${typeMap[item.type] || 'دراما'}
+              </span>
+              ${item.genre ? `
+              <div style="display:flex;flex-wrap:wrap;gap:3px;">
+                ${item.genre.split(/[•·\-,،]/).map(g=>g.trim()).filter(Boolean).map(g=>`
+                  <span style="font-size:8.5px;color:rgba(255,255,255,0.7);
+                    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);
+                    border-radius:4px;padding:2px 7px;
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${g}</span>
+                `).join('')}
+              </div>` : ''}
+            </div>
+
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    const dots = sliderItems.map((_, i) =>
+      `<span class="hks-dot ${i === 0 ? 'hks-dot-on' : ''}" data-i="${i}"></span>`
+    ).join('');
+
+    el.innerHTML = `
+      <div class="hks-wrap" id="hksWrap">
+        ${slides}
+        ${total > 1 ? `
+          <button class="hks-nav hks-nav-r" id="hksNavR" aria-label="پێشوو">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button class="hks-nav hks-nav-l" id="hksNavL" aria-label="دواتر">
+            <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+          <div class="hks-dots" id="hksDots">${dots}</div>
+        ` : ''}
+        <div class="hks-bar" id="hksBar"
+          style="background:linear-gradient(90deg,rgba(${r},${g},${b},1),rgba(${r},${g},${b},.5));">
+        </div>
+      </div>
+    `;
+
+    applyDotColor();
+  }
+
+  function applyDotColor() {
+    const { r, g, b } = getThemeRGB();
+    document.querySelectorAll('.hks-dot.hks-dot-on').forEach(d => {
+      d.style.background = `rgba(${r},${g},${b},1)`;
+      d.style.boxShadow = `0 0 6px rgba(${r},${g},${b},.7)`;
+    });
+    document.querySelectorAll('.hks-dot:not(.hks-dot-on)').forEach(d => {
+      d.style.background = 'rgba(255,255,255,.28)';
+      d.style.boxShadow = 'none';
+    });
+    const btn = document.querySelector('.hks-btn');
+    if (btn) {
+      btn.onmouseover = function () {
+        this.style.background = `rgba(${r},${g},${b},.45)`;
+        this.style.borderColor = `rgba(${r},${g},${b},.7)`;
+      };
+      btn.onmouseout = function () {
+        this.style.background = 'rgba(255,255,255,.14)';
+        this.style.borderColor = 'rgba(255,255,255,.32)';
+      };
+    }
+  }
+
+  /* ───── جوڵان ───── */
+  function goTo(n) {
+    const slides = document.querySelectorAll('.hks-slide');
+    const dots   = document.querySelectorAll('.hks-dot');
+    slides.forEach((s, i) => s.classList.toggle('hks-active', i === n));
+    dots.forEach((d, i) => {
+      d.classList.toggle('hks-dot-on', i === n);
+    });
+    applyDotColor();
+    startProgress();
+  }
+
+  function next() { cur = (cur + 1) % total; goTo(cur); }
+  function prev() { cur = (cur - 1 + total) % total; goTo(cur); }
+
+  function resetAuto() {
+    clearInterval(timer);
+    if (total > 1) timer = setInterval(next, 5500);
+  }
+
+  function startProgress() {
+    clearInterval(progTimer); progVal = 0;
+    const bar = document.getElementById('hksBar');
+    if (bar) bar.style.width = '0%';
+    if (total < 2) return;
+    progTimer = setInterval(() => {
+      progVal += 100 / (5500 / 17);
+      if (bar) bar.style.width = Math.min(progVal, 100) + '%';
+      if (progVal >= 100) clearInterval(progTimer);
+    }, 17);
+  }
+
+  /* ───── هێنانی نمرەی TMDB ───── */
+  async function fetchRatings() {
+    for (const item of sliderItems) {
+      try {
+        // TMDB
+        if (item.tmdb_id) {
+          const mt = (item.type === 'movie' || item.subtype === 'movie'
+            || item.type === 'chinese' || item.type === 'japanese') ? 'movie' : 'tv';
+          const res = await fetch(
+            `https://api.themoviedb.org/3/${mt}/${item.tmdb_id}?api_key=${TMDB_KEY}`
+          );
+          const data = await res.json();
+          const val = data.vote_average
+            ? (Math.round(data.vote_average * 10) / 10).toFixed(1)
+            : null;
+          if (val) {
+            document.querySelectorAll(`.hks-tmdb-${item.id}`).forEach(el => {
+              el.style.display = 'inline-flex';
+            });
+            document.querySelectorAll(`.hks-tmdb-val-${item.id}`).forEach(el => {
+              el.textContent = val;
+            });
+          }
+        }
+        // IMDb
+        const clean = item.title.replace(/\d{4}/g, '').replace(/[^a-zA-Z0-9\s]/g, '').trim();
+        const omdbRes = await fetch(
+          `https://www.omdbapi.com/?t=${encodeURIComponent(clean)}&apikey=87e20d0a`
+        );
+        const omdbData = await omdbRes.json();
+        if (omdbData.imdbRating && omdbData.imdbRating !== 'N/A') {
+          document.querySelectorAll(`.hks-imdb-${item.id}`).forEach(el => {
+            el.style.display = 'inline-flex';
+          });
+          document.querySelectorAll(`.hks-imdb-val-${item.id}`).forEach(el => {
+            el.textContent = omdbData.imdbRating;
+          });
+        }
+      } catch (_) {}
+    }
+  }
+
+
+
+
+
+
+
+  
+  /* ───── دەستپێکردن ───── */
+  buildHTML();
+  resetAuto();
+  startProgress();
+  fetchRatings();
+
+  /* ───── بەکارهێنان ───── */
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#hksNavR')) { prev(); resetAuto(); }
+    if (e.target.closest('#hksNavL')) { next(); resetAuto(); }
+    const dot = e.target.closest('.hks-dot');
+    if (dot) { cur = +dot.dataset.i; goTo(cur); resetAuto(); }
+  });
+
+  /* ───── swipe بۆ مۆبایل ───── */
+  let touchX = 0;
+  el.addEventListener('touchstart', e => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+  el.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 40) { dx > 0 ? prev() : next(); resetAuto(); }
+  }, { passive: true });
+
+  /* ───── ئەگەر تیم گۆڕی، ڕەنگەکان نوێ بکەرەوە ───── */
+  const origChangeTheme = window.changeTheme;
+  if (origChangeTheme) {
+    window.changeTheme = function () {
+      origChangeTheme.apply(this, arguments);
+      setTimeout(() => {
+        const { r, g, b } = getThemeRGB();
+        const bar = document.getElementById('hksBar');
+        if (bar) bar.style.background =
+          `linear-gradient(90deg,rgba(${r},${g},${b},1),rgba(${r},${g},${b},.5))`;
+        document.querySelectorAll('.hks-badge').forEach(bd => {
+          bd.style.background = `rgba(${r},${g},${b},.72)`;
+          bd.style.borderColor = `rgba(${r},${g},${b},.4)`;
+        });
+        applyDotColor();
+      }, 100);
+    };
+  }
+});
+</script>
+<!-- ===== كۆتایی HERO SLIDER ===== -->
+
     <div class="section-header">
         <i class="fas fa-bolt"></i>
         <span>نوێترین زیادکراوەکان</span>
@@ -1149,16 +1858,25 @@
   <div class="movie-grid" id="grid"></div>
 <div id="pagination-container" style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:30px 0 10px;"></div>
 </div>
-  <div id="player-modal">
-<!-- باگراوندی Hero -->
-  <div id="hero-backdrop" style="
-    position:fixed;inset:0;
-    background-size:cover;background-position:center top;
+  
+
+
+<div id="player-modal">
+
+
+
+
+
+<div id="hero-backdrop" style="
+    position:fixed;
+    top:0;left:0;right:0;
+    height:100vh;
+    background-size:cover;
+    background-position:center top;
     background-repeat:no-repeat;
     z-index:0;
     transition:background-image 0.5s ease;
-  "></div>
-
+"></div>
   <!-- تەڵخی سەرەوە -->
   <div style="
     position:fixed;inset:0;z-index:1;
@@ -1241,22 +1959,50 @@
       </div>
     </div>
 
-
-
-
-
-
-
-
-    
-
-
-
-
   </div>
 </div>
-    <!-- بەشی Hero: پۆستەر + زانیاری -->
-    <div style="
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- بەشی Hero: پۆستەر + زانیاری -->
+    <div id="hero-section" style="
       display:flex;align-items:flex-end;gap:18px;
       padding:0 16px 30px;
       min-height:260px;
@@ -1395,7 +2141,7 @@
 
 
       <!-- نمرەدان و تڕایلەر ئۆتۆماتیک لێرە زیاد دەبێت -->
-
+<div id="hk-comment-section"></div>
     </div><!-- /player-bottom -->
   </div><!-- /ناوەڕۆک -->
 </div><!-- /player-modal -->
@@ -1489,6 +2235,7 @@
     title: "S line 2025",
     tmdb_id: 232402,
     type: "drama",
+    
     genre: "ڕۆمانسی • خەیاڵی", 
     desc: "   ",
     image: "sline.png",
@@ -1571,6 +2318,7 @@
     title: "trigger 2025",
     type: "drama",
         tmdb_id: 238084,  // ← ئایدی TMDB
+    slider_image: "https://image.tmdb.org/t/p/original/ayeTPl4AvAWreEQxCbiF5IG1IyE.jpg",  // ← ئەمە
 
     genre: " ئەکشن • سەرکێشی • تاوانکاری• ", 
     desc: "لە وڵاتێکی وەک کۆریای باشووردا کە یاساکانی هەڵگرتنی چەک زۆر توندن و تاوانی تەقەکردن تێیدا دەگمەنە، لەناکاو کۆمەڵێک چەکی نایاسایی و بێ مۆڵەت بە وڵاتدا بڵاو دەبنەوە. ئەمەش دەبێتە هۆی دروستبوونی پشێوی و زیادبوونی تاوانە خوێناوییەکان.",
@@ -1692,6 +2440,7 @@
         title: "devils 2023",
         type: "movie",
             tmdb_id: 952476,  // ← ئایدی TMDB
+   slider_image: "https://image.tmdb.org/t/p/original/sbiHRLfGpOpQ1jPDAHZeVYU3bQK.jpg",
 
         genre: "ئەکشن • هەستبزوێن • تاوانکاری•",
         desc: "لێکۆڵەرێکی پۆلیس لە کاتی گەڕان بە دوای بکوژێکی زنجیرەیی کە هاوکارەکەی کوشتووە، تووشی ڕووداوێک دەبێت. کاتێک بەئاگا دێتەوە، دەبینێت جەستەی لەگەڵ بکوژەکە گۆڕدراوەتەوە! ئێستا دەبێت لەناو جەستەی بکوژەکە جەنگێک بکات بۆ گەڕاندنەوەی ناسنامەی خۆی و ڕێگریکردن لە تاوانێکی نوێ.",
@@ -1733,6 +2482,7 @@
     title: "Bloody Flower 2026",
     type: "drama",
     tmdb_id: 310024,      // ← ئایدی ڕاستەکە
+    slider_image: "https://image.tmdb.org/t/p/original/5T4ij5RgI7y5UHNgI2scH8BU5J9.jpg",  // ← ئەمە
 
     genre: " تاوانکاری • پزیشکی",
     desc: "(لی وو گیۆم) بکوژێکی زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
@@ -1786,6 +2536,7 @@
     title: "surely tomorrow 2025",
     type: "drama",
         tmdb_id: 281005,  // ← ئایدی TMDB
+    slider_image: "https://image.tmdb.org/t/p/original/fZSHDrZgR4PS3YMzfO3EvAYEiNu.jpg",  // ← ئەمە
 
     genre: "ڕۆمانسی - درامایی",
     desc:"(لی کیۆنگ دۆ) کارمەندێکی ئاسایی ڕۆژنامەنووس کار دەکات، کاتێک تەمەنی ۲۰ سال بوو، له گروپی شانودا (سيۆ جی وۆ)ـی ناسی و عاشقی یەکتر بوون بەڵام بەهۆی بێئومێد بوونی (سیۆ جی وۆ) لە ژیان دووجار جیابوونەوە",
@@ -2083,7 +2834,326 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
     document.getElementById('player-modal').style.display = 'block';
                 // پۆستەر
 document.getElementById('hero-poster-img').src = item.image;
+// زیادکردنی ناو و نمرە لە سەرەوەی player-bottom بۆ مۆبایل
+if (window.innerWidth <= 768) {
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex = ac.replace('#','').trim();
+    const r = parseInt(hex.substring(0,2),16);
+    const g = parseInt(hex.substring(2,4),16);
+    const b = parseInt(hex.substring(4,6),16);
 
+    const typeMap = { drama:'دراما', movie:'فیلم', chinese:'چینی', japanese:'ژاپۆنی' };
+    const genreIcons = {
+        'ڕۆمانسی':'fa-heart','ئەکشن':'fa-bolt','کۆمیدی':'fa-face-laugh',
+        'تاوانکاری':'fa-user-secret','خەیاڵی':'fa-wand-sparkles',
+        'دراما':'fa-masks-theater','هەستبزوێن':'fa-droplet',
+        'پزیشکی':'fa-stethoscope','سەرکێشی':'fa-fire'
+    };
+    const genres = (item.genre||'').split(/[•\-,،]/).map(x=>x.trim()).filter(Boolean);
+    const genrePills = genres.map(gn=>`
+        <span style="display:inline-flex;align-items:center;gap:4px;
+            background:rgba(${r},${g},${b},0.12);
+            border:1px solid rgba(${r},${g},${b},0.3);
+            color:rgba(255,255,255,0.8);
+            font-size:10px;font-weight:700;
+            padding:3px 9px;border-radius:20px;
+            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+            ${genreIcons[gn]?`<i class="fas ${genreIcons[gn]}" style="font-size:9px;color:rgba(${r},${g},${b},1);"></i>`:''}
+            ${gn}
+        </span>`).join('');
+
+    const titleHtml = `
+    <div id="mobile-info-card" style="margin-bottom:18px;">
+
+        <!-- ڕیزی سەرەوە: زانیاری + پۆستەر -->
+        <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:14px;">
+
+            <!-- زانیاری چەپ -->
+            <div style="flex:1;min-width:0;">
+
+                <!-- جۆر -->
+                <div style="display:inline-flex;align-items:center;gap:5px;
+                    background:rgba(${r},${g},${b},0.15);
+                    border:1px solid rgba(${r},${g},${b},0.4);
+                    color:rgba(${r},${g},${b},1);
+                    font-size:10px;font-weight:800;
+                    padding:3px 10px;border-radius:6px;
+                    margin-bottom:8px;
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+                    ${typeMap[item.type]||'دراما'}
+                </div>
+
+                <!-- ناو -->
+                <h2 style="color:#fff;font-size:19px;font-weight:900;
+                    margin:0 0 8px;line-height:1.2;
+                    font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;
+                    text-shadow:0 2px 10px rgba(0,0,0,0.8);">
+                    ${item.title}
+                </h2>
+
+                <!-- نمرەکان -->
+                <div id="mobile-ratings-${item.id}" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;"></div>
+
+                <!-- دوگمەی سەیرکردن -->
+                <button onclick="document.getElementById('video-frame').scrollIntoView({behavior:'smooth',block:'center'})"
+                    style="display:inline-flex;align-items:center;gap:7px;
+                    background:rgba(${r},${g},${b},0.2);
+                    border:1px solid rgba(${r},${g},${b},0.5);
+                    color:#fff;padding:9px 18px;border-radius:50px;
+                    font-size:12px;font-weight:800;cursor:pointer;
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+                    box-shadow:0 4px 15px rgba(${r},${g},${b},0.25);
+                    transition:all 0.3s ease;">
+                    <div style="width:22px;height:22px;border-radius:50%;
+                        background:rgba(${r},${g},${b},0.4);
+                        border:1px solid rgba(${r},${g},${b},0.6);
+                        display:flex;align-items:center;justify-content:center;">
+                        <i class="fas fa-play" style="font-size:8px;margin-right:-1px;"></i>
+                    </div>
+                    سەیرکردن
+                </button>
+            </div>
+
+            <!-- پۆستەر ڕاست -->
+            <div style="flex-shrink:0;position:relative;">
+             <div style="width:155px;height:232px;border-radius:14px;overflow:hidden;
+    border:2px solid rgba(${r},${g},${b},0.4);
+    box-shadow:0 8px 25px rgba(0,0,0,0.6),0 0 15px rgba(${r},${g},${b},0.2);">
+    <img src="${item.image}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- ژانەر -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;
+            background:rgba(255,255,255,0.04);
+            border:1px solid rgba(255,255,255,0.08);
+            border-radius:12px;">
+            <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;width:100%;">
+                <i class="fas fa-tags" style="color:rgba(${r},${g},${b},0.7);font-size:10px;"></i>
+                <span style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.35);
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;letter-spacing:1px;">ژانەر</span>
+            </div>
+            ${genrePills}
+        </div>
+
+    </div>`;
+
+    const pb = document.getElementById('player-bottom');
+    const old = document.getElementById('mobile-info-card');
+    if (old) old.remove();
+    pb.insertAdjacentHTML('afterbegin', titleHtml);
+
+    // نمرەکان هێنان
+    app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
+        const ratingsDiv = document.getElementById(`mobile-ratings-${item.id}`);
+        if (!ratingsDiv) return;
+        ratingsDiv.innerHTML = '';
+        if (imdb) ratingsDiv.innerHTML += `
+            <div style="display:inline-flex;align-items:center;gap:4px;
+                background:rgba(0,0,0,0.4);border:1px solid rgba(245,197,24,0.35);
+                border-radius:7px;padding:3px 8px;">
+                <svg width="26" height="13" viewBox="0 0 26 13">
+                    <rect width="26" height="13" rx="2" fill="#f5c518"/>
+                    <text x="13" y="9.5" text-anchor="middle" font-family="Arial Black"
+                        font-weight="900" font-size="7" fill="#000">IMDb</text>
+                </svg>
+                <span style="font-size:11px;font-weight:800;color:#fff;">${imdb}</span>
+            </div>`;
+        if (tmdb) ratingsDiv.innerHTML += `
+            <div style="display:inline-flex;align-items:center;gap:4px;
+                background:rgba(0,0,0,0.4);border:1px solid rgba(1,180,228,0.35);
+                border-radius:7px;padding:3px 8px;">
+                <svg width="26" height="13" viewBox="0 0 26 13">
+                    <rect width="26" height="13" rx="2" fill="#032541"/>
+                    <text x="13" y="9.5" text-anchor="middle" font-family="Arial Black"
+                        font-weight="900" font-size="6.5" fill="#01b4e4">TMDB</text>
+                </svg>
+                <span style="font-size:11px;font-weight:800;color:#fff;">${tmdb}</span>
+            </div>`;
+    });
+}
+// ── هێنانی کاتی دراما/فیلم ──
+(async function fetchRuntime() {
+    const TMDB_KEY = '1e5953c4d635318acd9b1cb9c7010caa';
+    const OMDB_KEY = '87e20d0a';
+    const mediaType = (item.type === 'movie' || item.subtype === 'movie'
+        || item.type === 'chinese' || item.type === 'japanese') ? 'movie' : 'tv';
+    
+    let minutes = 0;
+    let seasons = 0;
+    let networks = []; // ← نوێ
+
+    const cached = localStorage.getItem(`runtime_${item.id}`);
+    if (cached) {
+        minutes = parseInt(cached);
+    } else {
+        if (item.tmdb_id) {
+            try {
+                const res = await fetch(
+                    `https://api.themoviedb.org/3/${mediaType}/${item.tmdb_id}?api_key=${TMDB_KEY}&language=en-US`
+                );
+                const data = await res.json();
+                if (mediaType === 'movie') {
+                    minutes = data.runtime || 0;
+                } else {
+                    minutes = (data.episode_run_time && data.episode_run_time[0]) || 0;
+                }
+            } catch(e) {}
+        }
+
+        if (!minutes) {
+            try {
+                const clean = item.title.replace(/\d{4}/g, '').replace(/[^a-zA-Z0-9\s]/g, '').trim();
+                const res = await fetch(
+                    `https://www.omdbapi.com/?t=${encodeURIComponent(clean)}&apikey=${OMDB_KEY}`
+                );
+                const data = await res.json();
+                if (data.Runtime && data.Runtime !== 'N/A') {
+                    minutes = parseInt(data.Runtime) || 0;
+                }
+            } catch(e) {}
+        }
+
+        if (minutes) localStorage.setItem(`runtime_${item.id}`, minutes);
+    }
+
+    if (item.tmdb_id) {
+        try {
+            const apiRes = await fetch(
+                `https://api.themoviedb.org/3/${mediaType}/${item.tmdb_id}?api_key=${TMDB_KEY}&language=en-US`
+            );
+            const apiData = await apiRes.json();
+            
+            if (mediaType === 'tv') {
+                seasons = apiData.number_of_seasons || 0;
+                networks = apiData.networks || [];
+                if (seasons) localStorage.setItem(`seasons_${item.id}`, seasons);
+            }
+            
+            if (mediaType === 'movie') {
+                networks = (apiData.production_companies || []).filter(c => c.logo_path);
+            }
+            
+        } catch(e) {}
+    }
+
+    if (!minutes && !seasons && !networks.length) return;
+
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex2 = ac.replace('#','').trim();
+    const rv = parseInt(hex2.substring(0,2),16);
+    const gv = parseInt(hex2.substring(2,4),16);
+    const bv = parseInt(hex2.substring(4,6),16);
+
+    let badgesHTML = '';
+
+    if (minutes) {
+        badgesHTML += `
+        <div style="
+            display:inline-flex;align-items:center;gap:5px;
+            background:rgba(255,255,255,0.05);
+            border:1px solid rgba(255,255,255,0.12);
+            border-radius:20px;padding:4px 11px;
+        ">
+            <i class="fas fa-clock" style="color:rgba(255,255,255,0.45);font-size:10px;"></i>
+            <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+                ${minutes} خولەک${mediaType === 'tv' ? ' / ئەلقە' : ''}
+            </span>
+        </div>`;
+    }
+if (seasons && mediaType === 'tv' && item.type === 'drama') {
+    badgesHTML += `
+    <div style="
+        display:inline-flex;align-items:center;gap:5px;
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,255,255,0.12);
+        border-radius:20px;padding:4px 11px;
+    ">
+        <i class="fas fa-layer-group" style="color:rgba(255,255,255,0.45);font-size:10px;"></i>
+        <span style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.75);
+            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+            ژمارەی وەرز : ${seasons}
+        </span>
+    </div>`;
+}
+// ── نێتۆرک ── دیزاینی نوێ
+    if (networks.length) {
+        const netHTML = networks.map(n => `
+            <div style="
+                position:relative;
+                display:inline-flex;align-items:center;gap:8px;
+                background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03));
+                backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+                border:1px solid rgba(255,255,255,0.12);
+                border-top:1px solid rgba(255,255,255,0.2);
+                border-radius:14px;padding:6px 14px 6px 8px;
+                box-shadow:0 4px 15px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.1);
+                overflow:hidden;
+                transition:all 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 25px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.15)';this.style.borderColor='rgba(255,255,255,0.25)'"
+                onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.3),inset 0 1px 0 rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.12)'">
+                
+                <!-- درەوشانەوەی گۆشە -->
+                <div style="
+                    position:absolute;top:0;left:0;right:0;height:1px;
+                    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);
+                    pointer-events:none;">
+                </div>
+
+                <!-- لۆگۆ -->
+                <div style="
+                    width:32px;height:32px;border-radius:10px;
+                    background:rgba(0,0,0,0.4);
+                    border:1px solid rgba(255,255,255,0.1);
+                    display:flex;align-items:center;justify-content:center;
+                    overflow:hidden;flex-shrink:0;
+                    box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+                    ${n.logo_path 
+                        ? `<img src="https://image.tmdb.org/t/p/w92${n.logo_path}" 
+                            style="width:100%;height:100%;object-fit:contain;padding:4px;">`
+                        : `<i class="fas fa-tv" style="color:rgba(${rv},${gv},${bv},1);font-size:13px;filter:drop-shadow(0 0 6px rgba(${rv},${gv},${bv},0.8));"></i>`
+                    }
+                </div>
+
+                <!-- ناو -->
+                <span style="
+                    font-size:12px;font-weight:800;
+                    color:rgba(255,255,255,0.9);
+                    letter-spacing:0.3px;
+                    text-shadow:0 1px 4px rgba(0,0,0,0.5);
+                    white-space:nowrap;">
+                    ${n.name}
+                </span>
+            </div>`).join('');
+        
+        badgesHTML += `
+        <div style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;">
+            ${netHTML}
+        </div>`;
+    }
+    const runtimeHTML = `
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px;">
+            ${badgesHTML}
+        </div>`;
+
+    // دێسکتۆپ
+    const watchBtn = document.querySelector('#hero-section button');
+    if (watchBtn) watchBtn.insertAdjacentHTML('afterend', runtimeHTML);
+
+    // مۆبایل
+    const mobileBtn = document.querySelector('#mobile-info-card button');
+    if (mobileBtn) {
+        const wrapper = mobileBtn.parentElement;
+        wrapper.style.display = 'flex';
+        wrapper.style.flexDirection = 'column';
+        wrapper.style.alignItems = 'flex-start';
+        mobileBtn.insertAdjacentHTML('afterend', runtimeHTML);
+    }
+
+})();
 // باگراوند لە TMDB
 const TMDB_KEY = '1e5953c4d635318acd9b1cb9c7010caa';
 const mediaType = (item.type === 'movie' || item.subtype === 'movie'
@@ -2181,33 +3251,22 @@ app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
 
     document.getElementById('movie-genre').innerHTML = `
     <div class="genre-meta-row">
-
-        <!-- ڕیزی سەرەوە: جۆر + لێبڵێو -->
         <div class="gn-top-row">
-
             <div class="type-chip" style="--tc:${t.color};">
                 <i class="fas ${t.icon}"></i>
                 <span>${t.label}</span>
             </div>
-
             <div class="gn-section-label">
                 <i class="fas fa-tags"></i>
                 <span>ژانەر</span>
             </div>
-
         </div>
-
-        <!-- خەتی جیاکەرەوە -->
         <div class="gn-full-divider"></div>
-
-        <!-- ژانەرەکان -->
         <div class="genre-pills-wrap">
             ${genrePills}
         </div>
-
     </div>`;
 
-    // شاردنەوەی عونصرە کۆنەکان
     ['movie-type-display'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
@@ -2215,7 +3274,6 @@ app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
     const sep = document.getElementById('movie-genre').nextElementSibling;
     if (sep && sep.tagName === 'SPAN') sep.style.display = 'none';
 
-    // زیادکردنی CSS ئەگەر پێشتر نەبوو
     if (!document.getElementById('genre-meta-style')) {
         const s = document.createElement('style');
         s.id = 'genre-meta-style';
@@ -2296,7 +3354,7 @@ app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(${r},${g},${b},0.2);
         }
-      .gn-pill i {
+        .gn-pill i {
             font-size: 10px;
             color: ${al};
             opacity: 0.85;
@@ -2337,7 +3395,6 @@ app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
         document.head.appendChild(s);
     }
 })();
-
 
                 (function(){
     const ac  = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
@@ -2660,46 +3717,56 @@ if (writers.length === 0 && mediaType === 'tv' && data.created_by) {
             })
             .catch(() => {});
     }
-    
     let html = '<div class="credits-wrapper" style="display:flex;flex-direction:column;gap:10px;">';
-    
-    if (item.translators && item.translators.length > 0) {
-        item.translators.forEach(translator => {
-            html += `
-                <div class="credit-card" onclick="app.showPersonWorks('translator', '${translator.name}')">
-                    <img src="${translator.avatar}" alt="${translator.name}">
-                    <div class="credit-info">
-                        <span class="credit-role">وەرگێڕ</span>
-                        <span class="credit-name" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;">${translator.name}</span>
-                    </div>
-                </div>
-            `;
-        });
-    }
-    
-    if (item.technician) {
-        html += `
-            <div class="credit-card" onclick="app.showPersonWorks('technician', '${item.technician.name}')">
-                <img src="${item.technician.avatar}" alt="${item.technician.name}">
-                <div class="credit-info">
-                    <span class="credit-role">تەکنیکار</span>
-                    <span class="credit-name" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;">${item.technician.name}</span>
-                </div>
-            </div>
-        `;
-    }
 
-    if (item.poster_designer) {
+const flagSVG = `<div class="krd-flag"><svg viewBox="0 0 30 20" xmlns="http://www.w3.org/2000/svg"><rect width="30" height="6.6" fill="#e8252a"/><rect y="6.6" width="30" height="6.8" fill="#fff"/><rect y="13.4" width="30" height="6.6" fill="#009f3d"/><circle cx="15" cy="10" r="3.2" fill="#f7c600"/><circle cx="15" cy="10" r="1.8" fill="#e8252a"/><g fill="#f7c600"><rect x="14.5" y="6" width="1" height="1.5"/><rect x="14.5" y="12.5" width="1" height="1.5"/><rect x="11.5" y="9.5" width="1.5" height="1"/><rect x="17" y="9.5" width="1.5" height="1"/><rect x="12.2" y="7.2" width="1" height="1" transform="rotate(45 12.7 7.7)"/><rect x="16.8" y="7.2" width="1" height="1" transform="rotate(45 17.3 7.7)"/><rect x="12.2" y="11.8" width="1" height="1" transform="rotate(45 12.7 12.3)"/><rect x="16.8" y="11.8" width="1" height="1" transform="rotate(45 17.3 12.3)"/></g></svg></div>`;
+
+if (item.translators && item.translators.length > 0) {
+    item.translators.forEach(translator => {
         html += `
-            <div class="credit-card" onclick="app.showPersonWorks('poster_designer', '${item.poster_designer.name}')">
-                <img src="${item.poster_designer.avatar}" alt="${item.poster_designer.name}">
+            <div class="credit-card" onclick="app.showPersonWorks('translator', '${translator.name}')">
+                <div class="avatar-wrap">
+                    <img src="${translator.avatar}" alt="${translator.name}" class="avatar">
+                    ${flagSVG}
+                </div>
                 <div class="credit-info">
-                    <span class="credit-role">بەرگساز</span>
-                    <span class="credit-name" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:0.5px;">${item.poster_designer.name}</span>
+                    <span class="credit-role">وەرگێڕ</span>
+                    <span class="credit-name" style="font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${translator.name}</span>
                 </div>
             </div>
         `;
-    }
+    });
+}
+
+if (item.technician) {
+    html += `
+        <div class="credit-card" onclick="app.showPersonWorks('technician', '${item.technician.name}')">
+            <div class="avatar-wrap">
+                <img src="${item.technician.avatar}" alt="${item.technician.name}" class="avatar">
+                ${flagSVG}
+            </div>
+            <div class="credit-info">
+                <span class="credit-role">تەکنیکار</span>
+                <span class="credit-name" style="font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${item.technician.name}</span>
+            </div>
+        </div>
+    `;
+}
+
+if (item.poster_designer) {
+    html += `
+        <div class="credit-card" onclick="app.showPersonWorks('poster_designer', '${item.poster_designer.name}')">
+            <div class="avatar-wrap">
+                <img src="${item.poster_designer.avatar}" alt="${item.poster_designer.name}" class="avatar">
+                ${flagSVG}
+            </div>
+            <div class="credit-info">
+                <span class="credit-role">بەرگساز</span>
+                <span class="credit-name" style="font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${item.poster_designer.name}</span>
+            </div>
+        </div>
+    `;
+}
     
     html += '</div>';
     container.innerHTML += html;
@@ -3259,6 +4326,9 @@ goHome: function() {
     if (bd) { bd.style.backgroundImage = ''; bd.style.filter = ''; }
     const hr = document.getElementById('hero-ratings');
     if (hr) hr.innerHTML = '';
+    if(window.HKComments) HKComments.close();
+const cs = document.getElementById('hk-comment-section');
+if(cs) cs.innerHTML = '';
 },
 
 
@@ -3304,12 +4374,11 @@ goHome: function() {
     if(document.getElementById('player-modal').style.display === 'block') this.goHome();
 },
 filter: function(type, btnElement) {
-    // تۆماری جۆری هەڵبژاردراو
     this.currentFilter = type;
+    if (window.updateHeroSlider) window.updateHeroSlider(type);
     
     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
     btnElement.classList.add('active');
-
     const filterNav = document.getElementById('filter-navbar');
     
     // فلتەری ژانر و ساڵ تەنها بۆ دراما، فیلم، و چینی نیشان بدە
@@ -3533,6 +4602,8 @@ renderTrailerSection: async function(item) {
         const html = `<div class="trailer-section" style="margin-top:24px;"><div style="display:inline-flex;align-items:center;gap:8px;background:rgba(${r},${g},${b},0.08);border:1px solid rgba(${r},${g},${b},0.25);border-radius:50px;padding:6px 14px 6px 10px;margin-bottom:12px;"><i class="fas fa-film" style="color:var(--accent-color);font-size:13px;"></i><span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">تڕایلەر</span></div><div style="position:relative;padding-bottom:56.25%;height:0;border-radius:16px;overflow:hidden;border:1px solid rgba(${r},${g},${b},0.3);box-shadow:0 0 30px rgba(${r},${g},${b},0.15);"><iframe src="https://www.youtube.com/embed/${trailer.key}?rel=0" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen loading="lazy"></iframe></div></div>`;
        const ratingWrapper = document.querySelector('.rating-wrapper');
 if (ratingWrapper) ratingWrapper.insertAdjacentHTML('beforebegin', html);
+// ← ئەمەی نوێ زیاد بکە
+setTimeout(() => app.renderMediaImages(item), 200);
     } catch(e) {}
 }
 }
@@ -4017,6 +5088,7 @@ bs.textContent=`.btn-modal-create,.apply-btn,.submit-rating-btn,#modal-submitFor
 function bnFilter(type, btn) {
     document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    if (window.updateHeroSlider) window.updateHeroSlider(type);
 
     const topBtn = document.querySelector(`.cat-btn[onclick="app.filter('${type}', this)"]`);
     if (topBtn) {
@@ -4490,234 +5562,7 @@ body {
     pointer-events: none;
 }
 
-/* ========== COMMENT SECTION ========== */
-.comment-section {
-    margin-top: 28px;
-    padding: 0 16px;
-}
-.comment-section-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(140,0,255,0.08);
-    border: 1px solid rgba(140,0,255,0.25);
-    border-radius: 50px;
-    padding: 6px 14px 6px 10px;
-    margin-bottom: 16px;
-}
-.comment-section-header i {
-    color: var(--accent-color);
-    font-size: 13px;
-}
-.comment-section-header span {
-    font-size: 12px;
-    font-weight: 800;
-    color: rgba(255,255,255,0.7);
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-}
 
-/* باکسی نووسینی کۆمێنت */
-.comment-input-wrap {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    align-items: flex-end;
-}
-.comment-input-wrap img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid rgba(140,0,255,0.5);
-    flex-shrink: 0;
-}
-.comment-input-box {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(140,0,255,0.25);
-    border-radius: 14px;
-    padding: 10px 14px;
-    color: #fff;
-    font-size: 13px;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-    resize: none;
-    outline: none;
-    min-height: 44px;
-    max-height: 120px;
-    direction: rtl;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    overflow-y: auto;
-}
-.comment-input-box:focus {
-    border-color: rgba(140,0,255,0.6);
-    box-shadow: 0 0 15px rgba(140,0,255,0.15);
-}
-.comment-input-box::placeholder {
-    color: rgba(255,255,255,0.3);
-}
-.comment-send-btn {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: var(--accent-color);
-    border: none;
-    color: #fff;
-    font-size: 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(140,0,255,0.4);
-}
-.comment-send-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 6px 20px rgba(140,0,255,0.6);
-}
-.comment-send-btn:disabled {
-    background: rgba(255,255,255,0.1);
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* نیشاندەری داخلبوون */
-.comment-login-prompt {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(140,0,255,0.06);
-    border: 1px solid rgba(140,0,255,0.2);
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 20px;
-}
-.comment-login-prompt i {
-    color: rgba(140,0,255,0.8);
-    font-size: 20px;
-    flex-shrink: 0;
-}
-.comment-login-prompt p {
-    margin: 0;
-    color: rgba(255,255,255,0.6);
-    font-size: 12px;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-    line-height: 1.6;
-}
-.comment-login-prompt button {
-    margin-right: auto;
-    background: rgba(140,0,255,0.2);
-    border: 1px solid rgba(140,0,255,0.4);
-    color: #fff;
-    padding: 7px 16px;
-    border-radius: 50px;
-    font-size: 12px;
-    font-weight: 800;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.3s;
-    flex-shrink: 0;
-}
-.comment-login-prompt button:hover {
-    background: rgba(140,0,255,0.35);
-}
-
-/* کارتی کۆمێنت */
-.comment-item {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 14px;
-    animation: commentFadeIn 0.3s ease;
-}
-@keyframes commentFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-.comment-item img {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1.5px solid rgba(140,0,255,0.4);
-    flex-shrink: 0;
-}
-.comment-bubble {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 0 14px 14px 14px;
-    padding: 10px 13px;
-    position: relative;
-}
-.comment-name {
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--accent-light);
-    margin-bottom: 4px;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-}
-.comment-text {
-    font-size: 13px;
-    color: rgba(255,255,255,0.82);
-    line-height: 1.6;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-    direction: rtl;
-    word-break: break-word;
-}
-.comment-meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 6px;
-}
-.comment-time {
-    font-size: 10px;
-    color: rgba(255,255,255,0.3);
-}
-.comment-delete-btn {
-    background: none;
-    border: none;
-    color: rgba(255,80,80,0.5);
-    font-size: 11px;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 6px;
-    transition: all 0.2s;
-    display: none;
-}
-.comment-delete-btn:hover {
-    color: #ff5050;
-    background: rgba(255,80,80,0.1);
-}
-
-/* لۆدینگ */
-.comments-loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 20px;
-    color: rgba(255,255,255,0.3);
-    font-size: 13px;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-}
-.comments-loading::before {
-    content: '';
-    width: 18px; height: 18px;
-    border: 2px solid rgba(140,0,255,0.3);
-    border-top-color: var(--accent-color);
-    border-radius: 50%;
-    animation: border-spin 0.8s linear infinite;
-}
-.comments-empty {
-    text-align: center;
-    padding: 25px 20px;
-    color: rgba(255,255,255,0.25);
-    font-size: 13px;
-    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-}
 
 
 @media (max-width: 768px) {
@@ -5213,49 +6058,111 @@ body {
 .credit-card {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(140, 0, 255, 0.1);
-    border: 1px solid rgba(140, 0, 255, 0.3);
-    padding: 12px 18px;
-    border-radius: 14px;
+    justify-content: flex-end;
+    gap: 14px;
+    position: relative;
+    padding: 16px 18px;
+    border-radius: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    direction: rtl;
+    overflow: hidden;
+    background: rgba(10, 6, 20, 0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(140, 0, 255, 0.15);
+    border-right: 3px solid rgba(140, 0, 255, 0.7);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.credit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 100px; height: 100%;
+    background: linear-gradient(to left, rgba(140,0,255,0.07), transparent);
+    pointer-events: none;
 }
 
 .credit-card:hover {
-    background: rgba(140, 0, 255, 0.2);
-    border-color: var(--accent-color);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(140, 0, 255, 0.3);
+    background: rgba(15, 8, 28, 0.85);
+    border-right-color: rgba(179, 102, 255, 1);
+    border-color: rgba(140, 0, 255, 0.3);
+    transform: translateX(-4px);
+    box-shadow: 0 8px 32px rgba(140,0,255,0.15),
+                -4px 0 20px rgba(140,0,255,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .credit-card img {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--accent-color);
+    flex-shrink: 0;
+    border: 2px solid rgba(140,0,255,0.4);
+    box-shadow: 0 0 16px rgba(140,0,255,0.3);
+    transition: all 0.35s ease;
+}
+
+.credit-card:hover img {
+    border-color: rgba(179,102,255,0.9);
+    box-shadow: 0 0 24px rgba(140,0,255,0.5);
+    transform: scale(1.06);
 }
 
 .credit-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: flex-end;
+    gap: 3px;
+    flex: 1;
 }
 
 .credit-role {
-    font-size: 11px;
-    color: var(--accent-light);
-    font-weight: 600;
+    font-size: 10px;
+    color: rgba(179,102,255,0.75);
+    font-weight: 700;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    letter-spacing: 0.5px;
 }
 
 .credit-name {
-    font-size: 14px;
-    color: #fff;
-    font-weight: 700;
-    font-family: 'Barlow Condensed', sans-serif;
-    letter-spacing: 0.5px;
+    font-size: 16px;
+    color: #ffffff;
+    font-weight: 900;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
+
+
+
+
+
+
+
+.avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+.krd-flag {
+    position: absolute;
+    bottom: -2px;
+    left: -2px;
+    width: 20px;
+    height: 14px;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.25);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.krd-flag svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
 
     .person-modal {
     display: none;
@@ -5516,7 +6423,7 @@ body {
 
 /* main-container مارجین */
 .main-container {
-    margin-top: 80px !important;
+    margin-top: 62px !important;
 }
 </style>
 
@@ -5707,23 +6614,6 @@ body {
     background: linear-gradient(90deg, transparent, rgba(140,0,255,0.8), transparent);
     margin: 10px auto 20px;
     border-radius: 10px;
-    position: relative;
-}
-
-.footer-divider::after {
-    content: '';
-    position: absolute;
-    width: 10px; height: 10px;
-    background: #b366ff;
-    border-radius: 50%;
-    top: -4px; left: 10%;
-    box-shadow: 0 0 12px rgba(179,102,255,0.9);
-    animation: dotMove 2.5s ease-in-out infinite;
-}
-
-@keyframes dotMove {
-    0%, 100% { left: 10%; opacity: 0.4; }
-    50% { left: 85%; opacity: 1; }
 }
 
 .footer-tagline {
@@ -5819,17 +6709,9 @@ body {
                 <div class="menu-icon-wrap"><i class="fas fa-file-signature"></i></div>
                 <span>بوون بە وەرگێر</span>
             </button>
-            <button class="menu-item" onclick="openMenuModal('staff')">
-                <div class="menu-icon-wrap"><i class="fas fa-crown"></i></div>
-                <span>ستافی وەرگێڕان</span>
-            </button>
-          <button class="menu-item" onclick="openMenuModal('technician')">
-    <div class="menu-icon-wrap"><i class="fas fa-cogs"></i></div>
-    <span>تەکنیکار</span>
-</button>
-<button class="menu-item" onclick="openMenuModal('poster_designer')">
-    <div class="menu-icon-wrap"><i class="fas fa-palette"></i></div>
-    <span>بەرگساز</span>
+           <button class="menu-item" onclick="openMenuModal('staffall')">
+    <div class="menu-icon-wrap"><i class="fas fa-users"></i></div>
+    <span>ستافی هاڤێ کۆریا</span>
 </button>
            
             <button class="menu-item" onclick="openMenuModal('suggest')">
@@ -5864,9 +6746,62 @@ body {
    ============================================= -->
 <div id="menu-modal-overlay" class="menu-modal-overlay" onclick="closeMenuModal()">
     <div class="menu-modal-box" onclick="event.stopPropagation()">
-        <button class="modal-x-btn" onclick="closeMenuModal()">
-            <i class="fas fa-times"></i>
-        </button>
+        <div class="modal-x-btn">
+    <!-- تیشکی سەرەوە -->
+    <div style="position:absolute;top:0;left:0;right:0;height:1px;
+        background:linear-gradient(90deg,transparent,rgba(140,0,255,0.8),rgba(179,102,255,0.5),transparent);"></div>
+
+    <!-- لۆگۆ + ناو -->
+    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;">
+        <div style="position:relative;">
+            <div style="width:36px;height:36px;border-radius:50%;padding:2px;
+                background:conic-gradient(var(--accent-color),var(--accent-light),transparent 70%,var(--accent-color));
+                box-shadow:0 0 12px rgba(140,0,255,0.4);">
+                <img src="logo2.png" style="width:100%;height:100%;border-radius:50%;
+                    object-fit:cover;display:block;">
+            </div>
+            <div style="position:absolute;bottom:-1px;right:-1px;
+                width:10px;height:10px;border-radius:50%;
+                background:#00e676;border:2px solid rgba(8,5,15,0.95);
+                box-shadow:0 0 6px rgba(0,230,118,0.7);"></div>
+        </div>
+        <div style="display:flex;flex-direction:column;line-height:1.2;">
+            <span style="font-size:13px;font-weight:900;color:#fff;
+                letter-spacing:1.5px;font-family:'Rajdhani',sans-serif;">HAVE KOREA</span>
+           <span style="font-size:10px;font-weight:700;
+    color:var(--accent-light);
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">هاڤێ کۆریا</span>
+        </div>
+    </div>
+
+    <!-- دوگمەی داخستن -->
+    <button onclick="closeMenuModal()" style="
+        display:flex;align-items:center;gap:7px;
+        margin-left:12px;
+        background:rgba(255,255,255,0.06);
+        border:1px solid rgba(255,255,255,0.12);
+        border-top:1px solid rgba(255,255,255,0.2);
+        color:rgba(255,255,255,0.8);
+        padding:8px 14px;
+        border-radius:50px;
+        cursor:pointer;
+        font-size:11px;
+        font-weight:800;
+        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+        backdrop-filter:blur(10px);
+        transition:all 0.3s ease;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,0.1);"
+        onmouseover="this.style.background='rgba(255,50,50,0.2)';this.style.borderColor='rgba(255,50,50,0.4)';this.style.color='#fff'"
+        onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.8)'">
+        <div style="width:18px;height:18px;border-radius:50%;
+            background:rgba(255,50,50,0.2);
+            border:1px solid rgba(255,50,50,0.4);
+            display:flex;align-items:center;justify-content:center;">
+            <i class="fas fa-times" style="font-size:8px;color:rgba(255,100,100,0.9);"></i>
+        </div>
+        دەرچوون
+    </button>
+</div>
         <div id="menu-modal-content"></div>
     </div>
 </div>
@@ -5885,54 +6820,62 @@ body {
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; direction: rtl; }
 
     /* ========== دوگمەی کردنەوە ========== */
-.vertical-bars-btn { 
-    position: fixed; 
-    top: 15px; 
-    left: 15px; 
-    z-index: 10001; 
-    background: rgba(140, 0, 255, 0.1); 
-    backdrop-filter: blur(20px); 
-    -webkit-backdrop-filter: blur(20px);
-    padding: 10px; 
-    border-radius: 50%; 
-    border: 1px solid rgba(140, 0, 255, 0.2); 
-    cursor: pointer; 
-    transition: all 0.4s ease; 
-    box-shadow: 0 4px 15px rgba(140, 0, 255, 0.1); 
+.vertical-bars-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 10001;
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+    background: rgba(140, 0, 255, 0.1);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(140, 0, 255, 0.25);
+    border-top: 1px solid rgba(179, 102, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: none;
 }
-    .vertical-bars-btn:hover { 
-        transform: translateY(-3px); 
-        box-shadow: 0 6px 25px rgba(140, 0, 255, 0.4); 
-    }
-    .vertical-bars-btn.active { 
-        top: 25px !important; 
-        background: rgba(255, 50, 50, 0.25); 
-        border-color: rgba(255, 50, 50, 0.5); 
-    }
-
-
-
-
-    
-    .bars-wrapper { 
-        display: flex; 
-        gap: 5px; 
-        width: 20px; 
-        height: 22px; 
-        justify-content: center; 
-        position: relative; 
-    }
-    .bars-wrapper span { 
-        width: 3px; 
-        height: 22px; 
-        background: #fff; 
-        border-radius: 10px; 
-        transition: 0.4s; 
-        box-shadow: 0 0 10px var(--primary-glow); 
-    }
-    .vertical-bars-btn.active .bar-1 { transform: rotate(45deg) translate(5.5px, 0); position: absolute; }
-    .vertical-bars-btn.active .bar-2 { opacity: 0; }
-    .vertical-bars-btn.active .bar-3 { transform: rotate(-45deg) translate(-5.5px, 0); position: absolute; }
+.vertical-bars-btn:hover {
+    background: rgba(140, 0, 255, 0.2);
+    transform: scale(1.05);
+}
+.vertical-bars-btn.active {
+    background: rgba(255, 50, 50, 0.15);
+    border-color: rgba(255, 50, 50, 0.35);
+    border-top-color: rgba(255, 80, 80, 0.5);
+}
+.bars-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: auto;
+    height: auto;
+}
+.bars-wrapper span {
+    display: block;
+    height: 1.5px;
+    background: rgba(200, 160, 255, 0.9);
+    border-radius: 2px;
+    transition: 0.4s;
+    box-shadow: none;
+}
+.bars-wrapper .bar-1 { width: 16px; }
+.bars-wrapper .bar-2 { width: 10px; }
+.bars-wrapper .bar-3 { width: 16px; }
+.vertical-bars-btn.active .bar-1 {
+    transform: rotate(45deg) translate(4.5px, 4.5px);
+    width: 16px;
+}
+.vertical-bars-btn.active .bar-2 { opacity: 0; }
+.vertical-bars-btn.active .bar-3 {
+    transform: rotate(-45deg) translate(4.5px, -4.5px);
+    width: 16px;
+}
 .glass-sidebar { 
     position: fixed; 
     top: 0; 
@@ -6081,54 +7024,69 @@ body {
         to { opacity: 1; }
     }
 
+   .menu-modal-box {
+    background: linear-gradient(145deg, rgba(15, 8, 30, 0.98), rgba(25, 12, 45, 0.97));
+    backdrop-filter: blur(30px);
+    border: 1.5px solid rgba(140, 0, 255, 0.4);
+    border-radius: 28px;
+    padding: 50px 25px 30px;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(140, 0, 255, 0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+    animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (max-width: 768px) {
+    .menu-modal-overlay {
+        padding: 0 !important;
+        align-items: flex-end !important;
+    }
     .menu-modal-box {
-        background: linear-gradient(145deg, rgba(15, 8, 30, 0.98), rgba(25, 12, 45, 0.97));
-        backdrop-filter: blur(30px);
-        border: 1.5px solid rgba(140, 0, 255, 0.4);
-        border-radius: 28px;
-        padding: 50px 25px 30px;
-        width: 100%;
-        max-width: 480px;
-        max-height: 85vh;
-        overflow-y: auto;
-        position: relative;
-        box-shadow: 0 30px 80px rgba(0,0,0,0.8), 0 0 60px rgba(140, 0, 255, 0.15), inset 0 1px 0 rgba(255,255,255,0.06);
-        animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: 92vh !important;
+        border-radius: 24px 24px 0 0 !important;
+        padding: 45px 18px 40px !important;
     }
+}
 
-    @keyframes modalSlideUp {
-        from { opacity: 0; transform: translateY(40px) scale(0.95); }
-        to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
+@keyframes modalSlideUp {
+    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
-    .menu-modal-box::-webkit-scrollbar { width: 6px; }
-    .menu-modal-box::-webkit-scrollbar-thumb { background: rgba(140,0,255,0.5); border-radius: 10px; }
-
-
-    
-    .modal-x-btn {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        background: rgba(255,50,50,0.15);
-        border: 1px solid rgba(255,50,50,0.4);
-        color: #fff;
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s;
-        z-index: 10;
-    }
-    .modal-x-btn:hover {
-        background: rgba(255,50,50,0.35);
-        transform: rotate(90deg);
-        box-shadow: 0 0 20px rgba(255,50,50,0.4);
-    }
+.menu-modal-box::-webkit-scrollbar { width: 6px; }
+.menu-modal-box::-webkit-scrollbar-thumb { background: rgba(140,0,255,0.5); border-radius: 10px; }
+.modal-x-btn {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    margin-bottom: 24px;
+    background: rgba(10, 5, 20, 0.85);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: none;
+    border-bottom: 1px solid rgba(140, 0, 255, 0.2);
+    color: #fff;
+    padding: 0;
+    border-radius: 0;
+    cursor: default;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+}
+.modal-x-btn:hover {
+    background: rgba(10, 5, 20, 0.85);
+    transform: none;
+    box-shadow: none;
+}
 
     /* ناوەڕۆکی مۆداڵ */
     #menu-modal-content h2 {
@@ -6463,64 +7421,120 @@ body {
 
 
 
-/* ========== بەشی هەڕەمەکیانەی سەرەکی ========== */
 .home-random-section {
-    margin-bottom: 35px;
-    padding: 22px 25px;
-    border-radius: 20px;
-    background: rgba(140, 0, 255, 0.06);
-    border: 1px solid rgba(140, 0, 255, 0.25);
-    backdrop-filter: blur(10px);
     position: relative;
+    border-radius: 22px;
+    padding: 28px 24px 24px;
+    background: rgba(18, 10, 35, 0.95);
+    border: 1px solid rgba(140, 0, 255, 0.18);
     overflow: hidden;
-    transition: all 0.3s ease;
+    margin-bottom: 35px;
 }
 .home-random-section::before {
     content: '';
     position: absolute;
-    top: -50%; left: -50%;
-    width: 200%; height: 200%;
-    background: conic-gradient(from 0deg, transparent, rgba(140,0,255,0.06), transparent 180deg);
-    animation: rotateBorder 8s linear infinite;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(140,0,255,0.6) 40%, rgba(179,102,255,0.4) 60%, transparent);
+}
+.home-random-section::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(140,0,255,0.12) 0%, transparent 70%);
+    pointer-events: none;
     z-index: 0;
 }
 .home-random-inner {
-    position: relative; z-index: 1;
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
-.home-random-left { display: flex; align-items: center; gap: 15px; }
-.home-random-icon { font-size: 36px; animation: float 3s ease-in-out infinite; }
+.home-random-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+.home-random-icon {
+    position: relative;
+    width: 52px; height: 52px;
+    border-radius: 16px;
+    border: 1px solid rgba(140, 0, 255, 0.5);
+    background: rgba(140, 0, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+.home-random-icon::after {
+    content: '';
+    position: absolute;
+    top: -3px; right: -3px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #8c00ff;
+    box-shadow: 0 0 6px rgba(140,0,255,0.8);
+    border: 2px solid #07060d;
+}
 .home-random-title {
-    font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
     font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
 }
 .home-random-sub {
-    font-size: 12px; color: #b366ff;
+    font-size: 11px;
+    color: rgba(179, 102, 255, 0.8);
+    font-weight: 600;
     font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
 }
-.home-random-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.home-random-btns {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 18px;
+    border-top: 1px solid rgba(140, 0, 255, 0.15);
+    position: relative;
+}
+.home-random-btns::before {
+    content: '';
+    position: absolute;
+    right: 0; top: -3px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(140, 0, 255, 0.7);
+}
 .home-rand-btn {
-    padding: 10px 18px; border-radius: 12px;
-    border: 1.5px solid rgba(140,0,255,0.35);
-    background: rgba(140,0,255,0.12); color: #c499ff;
-    font-size: 13px; font-weight: 700; cursor: pointer;
-    font-family: Tahoma, sans-serif;
-    display: flex; align-items: center; gap: 7px;
-    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(140, 0, 255, 0.25);
+    background: rgba(140, 0, 255, 0.06);
+    color: rgba(200, 170, 255, 0.85);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    transition: all 0.2s ease;
 }
 .home-rand-btn:hover {
-    background: rgba(140,0,255,0.28);
-    border-color: var(--accent-color); color: #fff;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(140,0,255,0.3);
+    border-color: rgba(140, 0, 255, 0.55);
+    background: rgba(140, 0, 255, 0.15);
+    color: #fff;
+    transform: translateY(-2px);
 }
-.home-rand-btn:active { transform: scale(0.95); }
+.home-rand-btn:active { transform: scale(0.96); }
 @media (max-width: 768px) {
-    .home-random-inner { flex-direction: column; align-items: flex-start; }
-    .home-random-btns { width: 100%; justify-content: space-between; }
-    .home-rand-btn { flex: 1; justify-content: center; padding: 9px 8px; font-size: 12px; }
-    .home-random-title { font-size: 14px; }
+    .home-rand-btn { flex: 1; justify-content: center; }
+    .home-random-section { padding: 22px 16px 18px; }
 }
 
 </style>
@@ -7170,11 +8184,10 @@ volunteer: (() => {
   </form>
 </div>`;
 })(),
-
-           staff: (() => {
+staffall: (() => {
   const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
   const al = getComputedStyle(document.documentElement).getPropertyValue('--accent-light').trim() || '#b366ff';
-  
+
   function hexToRgba(hex, alpha) {
     hex = hex.replace('#','').trim();
     if(hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
@@ -7184,297 +8197,195 @@ volunteer: (() => {
     return `rgba(${r},${g},${b},${alpha})`;
   }
 
-  const helin_count  = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='هێلین')).length; })();
-  const sana_count   = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='سەنا ئەحمەد')).length; })();
-  const shaian_count = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='شاین')).length; })();
-  const kelwa_count  = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='کێڵوا')).length; })();
-  const iman_count   = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئیمان')).length; })();
-const asia_count   = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئاسیا')).length; })();
+  const db = typeof database !== 'undefined' ? database : [];
+  const counts = {
+    helin_t:  db.filter(d=>d.translators&&d.translators.some(t=>t.name==='هێلین')).length,
+    sana_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='سەنا ئەحمەد')).length,
+    shaian_t: db.filter(d=>d.translators&&d.translators.some(t=>t.name==='شاین')).length,
+    kelwa_t:  db.filter(d=>d.translators&&d.translators.some(t=>t.name==='کێڵوا')).length,
+    iman_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئیمان')).length,
+    asia_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئاسیا')).length,
+    kelwa_tech: db.filter(d=>d.technician&&d.technician.name==='کێڵوا').length,
+    helin_p:  db.filter(d=>d.poster_designer&&d.poster_designer.name==='هێلین').length,
+    kelwa_p:  db.filter(d=>d.poster_designer&&d.poster_designer.name==='کێڵوا').length,
+  };
 
-  function makeCard(opts) {
+  function staffCard(img, name, role, count, ig) {
     return `
-    <div style="
-      position:relative; ${opts.mb ? 'margin-bottom:12px;' : ''} border-radius:20px; overflow:hidden;
-      background:rgba(12,8,20,0.7);
-      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-      border:1px solid ${hexToRgba(ac,0.2)};
-      transition:all 0.35s cubic-bezier(0.4,0,0.2,1);"
-      onmouseover="this.style.borderColor='${hexToRgba(ac,0.6)}';this.style.transform='translateX(-5px)';this.style.background='rgba(18,12,30,0.85)';this.style.boxShadow='0 12px 40px ${hexToRgba(ac,0.1)}'"
-      onmouseout="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.transform='translateX(0)';this.style.background='rgba(12,8,20,0.7)';this.style.boxShadow='none'">
+    <div onclick="${ig ? `window.open('${ig}','_blank')` : ''}" style="
+      display:flex;flex-direction:column;align-items:center;gap:10px;
+      padding:18px 12px;border-radius:18px;cursor:${ig?'pointer':'default'};
+      background:rgba(255,255,255,0.03);
+      border:1px solid ${hexToRgba(ac,0.18)};
+      transition:all 0.3s ease;position:relative;overflow:hidden;"
+      onmouseover="this.style.background='${hexToRgba(ac,0.1)}';this.style.borderColor='${hexToRgba(ac,0.5)}';this.style.transform='translateY(-4px)'"
+      onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='${hexToRgba(ac,0.18)}';this.style.transform='translateY(0)'">
 
-      <div style="position:absolute;top:0;right:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,${hexToRgba(ac,0.8)} 40%,${hexToRgba(ac,0.8)} 60%,transparent);"></div>
-      <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle at top right,${hexToRgba(ac,0.1)},transparent 70%);pointer-events:none;"></div>
+      <!-- نیشانەی مۆری گۆشەکە -->
+      <div style="position:absolute;top:0;right:0;width:40px;height:40px;
+        background:radial-gradient(circle at top right,${hexToRgba(ac,0.2)},transparent 70%);
+        pointer-events:none;"></div>
 
-      <div style="display:flex;align-items:center;gap:16px;padding:18px 20px 18px 18px;">
-        <div style="position:relative;flex-shrink:0;">
-          <div style="width:72px;height:72px;border-radius:18px;padding:2px;
-            background:linear-gradient(135deg,${hexToRgba(ac,0.75)},${hexToRgba(ac,0.15)},${hexToRgba(ac,0.65)});
-            box-shadow:0 0 20px ${hexToRgba(ac,0.2)};">
-            <img src="${opts.img}" style="width:100%;height:100%;border-radius:16px;object-fit:cover;display:block;filter:contrast(1.05) brightness(1.02);">
-          </div>
-          <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#00e676;border:2.5px solid rgba(8,5,15,0.95);box-shadow:0 0 8px rgba(0,230,118,0.5);"></div>
+      <!-- وێنەی گردۆڵەیی -->
+      <div style="position:relative;">
+        <div style="width:72px;height:72px;border-radius:50%;padding:2px;
+          background:conic-gradient(${ac},${al},transparent 70%,${ac});
+          box-shadow:0 0 20px ${hexToRgba(ac,0.35)};">
+          <img src="${img}" style="width:100%;height:100%;border-radius:50%;
+            object-fit:cover;display:block;background:rgba(20,10,35,0.9);"
+            onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
         </div>
-
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;flex-wrap:wrap;">
-            <span style="color:#fff;font-size:16px;font-weight:900;letter-spacing:0.3px;">${opts.name}</span>
-            <div style="display:flex;align-items:center;gap:5px;background:${hexToRgba(ac,0.09)};border:1px solid ${hexToRgba(ac,0.3)};border-radius:10px;padding:4px 10px;">
-              <i class="fas fa-play-circle" style="color:${ac};font-size:11px;"></i>
-              <span style="color:${ac};font-size:11px;font-weight:800;line-height:1;">${opts.count} کار</span>
-            </div>
-          </div>
-
-          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
-            ${opts.badges.map((b,i) => i===0 && opts.star ? `
-              <span style="background:${hexToRgba(ac,0.15)};color:${al};font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;border:1px solid ${hexToRgba(ac,0.35)};letter-spacing:0.2px;">
-                <i class="fas fa-star" style="font-size:8px;margin-left:3px;"></i>${b}
-              </span>` : `
-              <span style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);">${b}</span>`
-            ).join('')}
-          </div>
-${opts.ig ? `<a href="${opts.ig}" target="_blank"
-  style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:rgba(193,53,132,0.1);border:1px solid rgba(193,53,132,0.25);color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-  onmouseover="this.style.background='rgba(193,53,132,0.28)';this.style.borderColor='rgba(193,53,132,0.55)';this.style.color='#fff';this.style.transform='translateY(-1px)'"
-  onmouseout="this.style.background='rgba(193,53,132,0.1)';this.style.borderColor='rgba(193,53,132,0.25)';this.style.color='rgba(255,255,255,0.7)';this.style.transform='translateY(0)'">
-  <i class="fab fa-instagram" style="color:#e1306c;font-size:13px;"></i> Instagram
-</a>` : ''}
-        </div>
+        <!-- نوکتەی سەوز -->
+        <div style="position:absolute;bottom:1px;right:1px;width:14px;height:14px;
+          border-radius:50%;background:#00e676;
+          border:2.5px solid rgba(8,5,15,0.95);
+          box-shadow:0 0 8px rgba(0,230,118,0.6);"></div>
       </div>
+
+      <!-- ناو -->
+      <div style="text-align:center;">
+        <div style="color:#fff;font-size:14px;font-weight:900;margin-bottom:4px;
+          font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${name}</div>
+        <div style="display:inline-flex;align-items:center;gap:4px;
+          background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.35)};
+          color:${al};font-size:9px;font-weight:800;
+          padding:3px 10px;border-radius:20px;
+          font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${role}</div>
+      </div>
+
+      <!-- ژمارەی کارەکان -->
+      <div style="display:flex;align-items:center;gap:5px;
+        background:${hexToRgba(ac,0.08)};border:1px solid ${hexToRgba(ac,0.2)};
+        border-radius:8px;padding:4px 10px;">
+        <i class="fas fa-film" style="color:${hexToRgba(ac,0.8)};font-size:9px;"></i>
+        <span style="color:rgba(255,255,255,0.7);font-size:10px;font-weight:800;">${count} کار</span>
+      </div>
+
+      ${ig ? `
+      <div style="display:inline-flex;align-items:center;gap:4px;
+        color:rgba(255,255,255,0.45);font-size:10px;">
+        <i class="fab fa-instagram" style="color:#e1306c;font-size:11px;"></i>
+        <span>Instagram</span>
+      </div>` : ''}
     </div>`;
   }
 
   return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
+<div style="direction:rtl;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
 
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:28px;padding-bottom:22px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};
-        border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-crown" style="color:${ac};font-size:24px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
-      </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">ستافی وەرگێڕان</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:2px;">HAVE KOREA TEAM</span>
+  <!-- ===== سەردێڕ وەک کورد سینەما ===== -->
+  <div style="text-align:center;padding:10px 0 24px;position:relative;">
+
+    <!-- ئایکۆنی ئەستێرەکان -->
+    <div style="position:relative;display:inline-block;margin-bottom:14px;">
+      <svg width="52" height="48" viewBox="0 0 52 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M26 4L29.5 16H42L32 23.5L35.5 36L26 28.5L16.5 36L20 23.5L10 16H22.5L26 4Z"
+          fill="url(#star-grad)" filter="url(#glow)"/>
+        <path d="M42 2L43.5 7H48.5L44.5 9.5L46 14.5L42 12L38 14.5L39.5 9.5L35.5 7H40.5L42 2Z"
+          fill="${ac}" opacity="0.7"/>
+        <defs>
+          <linearGradient id="star-grad" x1="10" y1="4" x2="42" y2="36" gradientUnits="userSpaceOnUse">
+            <stop stop-color="${ac}"/>
+            <stop offset="1" stop-color="${al}"/>
+          </linearGradient>
+          <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+      </svg>
     </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
+
+    <!-- ناونیشان -->
+    <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;line-height:1.2;color:#fff;">
+      ستافی&nbsp;
+      <span style="
+        background:linear-gradient(90deg,${ac},${al},#ff6b6b);
+        -webkit-background-clip:text;background-clip:text;
+        -webkit-text-fill-color:transparent;color:transparent;">
+        هاڤێ کۆریا
+      </span>
+    </h2>
+
+    <!-- وێنەی بانەر -->
+    <img src="korean.png" alt="Have Korea Banner" style="
+      width:100%;max-width:380px;
+      border-radius:14px;margin:10px auto 0;display:block;
+      object-fit:cover;
+      border:1px solid ${hexToRgba(ac,0.3)};
+      box-shadow:0 8px 25px rgba(0,0,0,0.5);"
+      onerror="this.style.display='none'">
+
+    <!-- تێبینی -->
+    <p style="color:rgba(255,255,255,0.55);font-size:11px;line-height:1.8;
+      margin:10px auto 0;max-width:340px;">
+      سایتەکەمان بە هاوکاری تیمێکی پسپۆڕ و دڵسۆز کاردەکات.
+      هەر یەکێک لە ئەندامانی تیمەکەمان بەشداری باشترین ئەزموونی
+      فیلم بینینی بۆ ئێوە.
+    </p>
   </div>
 
-  ${makeCard({ img:'admin1.png', name:'هێلین', count:helin_count,  mb:true,  star:true,  badges:['سەرپەرشتیار','وەرگێڕ'],  ig:'https://www.instagram.com/helin.jill?utm_source=qr&igsh=dnNsb2FnZXZxN3l2' })}
-  ${makeCard({ img:'سانا.png',  name:'سەنا ئەحمەد', count:sana_count, mb:true, star:false, badges:['وەرگێڕی سەرەکی'], ig:'https://www.instagram.com/sana.sa_n4?igsh=MXh0azgzdXcwYjgxdg%3D%3D&utm_source=qr' })}
-  ${makeCard({ img:'shaian.png', name:'شاین', count:shaian_count, mb:true, star:true, badges:['سەرپەرشتیاری گشتی'], ig:null })}
-${makeCard({ img:'admin2.png', name:'کێڵوا', count:kelwa_count, mb:true, star:false, badges:['وەرگێڕ'], ig:'https://www.instagram.com/y9u7x?igsh=bHprcHh3MnBjM2ti&utm_source=qr' })}
-  ${makeCard({ img:'nena.png', name:'ئیمان', count:iman_count, mb:true, star:false, badges:['وەرگێڕ'], ig:'https://www.instagram.com/emannn.404?igsh=MXhuZXJyc3A3Z2Jrbg==' })}
-  ${makeCard({ img:'asia.png', name:'ئاسیا', count:asia_count, mb:false, star:false, badges:['وەرگێڕ'], ig:'https://www.instagram.com/asia_asiaa7?igsh=dHkweWozNzh0NW9p' })}
-</div>`;
-})(),
-technician: (() => {
-  const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
-  const al = getComputedStyle(document.documentElement).getPropertyValue('--accent-light').trim() || '#b366ff';
-  
-  function hexToRgba(hex, alpha) {
-    hex = hex.replace('#','').trim();
-    if(hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    const r = parseInt(hex.substring(0,2),16);
-    const g = parseInt(hex.substring(2,4),16);
-    const b = parseInt(hex.substring(4,6),16);
-    return `rgba(${r},${g},${b},${alpha})`;
-  }
-
-  const kelwa_tech_count = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.technician&&d.technician.name==='کێڵوا').length; })();
-
-  return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
-
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:28px;padding-bottom:22px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};
-        border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-cogs" style="color:${ac};font-size:24px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
-      </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">تەکنیکار</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:2px;">HAVE KOREA TEAM</span>
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
-  </div>
-
-  <!-- کێڵوا -->
-  <div style="
-    position:relative; border-radius:20px; overflow:hidden;
-    background:rgba(12,8,20,0.7);
-    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  <!-- ===== تابەکان وەک کورد سینەما ===== -->
+  <div style="display:flex;gap:0;margin-bottom:20px;
+    background:rgba(255,255,255,0.03);
     border:1px solid ${hexToRgba(ac,0.2)};
-    transition:all 0.35s cubic-bezier(0.4,0,0.2,1);"
-    onmouseover="this.style.borderColor='${hexToRgba(ac,0.6)}';this.style.transform='translateX(-5px)';this.style.background='rgba(18,12,30,0.85)';this.style.boxShadow='0 12px 40px ${hexToRgba(ac,0.1)}'"
-    onmouseout="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.transform='translateX(0)';this.style.background='rgba(12,8,20,0.7)';this.style.boxShadow='none'">
+    border-radius:14px;overflow:hidden;">
 
-    <div style="position:absolute;top:0;right:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,${hexToRgba(ac,0.8)} 40%,${hexToRgba(ac,0.8)} 60%,transparent);"></div>
-    <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle at top right,${hexToRgba(ac,0.1)},transparent 70%);pointer-events:none;"></div>
+    <button id="hk-tab-translators" onclick="hkStaffTab('translators',this)" style="
+      flex:1;padding:11px 4px;border:none;cursor:pointer;
+      font-size:10px;font-weight:800;
+      font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+      background:${hexToRgba(ac,0.2)};color:#fff;
+      border-left:1px solid ${hexToRgba(ac,0.3)};
+      display:flex;flex-direction:column;align-items:center;gap:4px;
+      transition:all 0.3s;">
+      <i class="fas fa-language" style="font-size:14px;"></i> وەرگێران
+    </button>
 
-    <div style="display:flex;align-items:center;gap:16px;padding:18px 20px 18px 18px;">
-      <div style="position:relative;flex-shrink:0;">
-        <div style="width:72px;height:72px;border-radius:18px;padding:2px;
-          background:linear-gradient(135deg,${hexToRgba(ac,0.75)},${hexToRgba(ac,0.15)},${hexToRgba(ac,0.65)});
-          box-shadow:0 0 20px ${hexToRgba(ac,0.2)};">
-          <img src="admin2.png" style="width:100%;height:100%;border-radius:16px;object-fit:cover;display:block;filter:contrast(1.05) brightness(1.02);">
-        </div>
-        <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#00e676;border:2.5px solid rgba(8,5,15,0.95);box-shadow:0 0 8px rgba(0,230,118,0.5);"></div>
-      </div>
+    <button id="hk-tab-technician" onclick="hkStaffTab('technician',this)" style="
+      flex:1;padding:11px 4px;border:none;cursor:pointer;
+      font-size:10px;font-weight:800;
+      font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+      background:transparent;color:rgba(255,255,255,0.5);
+      border-left:1px solid ${hexToRgba(ac,0.3)};
+      display:flex;flex-direction:column;align-items:center;gap:4px;
+      transition:all 0.3s;">
+      <i class="fas fa-cogs" style="font-size:14px;"></i> تەکنیکار
+    </button>
 
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;flex-wrap:wrap;">
-          <span style="color:#fff;font-size:16px;font-weight:900;letter-spacing:0.3px;">کێڵوا</span>
-          <div style="display:flex;align-items:center;gap:5px;background:${hexToRgba(ac,0.09)};border:1px solid ${hexToRgba(ac,0.3)};border-radius:10px;padding:4px 10px;">
-            <i class="fas fa-play-circle" style="color:${ac};font-size:11px;"></i>
-            <span style="color:${ac};font-size:11px;font-weight:800;line-height:1;">${kelwa_tech_count} کار</span>
-          </div>
-        </div>
-
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
-          <span style="background:${hexToRgba(ac,0.15)};color:${al};font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;border:1px solid ${hexToRgba(ac,0.35)};letter-spacing:0.2px;">
-            <i class="fas fa-star" style="font-size:8px;margin-left:3px;"></i>تەکنیکار
-          </span>
-        </div>
-
-        <a href="https://www.instagram.com/y9u7x?igsh=bHprcHh3MnBjM2ti&utm_source=qr" target="_blank"
-          style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:rgba(193,53,132,0.1);border:1px solid rgba(193,53,132,0.25);color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-          onmouseover="this.style.background='rgba(193,53,132,0.28)';this.style.borderColor='rgba(193,53,132,0.55)';this.style.color='#fff';this.style.transform='translateY(-1px)'"
-          onmouseout="this.style.background='rgba(193,53,132,0.1)';this.style.borderColor='rgba(193,53,132,0.25)';this.style.color='rgba(255,255,255,0.7)';this.style.transform='translateY(0)'">
-          <i class="fab fa-instagram" style="color:#e1306c;font-size:13px;"></i> Instagram
-        </a>
-      </div>
-    </div>
+    <button id="hk-tab-poster" onclick="hkStaffTab('poster',this)" style="
+      flex:1;padding:11px 4px;border:none;cursor:pointer;
+      font-size:10px;font-weight:800;
+      font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+      background:transparent;color:rgba(255,255,255,0.5);
+      display:flex;flex-direction:column;align-items:center;gap:4px;
+      transition:all 0.3s;">
+      <i class="fas fa-palette" style="font-size:14px;"></i> دیزاینەر
+    </button>
   </div>
 
-</div>`;
-})(),
-poster_designer: (() => {
-  const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
-  const al = getComputedStyle(document.documentElement).getPropertyValue('--accent-light').trim() || '#b366ff';
-  
-  function hexToRgba(hex, alpha) {
-    hex = hex.replace('#','').trim();
-    if(hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    const r = parseInt(hex.substring(0,2),16);
-    const g = parseInt(hex.substring(2,4),16);
-    const b = parseInt(hex.substring(4,6),16);
-    return `rgba(${r},${g},${b},${alpha})`;
-  }
-
-  const helin_poster_count = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.poster_designer&&d.poster_designer.name==='هێلین').length; })();
-  const kelwa_poster_count = (()=>{ const db=typeof database!=='undefined'?database:[]; return db.filter(d=>d.poster_designer&&d.poster_designer.name==='کێڵوا').length; })();
-
-  return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
-
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:28px;padding-bottom:22px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};
-        border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-palette" style="color:${ac};font-size:24px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
-      </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">بەرگساز</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:2px;">HAVE KOREA TEAM</span>
-    </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
+  <!-- ===== وەرگێران ===== -->
+  <div id="hk-content-translators" style="
+    display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+    ${staffCard('admin1.png','هێلین','وەرگێڕ',counts.helin_t,'https://www.instagram.com/helin.jill')}
+    ${staffCard('سانا.png','سەنا ئەحمەد','وەرگێڕ',counts.sana_t,'https://www.instagram.com/sana.sa_n4')}
+    ${staffCard('shaian.png','شاین','سەرپەرشتیار',counts.shaian_t,null)}
+    ${staffCard('admin2.png','کێڵوا','وەرگێڕ',counts.kelwa_t,'https://www.instagram.com/y9u7x')}
+    ${staffCard('nena.png','ئیمان','وەرگێڕ',counts.iman_t,'https://www.instagram.com/emannn.404')}
+    ${staffCard('asia.png','ئاسیا','وەرگێڕ',counts.asia_t,'https://www.instagram.com/asia_asiaa7')}
   </div>
 
-  <!-- هێلین -->
-  <div style="margin-bottom:12px;position:relative;border-radius:20px;overflow:hidden;
-    background:rgba(12,8,20,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    border:1px solid ${hexToRgba(ac,0.2)};transition:all 0.35s cubic-bezier(0.4,0,0.2,1);"
-    onmouseover="this.style.borderColor='${hexToRgba(ac,0.6)}';this.style.transform='translateX(-5px)';this.style.background='rgba(18,12,30,0.85)';this.style.boxShadow='0 12px 40px ${hexToRgba(ac,0.1)}'"
-    onmouseout="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.transform='translateX(0)';this.style.background='rgba(12,8,20,0.7)';this.style.boxShadow='none'">
-    <div style="position:absolute;top:0;right:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,${hexToRgba(ac,0.8)} 40%,${hexToRgba(ac,0.8)} 60%,transparent);"></div>
-    <div style="display:flex;align-items:center;gap:16px;padding:18px 20px 18px 18px;">
-      <div style="position:relative;flex-shrink:0;">
-        <div style="width:72px;height:72px;border-radius:18px;padding:2px;
-          background:linear-gradient(135deg,${hexToRgba(ac,0.75)},${hexToRgba(ac,0.15)},${hexToRgba(ac,0.65)});
-          box-shadow:0 0 20px ${hexToRgba(ac,0.2)};">
-          <img src="admin1.png" style="width:100%;height:100%;border-radius:16px;object-fit:cover;display:block;">
-        </div>
-        <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#00e676;border:2.5px solid rgba(8,5,15,0.95);box-shadow:0 0 8px rgba(0,230,118,0.5);"></div>
-      </div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;flex-wrap:wrap;">
-          <span style="color:#fff;font-size:16px;font-weight:900;">هێلین</span>
-          <div style="display:flex;align-items:center;gap:5px;background:${hexToRgba(ac,0.09)};border:1px solid ${hexToRgba(ac,0.3)};border-radius:10px;padding:4px 10px;">
-            <i class="fas fa-play-circle" style="color:${ac};font-size:11px;"></i>
-            <span style="color:${ac};font-size:11px;font-weight:800;">${helin_poster_count} کار</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
-          <span style="background:${hexToRgba(ac,0.15)};color:${al};font-size:10px;font-weight:800;padding:3px 10px;border-radius:6px;border:1px solid ${hexToRgba(ac,0.35)};">
-            <i class="fas fa-star" style="font-size:8px;margin-left:3px;"></i>بەرگساز
-          </span>
-        </div>
-        <a href="https://www.instagram.com/helin.jill?utm_source=qr&igsh=dnNsb2FnZXZxN3l2" target="_blank"
-          style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:rgba(193,53,132,0.1);border:1px solid rgba(193,53,132,0.25);color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-          onmouseover="this.style.background='rgba(193,53,132,0.28)';this.style.color='#fff'"
-          onmouseout="this.style.background='rgba(193,53,132,0.1)';this.style.color='rgba(255,255,255,0.7)'">
-          <i class="fab fa-instagram" style="color:#e1306c;font-size:13px;"></i> Instagram
-        </a>
-      </div>
-    </div>
+  <!-- ===== تەکنیکار ===== -->
+  <div id="hk-content-technician" style="
+    display:none;grid-template-columns:repeat(2,1fr);gap:10px;">
+    ${staffCard('admin2.png','کێڵوا','تەکنیکار',counts.kelwa_tech,'https://www.instagram.com/y9u7x')}
   </div>
 
-  <!-- کێڵوا -->
-  <div style="position:relative;border-radius:20px;overflow:hidden;
-    background:rgba(12,8,20,0.7);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    border:1px solid ${hexToRgba(ac,0.2)};transition:all 0.35s cubic-bezier(0.4,0,0.2,1);"
-    onmouseover="this.style.borderColor='${hexToRgba(ac,0.6)}';this.style.transform='translateX(-5px)';this.style.background='rgba(18,12,30,0.85)';this.style.boxShadow='0 12px 40px ${hexToRgba(ac,0.1)}'"
-    onmouseout="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.transform='translateX(0)';this.style.background='rgba(12,8,20,0.7)';this.style.boxShadow='none'">
-    <div style="position:absolute;top:0;right:0;width:2px;height:100%;background:linear-gradient(180deg,transparent,${hexToRgba(ac,0.8)} 40%,${hexToRgba(ac,0.8)} 60%,transparent);"></div>
-    <div style="display:flex;align-items:center;gap:16px;padding:18px 20px 18px 18px;">
-      <div style="position:relative;flex-shrink:0;">
-        <div style="width:72px;height:72px;border-radius:18px;padding:2px;
-          background:linear-gradient(135deg,${hexToRgba(ac,0.75)},${hexToRgba(ac,0.15)},${hexToRgba(ac,0.65)});
-          box-shadow:0 0 20px ${hexToRgba(ac,0.2)};">
-          <img src="admin2.png" style="width:100%;height:100%;border-radius:16px;object-fit:cover;display:block;">
-        </div>
-        <div style="position:absolute;bottom:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#00e676;border:2.5px solid rgba(8,5,15,0.95);box-shadow:0 0 8px rgba(0,230,118,0.5);"></div>
-      </div>
-      <div style="flex:1;min-width:0;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px;flex-wrap:wrap;">
-          <span style="color:#fff;font-size:16px;font-weight:900;">کێڵوا</span>
-          <div style="display:flex;align-items:center;gap:5px;background:${hexToRgba(ac,0.09)};border:1px solid ${hexToRgba(ac,0.3)};border-radius:10px;padding:4px 10px;">
-            <i class="fas fa-play-circle" style="color:${ac};font-size:11px;"></i>
-            <span style="color:${ac};font-size:11px;font-weight:800;">${kelwa_poster_count} کار</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;">
-          <span style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.65);font-size:10px;font-weight:700;padding:3px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);">بەرگساز</span>
-        </div>
-        <a href="https://www.instagram.com/y9u7x?igsh=bHprcHh3MnBjM2ti&utm_source=qr" target="_blank"
-          style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:rgba(193,53,132,0.1);border:1px solid rgba(193,53,132,0.25);color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-          onmouseover="this.style.background='rgba(193,53,132,0.28)';this.style.color='#fff'"
-          onmouseout="this.style.background='rgba(193,53,132,0.1)';this.style.color='rgba(255,255,255,0.7)'">
-          <i class="fab fa-instagram" style="color:#e1306c;font-size:13px;"></i> Instagram
-        </a>
-      </div>
-    </div>
+  <!-- ===== دیزاینەر ===== -->
+  <div id="hk-content-poster" style="
+    display:none;grid-template-columns:repeat(2,1fr);gap:10px;">
+    ${staffCard('admin1.png','هێلین','بەرگساز',counts.helin_p,'https://www.instagram.com/helin.jill')}
+    ${staffCard('admin2.png','کێڵوا','بەرگساز',counts.kelwa_p,'https://www.instagram.com/y9u7x')}
   </div>
 
 </div>`;
@@ -7879,17 +8790,42 @@ function switchWorksTab(tab) {
         activeBtn.style.color = '#fff';
         activeBtn.style.border = `1px solid rgba(${r},${g},${b},0.4)`;
     }
+}
 
-    if(tab === 'translator') {
-        const firstBtn = document.querySelector('.works-person-btn');
-        if(firstBtn) filterWorksModal(firstBtn);
-    } else if(tab === 'technician') {
-        const firstBtn = document.querySelector('.works-person-btn-tech');
-        if(firstBtn) filterWorksTech(firstBtn);
-    } else if(tab === 'poster_designer') {
-        const firstBtn = document.querySelector('.works-person-btn-poster');
-        if(firstBtn) filterWordsPoster(firstBtn);
-    }
+function switchStaffTab(tab, btn) {
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex = ac.replace('#','').trim();
+    const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+    ['translators','technician','poster'].forEach(t => {
+        const el = document.getElementById('staffcontent-' + t);
+        if(el) el.style.display = 'none';
+        const b2 = document.getElementById('stafftab-' + t);
+        if(b2) { b2.style.background='rgba(255,255,255,0.04)'; b2.style.color='rgba(255,255,255,0.6)'; b2.style.borderColor='rgba(255,255,255,0.1)'; }
+    });
+    const activeEl = document.getElementById('staffcontent-' + tab);
+    if(activeEl) activeEl.style.display = 'block';
+    if(btn) { btn.style.background=`rgba(${r},${g},${b},0.2)`; btn.style.color='#fff'; btn.style.borderColor=`rgba(${r},${g},${b},0.4)`; }
+}
+
+    
+function hkStaffTab(tab, btn) {
+  const ac = getComputedStyle(document.documentElement)
+    .getPropertyValue('--accent-color').trim() || '#8c00ff';
+  const hex = ac.replace('#','').trim();
+  const r=parseInt(hex.substring(0,2),16),
+        g=parseInt(hex.substring(2,4),16),
+        b=parseInt(hex.substring(4,6),16);
+
+  ['translators','technician','poster'].forEach(t => {
+    const el = document.getElementById('hk-content-'+t);
+    if(el){ el.style.display='none'; }
+    const bt = document.getElementById('hk-tab-'+t);
+    if(bt){ bt.style.background='transparent'; bt.style.color='rgba(255,255,255,0.5)'; }
+  });
+
+  const el = document.getElementById('hk-content-'+tab);
+  if(el){ el.style.display='grid'; }
+  if(btn){ btn.style.background=`rgba(${r},${g},${b},0.2)`; btn.style.color='#fff'; }
 }
 
 function filterWorksTech(btn) {
@@ -8399,6 +9335,90 @@ box-shadow: 0 8px 20px rgba(91, 0, 196, 0.4),
     .star { font-size: 36px; gap: 8px; }
     .rating-main-title { font-size: 18px; }
 }
+
+
+/* ===== بەشی وێنەکان ===== */
+.media-images-section {
+    margin: 20px 0;
+    background: var(--bg-card);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    border: 1px solid rgba(140,0,255,0.15);
+}
+.images-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-light);
+    margin-bottom: 14px;
+}
+.images-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.image-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 16/9;
+}
+.image-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+}
+.image-item:hover img { transform: scale(1.05); }
+.img-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s;
+    color: white; font-size: 1.4rem;
+}
+.image-item:hover .img-overlay { opacity: 1; }
+
+/* ===== Lightbox ===== */
+#global-lightbox {
+    position: fixed; inset: 0; z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+}
+.lb-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.92);
+}
+.lb-content {
+    position: relative; z-index: 1;
+    max-width: 90vw; max-height: 90vh;
+}
+#lb-img {
+    max-width: 90vw; max-height: 85vh;
+    border-radius: 12px;
+    object-fit: contain;
+}
+.lb-close, .lb-prev, .lb-next {
+    position: absolute;
+    background: rgba(140,0,255,0.7);
+    border: none; color: white;
+    border-radius: 50%; width: 40px; height: 40px;
+    cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+}
+.lb-close { top: -15px; left: -15px; }
+.lb-prev { top: 50%; right: -50px; transform: translateY(-50%); }
+.lb-next { top: 50%; left: -50px; transform: translateY(-50%); }
+.lb-counter {
+    text-align: center; color: white;
+    margin-top: 8px; font-size: 0.9rem;
+}
+@media(max-width:768px) {
+    .images-grid { grid-template-columns: repeat(2,1fr); }
+    .lb-prev { right: -35px; }
+    .lb-next { left: -35px; }
+}
 </style>
 
 <script>
@@ -8419,7 +9439,7 @@ app.openPlayer = async function(item) {
     await originalOpenPlayer.call(this, item);
     setTimeout(() => this.renderRatingSection(item), 100);
     setTimeout(() => this.renderTrailerSection(item), 150);
-setTimeout(() => this.renderCommentSection(item), 200);
+    setTimeout(() => { if(window.HKComments) HKComments.open(item.id); }, 300);
 };
 
 app.renderRatingSection = async function(item) {
@@ -8478,6 +9498,246 @@ app.renderRatingSection = async function(item) {
     
     serverContainer.insertAdjacentHTML('afterend', html);
     this.setupRatingEvents(item, hasVoted);
+  app.renderMediaImages = async function(item) {
+    const old = document.querySelector('.media-images-section');
+    if (old) old.remove();
+    if (!item.tmdb_id) return;
+
+    const mediaType = (item.type === 'movie' || item.subtype === 'movie'
+        || item.type === 'chinese' || item.type === 'japanese') ? 'movie' : 'tv';
+
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex = ac.replace('#','').trim();
+    const r = parseInt(hex.substring(0,2),16);
+    const g = parseInt(hex.substring(2,4),16);
+    const b = parseInt(hex.substring(4,6),16);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    const trailerSection = document.querySelector('.trailer-section');
+    const insertAfter = trailerSection || document.querySelector('.rating-wrapper');
+    if (!insertAfter) return;
+
+    const section = document.createElement('div');
+    section.className = 'media-images-section';
+    section.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+            <div style="display:inline-flex;align-items:center;gap:8px;
+                background:rgba(${r},${g},${b},0.08);
+                border:1px solid rgba(${r},${g},${b},0.25);
+                border-radius:50px;padding:6px 14px 6px 10px;">
+                <i class="fas fa-images" style="color:rgba(${r},${g},${b},1);font-size:13px;"></i>
+                <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">وێنەکان</span>
+                <span id="img-count-${item.id}" style="font-size:11px;color:rgba(${r},${g},${b},0.8);font-weight:800;"></span>
+            </div>
+            <button id="view-all-imgs-${item.id}" onclick="app.showAllImages('${item.id}')" style="
+                display:none;
+                align-items:center;gap:6px;
+                background:rgba(${r},${g},${b},0.12);
+                border:1px solid rgba(${r},${g},${b},0.35);
+                color:rgba(255,255,255,0.8);
+                font-size:11px;font-weight:800;
+                padding:6px 14px;border-radius:50px;cursor:pointer;
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+                transition:all 0.3s ease;"
+                onmouseover="this.style.background='rgba(${r},${g},${b},0.28)';this.style.color='#fff'"
+                onmouseout="this.style.background='rgba(${r},${g},${b},0.12)';this.style.color='rgba(255,255,255,0.8)'">
+                <i class="fas fa-th" style="font-size:10px;"></i>
+                بینینی هەمووی
+            </button>
+        </div>
+        <div id="images-grid-${item.id}" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;">
+            <div style="grid-column:1/-1;text-align:center;padding:20px;color:rgba(255,255,255,0.3);">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+        </div>
+    `;
+    section.style.cssText = `margin-top:20px;background:rgba(${r},${g},${b},0.05);
+        border:1px solid rgba(${r},${g},${b},0.15);border-radius:18px;padding:16px;`;
+
+    insertAfter.insertAdjacentElement('afterend', section);
+
+    try {
+        const res = await fetch(
+            `https://api.themoviedb.org/3/${mediaType}/${item.tmdb_id}/images?api_key=${TMDB_KEY}`
+        );
+        const data = await res.json();
+        const backdrops = (data.backdrops || []);
+        const grid = document.getElementById(`images-grid-${item.id}`);
+        if (!grid) return;
+
+        if (!backdrops.length) {
+            grid.innerHTML = '<p style="color:rgba(255,255,255,0.3);text-align:center;grid-column:1/-1;padding:15px;">وێنە نەدۆزرایەوە</p>';
+            return;
+        }
+
+        // پاشەکەوتکردنی هەموو وێنەکان بۆ lightbox
+        app._lightboxImages = app._lightboxImages || {};
+        app._lightboxImages[item.id] = backdrops.map(img =>
+            `https://image.tmdb.org/t/p/original${img.file_path}`
+        );
+        // پاشەکەوتکردنی هەموو وێنەکان بۆ نیشاندانی کامل
+        app._allBackdrops = app._allBackdrops || {};
+        app._allBackdrops[item.id] = backdrops;
+
+        const PREVIEW_COUNT = 10;
+        const previewBackdrops = backdrops.slice(0, PREVIEW_COUNT);
+
+        const countEl = document.getElementById(`img-count-${item.id}`);
+        if (countEl) countEl.textContent = `(${backdrops.length})`;
+
+        // نیشاندانی دوگمەی "بینینی هەمووی" ئەگەر زیاتر لە ١٠ وێنە هەبوو
+        if (backdrops.length > PREVIEW_COUNT) {
+            const viewAllBtn = document.getElementById(`view-all-imgs-${item.id}`);
+            if (viewAllBtn) {
+                viewAllBtn.style.display = 'inline-flex';
+                viewAllBtn.textContent = '';
+                viewAllBtn.innerHTML = `<i class="fas fa-th" style="font-size:10px;"></i> بینینی هەمووی (${backdrops.length})`;
+            }
+        }
+
+        function buildImageCard(img, i) {
+            return `
+            <div onclick="app.openLightbox('${item.id}', ${i})"
+                style="aspect-ratio:16/9;border-radius:10px;overflow:hidden;cursor:pointer;
+                border:1px solid rgba(${r},${g},${b},0.2);position:relative;transition:all 0.3s ease;"
+                onmouseover="this.style.transform='scale(1.03)';this.style.borderColor='rgba(${r},${g},${b},0.6)'"
+                onmouseout="this.style.transform='scale(1)';this.style.borderColor='rgba(${r},${g},${b},0.2)'">
+                <img src="https://image.tmdb.org/t/p/w500${img.file_path}"
+                    style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+                <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);
+                    display:flex;align-items:center;justify-content:center;
+                    opacity:0;transition:opacity 0.3s;"
+                    onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">
+                    <i class="fas fa-expand" style="color:#fff;font-size:18px;"></i>
+                </div>
+            </div>`;
+        }
+
+        grid.innerHTML = previewBackdrops.map((img, i) => buildImageCard(img, i)).join('');
+
+    } catch(e) {
+        console.log('Images error:', e);
+    }
+};
+
+// فانکشنی نیشاندانی هەموو وێنەکان
+app.showAllImages = function(itemId) {
+    const backdrops = app._allBackdrops?.[itemId];
+    if (!backdrops) return;
+
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+    const hex = ac.replace('#','').trim();
+    const r = parseInt(hex.substring(0,2),16);
+    const g = parseInt(hex.substring(2,4),16);
+    const b = parseInt(hex.substring(4,6),16);
+
+    const grid = document.getElementById(`images-grid-${itemId}`);
+    if (!grid) return;
+
+    grid.innerHTML = backdrops.map((img, i) => `
+        <div onclick="app.openLightbox('${itemId}', ${i})"
+            style="aspect-ratio:16/9;border-radius:10px;overflow:hidden;cursor:pointer;
+            border:1px solid rgba(${r},${g},${b},0.2);position:relative;transition:all 0.3s ease;"
+            onmouseover="this.style.transform='scale(1.03)';this.style.borderColor='rgba(${r},${g},${b},0.6)'"
+            onmouseout="this.style.transform='scale(1)';this.style.borderColor='rgba(${r},${g},${b},0.2)'">
+            <img src="https://image.tmdb.org/t/p/w500${img.file_path}"
+                style="width:100%;height:100%;object-fit:cover;display:block;" loading="lazy">
+            <div style="position:absolute;inset:0;background:rgba(0,0,0,0.4);
+                display:flex;align-items:center;justify-content:center;
+                opacity:0;transition:opacity 0.3s;"
+                onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0'">
+                <i class="fas fa-expand" style="color:#fff;font-size:18px;"></i>
+            </div>
+        </div>
+    `).join('');
+
+    // شاردنەوەی دوگمەی "بینینی هەمووی"
+    const btn = document.getElementById(`view-all-imgs-${itemId}`);
+    if (btn) btn.style.display = 'none';
+};
+
+app.openLightbox = function(itemId, index) {
+    const images = app._lightboxImages?.[itemId] || [];
+    if (!images.length) return;
+
+    let lb = document.getElementById('global-lightbox');
+    if (!lb) {
+        lb = document.createElement('div');
+        lb.id = 'global-lightbox';
+        lb.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);';
+        lb.innerHTML = `
+            <div style="position:relative;max-width:95vw;max-height:95vh;display:flex;align-items:center;justify-content:center;">
+                <img id="lb-img" src="" style="max-width:90vw;max-height:88vh;border-radius:12px;object-fit:contain;">
+                <button onclick="app.closeLightbox()"
+                    style="position:fixed;top:16px;right:16px;background:rgba(255,50,50,0.3);border:1px solid rgba(255,50,50,0.5);
+                    color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:16px;
+                    display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-times"></i>
+                </button>
+                <button onclick="app.changeLightbox(-1)"
+                    style="position:fixed;right:12px;top:50%;transform:translateY(-50%);
+                    background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+                    color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:14px;
+                    display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button onclick="app.changeLightbox(1)"
+                    style="position:fixed;left:12px;top:50%;transform:translateY(-50%);
+                    background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);
+                    color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:14px;
+                    display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div id="lb-counter" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+                    color:rgba(255,255,255,0.6);font-size:13px;background:rgba(0,0,0,0.5);
+                    padding:4px 14px;border-radius:20px;"></div>
+            </div>`;
+        document.body.appendChild(lb);
+        lb.addEventListener('click', function(e) {
+            if (e.target === lb || e.target === lb.firstElementChild) app.closeLightbox();
+        });
+    }
+
+    app._lbCurrent = { itemId, index };
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-img').src = images[index];
+    document.getElementById('lb-counter').textContent = `${index + 1} / ${images.length}`;
+};
+
+app.closeLightbox = function() {
+    const lb = document.getElementById('global-lightbox');
+    if (lb) lb.style.display = 'none';
+    document.body.style.overflow = '';
+};
+
+app.changeLightbox = function(dir) {
+    const { itemId, index } = app._lbCurrent;
+    const images = app._lightboxImages?.[itemId] || [];
+    const newIndex = (index + dir + images.length) % images.length;
+    app.openLightbox(itemId, newIndex);
+};
     this.fetchLiveRatings(item.id);
 };
 
@@ -8566,197 +9826,6 @@ app.setupRatingEvents = function(item, hasVoted) {
         }
     });
 };
-
-
-
-// ========== COMMENT SYSTEM ==========
-const db = firebase.firestore();
-
-app.renderCommentSection = function(item) {
-    const old = document.querySelector('.comment-section');
-    if (old) old.remove();
-
-    const ac = getComputedStyle(document.documentElement)
-        .getPropertyValue('--accent-color').trim() || '#8c00ff';
-
-    const user = auth.currentUser;
-    const userAvatar = user?.photoURL || 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-
-    const inputArea = user ? `
-        <div class="comment-input-wrap">
-            <img src="${userAvatar}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
-            <textarea class="comment-input-box" id="comment-input-${item.id}"
-                placeholder="کۆمێنتت بنووسە..." rows="1"
-                oninput="autoResizeComment(this)"></textarea>
-            <button class="comment-send-btn" id="comment-send-${item.id}"
-                onclick="submitComment(${item.id})">
-                <i class="fas fa-paper-plane" style="font-size:13px;transform:scaleX(-1);"></i>
-            </button>
-        </div>
-    ` : `
-        <div class="comment-login-prompt">
-            <i class="fas fa-comment-slash"></i>
-            <p>بۆ نووسینی کۆمێنت، داخل ببە</p>
-            <button onclick="openMenuModal('account');closeCommentIfOpen()">
-                <i class="fas fa-sign-in-alt" style="margin-left:5px;"></i> داخلبوون
-            </button>
-        </div>
-    `;
-
-    const html = `
-        <div class="comment-section">
-            <div class="comment-section-header">
-                <i class="fas fa-comments"></i>
-                <span>کۆمێنتەکان</span>
-                <span id="comment-count-${item.id}" style="
-                    background:rgba(140,0,255,0.3);
-                    color:#fff;font-size:10px;font-weight:800;
-                    padding:1px 7px;border-radius:20px;margin-right:4px;">0</span>
-            </div>
-            ${inputArea}
-            <div id="comments-list-${item.id}">
-                <div class="comments-loading">چاوەڕوانبە...</div>
-            </div>
-        </div>
-    `;
-
-    const playerBottom = document.getElementById('player-bottom');
-    if (playerBottom) playerBottom.insertAdjacentHTML('beforeend', html);
-
-    this.loadComments(item.id);
-};
-
-app.loadComments = function(movieId) {
-    const listEl = document.getElementById(`comments-list-${movieId}`);
-    if (!listEl) return;
-
-    db.collection('comments')
-        .where('movieId', '==', Number(movieId))
-        .orderBy('createdAt', 'desc')
-        .limit(50)
-        .get()
-        .then(snapshot => {
-            const countEl = document.getElementById(`comment-count-${movieId}`);
-            if (countEl) countEl.innerText = snapshot.size;
-
-            if (snapshot.empty) {
-                listEl.innerHTML = `<div class="comments-empty">
-                    <i class="fas fa-comment" style="font-size:28px;margin-bottom:8px;display:block;opacity:0.3;"></i>
-                    هێشتا کۆمێنتێک نییە. یەکەمین بە!
-                </div>`;
-                return;
-            }
-
-            const user = auth.currentUser;
-            let html = '';
-            snapshot.forEach(doc => {
-                const c = doc.data();
-                const isOwner = user && user.uid === c.userId;
-                const timeStr = c.createdAt?.toDate
-                    ? formatCommentTime(c.createdAt.toDate())
-                    : 'ئێستا';
-
-                html += `
-                    <div class="comment-item" id="comment-${doc.id}">
-                        <img src="${c.avatar || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}"
-                            onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
-                        <div class="comment-bubble">
-                            <div class="comment-name">${escapeHtml(c.userName || 'بەکارهێنەر')}</div>
-                            <div class="comment-text">${escapeHtml(c.text)}</div>
-                            <div class="comment-meta">
-                                <span class="comment-time">${timeStr}</span>
-                                ${isOwner ? `<button class="comment-delete-btn" style="display:inline-block;"
-                                    onclick="deleteComment('${doc.id}', ${movieId})">
-                                    <i class="fas fa-trash-alt" style="margin-left:3px;"></i> سڕینەوە
-                                </button>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            listEl.innerHTML = html;
-        })
-        .catch(err => {
-            console.error('Comments error:', err);
-            listEl.innerHTML = `<div class="comments-empty">کێشەیەک ڕوویدا</div>`;
-        });
-};
-
-async function submitComment(movieId) {
-    const user = auth.currentUser;
-    if (!user) return;
-
-    const input = document.getElementById(`comment-input-${movieId}`);
-    const btn = document.getElementById(`comment-send-${movieId}`);
-    const text = input?.value.trim();
-
-    if (!text || text.length < 1) return;
-    if (text.length > 500) {
-        input.style.borderColor = 'rgba(255,80,80,0.6)';
-        setTimeout(() => input.style.borderColor = '', 1500);
-        return;
-    }
-
-    btn.disabled = true;
-    input.disabled = true;
-
-    try {
-        await db.collection('comments').add({
-            movieId: movieId,
-            userId: user.uid,
-            userName: user.displayName || user.email?.split('@')[0] || 'بەکارهێنەر',
-            avatar: user.photoURL || '',
-            text: text,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        input.value = '';
-        input.style.height = '44px';
-    } catch (err) {
-        console.error('Submit comment error:', err);
-    } finally {
-        btn.disabled = false;
-        input.disabled = false;
-        input.focus();
-    }
-}
-
-async function deleteComment(commentId, movieId) {
-    if (!confirm('دڵنیایت لە سڕینەوەی کۆمێنتەکە؟')) return;
-    const user = auth.currentUser;
-    if (!user) return;
-    try {
-        await db.collection('comments').doc(commentId).delete();
-    } catch (err) {
-        console.error('Delete error:', err);
-    }
-}
-
-function autoResizeComment(el) {
-    el.style.height = '44px';
-    el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-}
-
-function formatCommentTime(date) {
-    const now = new Date();
-    const diff = Math.floor((now - date) / 1000);
-    if (diff < 60) return 'ئێستا';
-    if (diff < 3600) return Math.floor(diff/60) + ' خولەک پێش';
-    if (diff < 86400) return Math.floor(diff/3600) + ' کاتژمێر پێش';
-    if (diff < 604800) return Math.floor(diff/86400) + ' ڕۆژ پێش';
-    return date.toLocaleDateString('ar-IQ');
-}
-
-function escapeHtml(text) {
-    return String(text)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-}
-
-function closeCommentIfOpen() {
-    // هیچی پێویست نییە، تەنها بۆ ناو onclick
-}
 </script>
 
 
@@ -8818,6 +9887,405 @@ document.addEventListener('DOMContentLoaded', function() {
         </article>
     `;
 });
+</script>
+<style id="hk-comment-style">
+.hk-comment-section {
+    margin-top: 28px;
+    padding: 0 16px 40px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    direction: rtl;
+}
+.hk-comment-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+}
+.hk-comment-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    right: 0;
+    width: 80px;
+    height: 2px;
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+.hk-comment-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+}
+.hk-comment-count {
+    background: rgba(140,0,255,0.2);
+    border: 1px solid rgba(140,0,255,0.4);
+    color: var(--accent-light);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 2px 10px;
+    border-radius: 20px;
+    min-width: 24px;
+    text-align: center;
+}
+.hk-comment-login-notice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(140,0,255,0.07);
+    border: 1px solid rgba(140,0,255,0.2);
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+.hk-comment-login-notice:hover {
+    background: rgba(140,0,255,0.14);
+    border-color: rgba(140,0,255,0.45);
+    color: #fff;
+}
+.hk-comment-login-notice i { color: var(--accent-color); font-size: 16px; }
+.hk-comment-input-wrap {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.hk-comment-input-wrap.show { display: flex; }
+.hk-comment-user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.hk-comment-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(140,0,255,0.4);
+    flex-shrink: 0;
+}
+.hk-comment-avatar-placeholder {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(140,0,255,0.2);
+    border: 2px solid rgba(140,0,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--accent-light);
+    font-size: 14px;
+    font-weight: 800;
+}
+.hk-comment-username {
+    font-size: 13px; font-weight: 800; color: #fff;
+}
+.hk-comment-textarea {
+    width: 100%;
+    min-height: 90px;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(140,0,255,0.25);
+    border-radius: 14px;
+    color: #fff;
+    font-size: 13px;
+    padding: 12px 14px;
+    resize: none;
+    outline: none;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    direction: rtl;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+.hk-comment-textarea:focus {
+    border-color: var(--accent-color);
+    background: rgba(140,0,255,0.06);
+    box-shadow: 0 0 15px rgba(140,0,255,0.15);
+}
+.hk-comment-textarea::placeholder { color: rgba(255,255,255,0.25); }
+.hk-comment-char-row {
+    display: flex; align-items: center; justify-content: space-between;
+}
+.hk-comment-char-count { font-size: 11px; color: rgba(255,255,255,0.3); }
+.hk-comment-submit {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: linear-gradient(135deg, rgba(140,0,255,0.8), rgba(179,102,255,0.7));
+    border: 1px solid rgba(179,102,255,0.5);
+    color: #fff; font-size: 12px; font-weight: 800;
+    padding: 9px 20px; border-radius: 50px; cursor: pointer;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(140,0,255,0.25);
+}
+.hk-comment-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(140,0,255,0.4); }
+.hk-comment-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.hk-comment-list { display: flex; flex-direction: column; gap: 12px; }
+.hk-comment-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 14px 16px;
+    position: relative;
+    transition: all 0.3s;
+    animation: commentFadeIn 0.4s ease;
+}
+@keyframes commentFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.hk-comment-item:hover {
+    border-color: rgba(140,0,255,0.2);
+    background: rgba(140,0,255,0.04);
+}
+.hk-comment-item-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.hk-comment-item-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%; object-fit: cover;
+    border: 2px solid rgba(140,0,255,0.3); flex-shrink: 0;
+}
+.hk-comment-item-info { flex: 1; min-width: 0; }
+.hk-comment-item-name {
+    font-size: 13px; font-weight: 800; color: #fff;
+    display: block; margin-bottom: 2px;
+}
+.hk-comment-item-date { font-size: 10px; color: rgba(255,255,255,0.3); display: block; }
+.hk-comment-item-text {
+    font-size: 13px; color: rgba(255,255,255,0.8);
+    line-height: 1.7; word-break: break-word;
+}
+.hk-comment-item-actions {
+    display: flex; gap: 8px; margin-top: 10px;
+}
+.hk-comment-delete-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 10px; color: rgba(255,80,80,0.6);
+    background: rgba(255,50,50,0.08);
+    border: 1px solid rgba(255,50,50,0.2);
+    padding: 4px 10px; border-radius: 20px; cursor: pointer;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    transition: all 0.3s;
+}
+.hk-comment-delete-btn:hover {
+    color: #ff6060; background: rgba(255,50,50,0.18);
+    border-color: rgba(255,50,50,0.5);
+}
+.hk-comment-own-badge {
+    position: absolute; top: 12px; left: 12px;
+    background: rgba(140,0,255,0.15);
+    border: 1px solid rgba(140,0,255,0.3);
+    color: var(--accent-light);
+    font-size: 9px; font-weight: 800;
+    padding: 2px 8px; border-radius: 20px;
+}
+.hk-comment-loading {
+    text-align: center; padding: 30px;
+    color: rgba(255,255,255,0.3); font-size: 13px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.hk-comment-loading i { color: var(--accent-color); animation: hk-spin 0.8s linear infinite; }
+@keyframes hk-spin { to { transform: rotate(360deg); } }
+.hk-comment-empty {
+    text-align: center; padding: 30px 20px;
+    color: rgba(255,255,255,0.25); font-size: 13px;
+    border: 1px dashed rgba(255,255,255,0.08); border-radius: 14px;
+}
+.hk-comment-empty i {
+    font-size: 28px; display: block;
+    margin-bottom: 8px; color: rgba(140,0,255,0.3);
+}
+@media (max-width: 768px) {
+    .hk-comment-section { padding: 0 12px 40px; }
+    .hk-comment-textarea { min-height: 80px; font-size: 12px; }
+}
+</style>
+
+<!-- JavaScript -->
+<script id="hk-comment-script">
+(function() {
+
+function waitForFirestore(cb) {
+    if (typeof firebase !== 'undefined' && firebase.apps && firebase.apps.length && firebase.firestore) {
+        try { cb(firebase.firestore()); } catch(e) { setTimeout(() => waitForFirestore(cb), 500); }
+    } else {
+        setTimeout(() => waitForFirestore(cb), 300);
+    }
+}
+
+function formatDate(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const now = new Date();
+    const diff = Math.floor((now - d) / 1000);
+    if (diff < 60) return 'ئێستا';
+    if (diff < 3600) return Math.floor(diff/60) + ' خولەک پێش';
+    if (diff < 86400) return Math.floor(diff/3600) + ' کاتژمێر پێش';
+    if (diff < 604800) return Math.floor(diff/86400) + ' ڕۆژ پێش';
+    return d.toLocaleDateString('en-GB');
+}
+
+function escapeHTML(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function buildCommentHTML(doc, currentUserId) {
+    const data = doc.data();
+    const isOwn = currentUserId && data.user_id === currentUserId;
+    const initial = (data.user_name || '?')[0].toUpperCase();
+    return '<div class="hk-comment-item" id="hk-c-' + doc.id + '">' +
+        (isOwn ? '<span class="hk-comment-own-badge">کۆمێنتی من</span>' : '') +
+        '<div class="hk-comment-item-header">' +
+        (data.user_photo
+            ? '<img class="hk-comment-item-avatar" src="' + escapeHTML(data.user_photo) + '" onerror="this.style.display=\'none\'">'
+            : '<div class="hk-comment-avatar-placeholder">' + initial + '</div>') +
+        '<div class="hk-comment-item-info">' +
+        '<span class="hk-comment-item-name">' + escapeHTML(data.user_name || 'بەکارهێنەر') + '</span>' +
+        '<span class="hk-comment-item-date">' + formatDate(data.timestamp) + '</span>' +
+        '</div></div>' +
+        '<div class="hk-comment-item-text">' + escapeHTML(data.text) + '</div>' +
+        (isOwn ? '<div class="hk-comment-item-actions"><button class="hk-comment-delete-btn" onclick="HKComments.deleteComment(\'' + doc.id + '\')"><i class="fas fa-trash"></i> سڕینەوە</button></div>' : '') +
+        '</div>';
+}
+
+window.HKComments = {
+    db: null,
+    currentDramaId: null,
+    unsubscribe: null,
+
+    init: function(db) { this.db = db; },
+
+    open: function(dramaId) {
+        if (this.unsubscribe) { this.unsubscribe(); this.unsubscribe = null; }
+        this.currentDramaId = String(dramaId);
+        this.render();
+        this.listen();
+    },
+
+    render: function() {
+        const section = document.getElementById('hk-comment-section');
+        if (!section) return;
+        const user = firebase.auth().currentUser;
+        const initial = user ? (user.displayName || user.email || '?')[0].toUpperCase() : '';
+        const userName = user ? (user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر')) : '';
+
+        section.innerHTML =
+            '<div class="hk-comment-section">' +
+            '<div class="hk-comment-header">' +
+            '<i class="fas fa-comments" style="color:var(--accent-color);font-size:16px;"></i>' +
+            '<span class="hk-comment-title">کۆمێنتەکان</span>' +
+            '<span class="hk-comment-count" id="hk-ccount">0</span>' +
+            '</div>' +
+            (user
+                ? '<div class="hk-comment-input-wrap show" id="hk-input-wrap">' +
+                  '<div class="hk-comment-user-row">' +
+                  (user.photoURL ? '<img class="hk-comment-avatar" src="' + user.photoURL + '">' : '<div class="hk-comment-avatar-placeholder">' + initial + '</div>') +
+                  '<span class="hk-comment-username">' + escapeHTML(userName) + '</span>' +
+                  '</div>' +
+                  '<textarea class="hk-comment-textarea" id="hk-ctextarea" placeholder="کۆمێنتەکەت بنووسە..." maxlength="500" oninput="var el=document.getElementById(\'hk-ccharcount\');if(el)el.innerText=this.value.length+\'/500\'"></textarea>' +
+                  '<div class="hk-comment-char-row">' +
+                  '<span class="hk-comment-char-count" id="hk-ccharcount">0/500</span>' +
+                  '<button class="hk-comment-submit" id="hk-csubmit" onclick="HKComments.submit()"><i class="fas fa-paper-plane"></i> ناردن</button>' +
+                  '</div></div>'
+                : '<div class="hk-comment-login-notice" onclick="openMenuModal(\'account\')">' +
+                  '<i class="fas fa-user-circle"></i>' +
+                  '<span>داخل ببە تا کۆمێنت بنووسیت</span>' +
+                  '<i class="fas fa-chevron-left" style="margin-right:auto;opacity:0.5;font-size:11px;"></i>' +
+                  '</div>') +
+            '<div class="hk-comment-list" id="hk-clist">' +
+            '<div class="hk-comment-loading"><i class="fas fa-spinner"></i><span>کۆمێنتەکان دەهێنرێن...</span></div>' +
+            '</div></div>';
+    },
+
+    listen: function() {
+        if (!this.db || !this.currentDramaId) return;
+        var self = this;
+        this.unsubscribe = this.db
+            .collection('comments')
+            .where('drama_id', '==', self.currentDramaId)
+            .orderBy('timestamp', 'desc')
+            .limit(100)
+            .onSnapshot(function(snapshot) {
+                var list = document.getElementById('hk-clist');
+                var countEl = document.getElementById('hk-ccount');
+                if (!list) return;
+                var user = firebase.auth().currentUser;
+                var count = snapshot.docs.length;
+                if (countEl) countEl.innerText = count;
+                if (count === 0) {
+                    list.innerHTML = '<div class="hk-comment-empty"><i class="fas fa-comment-slash"></i>هێشتا کۆمێنتێک نیە، یەکەم بە!</div>';
+                    return;
+                }
+                list.innerHTML = snapshot.docs.map(function(doc) {
+                    return buildCommentHTML(doc, user ? user.uid : null);
+                }).join('');
+            }, function(err) {
+                console.log('Comment listen error:', err);
+                var list = document.getElementById('hk-clist');
+                if (list) list.innerHTML = '<div class="hk-comment-empty"><i class="fas fa-exclamation-triangle"></i>کێشەیەک ڕوویدا</div>';
+            });
+    },
+
+    submit: async function() {
+        var user = firebase.auth().currentUser;
+        if (!user) { if(typeof openMenuModal !== 'undefined') openMenuModal('account'); return; }
+        var textarea = document.getElementById('hk-ctextarea');
+        if (!textarea) return;
+        var text = textarea.value.trim();
+        if (!text || text.length < 1) return;
+        var btn = document.getElementById('hk-csubmit');
+        if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+        try {
+            await this.db.collection('comments').add({
+                drama_id: this.currentDramaId,
+                user_id: user.uid,
+                user_name: user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر'),
+                user_photo: user.photoURL || null,
+                text: text,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            textarea.value = '';
+            var cc = document.getElementById('hk-ccharcount');
+            if (cc) cc.innerText = '0/500';
+        } catch(e) {
+            console.log('Submit error:', e);
+            alert('کێشەیەک ڕوویدا، دووبارە هەوڵ بدە');
+        }
+        if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> ناردن'; }
+    },
+
+    deleteComment: async function(docId) {
+        var user = firebase.auth().currentUser;
+        if (!user) return;
+        if (!confirm('دڵنیایت لە سڕینەوەی کۆمێنتەکە؟')) return;
+        try {
+            await this.db.collection('comments').doc(docId).delete();
+        } catch(e) { console.log('Delete error:', e); alert('سڕینەوە سەرکەوتوو نەبوو'); }
+    },
+
+    close: function() {
+        if (this.unsubscribe) { this.unsubscribe(); this.unsubscribe = null; }
+        this.currentDramaId = null;
+    }
+};
+
+// دەستپێکردن
+waitForFirestore(function(db) {
+    HKComments.init(db);
+    console.log('HKComments ready!');
+});
+
+// گوێگرتن لە گۆڕانی هەژمار - نوێکردنەوەی UI
+firebase.auth().onAuthStateChanged(function(user) {
+    if (window.HKComments && window.HKComments.currentDramaId) {
+        HKComments.render();
+        HKComments.listen();
+    }
+});
+
+})();
 </script>
 
 
