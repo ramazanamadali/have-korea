@@ -9439,7 +9439,7 @@ app.openPlayer = async function(item) {
     await originalOpenPlayer.call(this, item);
     setTimeout(() => this.renderRatingSection(item), 100);
     setTimeout(() => this.renderTrailerSection(item), 150);
-    setTimeout(() => { if(window.HKComments) HKComments.open(item.id); }, 300);
+    setTimeout(() => { if(window.HKComments) HKComments.open(String(item.id)); }, 300);
 };
 
 app.renderRatingSection = async function(item) {
@@ -10205,7 +10205,7 @@ window.HKComments = {
         this.unsubscribe = this.db
             .collection('comments')
             .where('drama_id', '==', self.currentDramaId)
-            .orderBy('timestamp', 'desc')
+            .orderBy('timestamp', 'asc')
             .limit(100)
             .onSnapshot(function(snapshot) {
                 var list = document.getElementById('hk-clist');
@@ -10218,7 +10218,7 @@ window.HKComments = {
                     list.innerHTML = '<div class="hk-comment-empty"><i class="fas fa-comment-slash"></i>هێشتا کۆمێنتێک نیە، یەکەم بە!</div>';
                     return;
                 }
-                list.innerHTML = snapshot.docs.map(function(doc) {
+                list.innerHTML = snapshot.docs.slice().reverse().map(function(doc) {
                     return buildCommentHTML(doc, user ? user.uid : null);
                 }).join('');
             }, function(err) {
@@ -10242,6 +10242,7 @@ window.HKComments = {
     drama_id: String(this.currentDramaId),
     user_id: user.uid,
     user_name: user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر'),
+    user_photo: user.photoURL || null,
     text: text,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
 });
