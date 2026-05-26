@@ -10238,14 +10238,13 @@ window.HKComments = {
         var btn = document.getElementById('hk-csubmit');
         if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
         try {
-            await this.db.collection('comments').add({
-                drama_id: this.currentDramaId,
-                user_id: user.uid,
-                user_name: user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر'),
-                user_photo: user.photoURL || null,
-                text: text,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
+           await this.db.collection('comments').add({
+    drama_id: String(this.currentDramaId),
+    user_id: user.uid,
+    user_name: user.displayName || (user.email ? user.email.split('@')[0] : 'بەکارهێنەر'),
+    text: text,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+});
             textarea.value = '';
             var cc = document.getElementById('hk-ccharcount');
             if (cc) cc.innerText = '0/500';
