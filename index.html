@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
     <title>هاڤێ کۆریا | have Korea - درامای کۆری بە ژێرنووسی کوردی</title>
     
     <meta name="description" content="هاڤێ کۆریا (have korea) - سایتی هاڤێ کۆریا، تایبەت بە نوێترین دراما و فیلمە کۆرییەکان بە باشترین کوالێتی و ژێرنووسی کوردی.">
@@ -5192,8 +5195,124 @@ function watchRandom() {
     // کردنەوەی پلەیەر
     setTimeout(() => app.openPlayer(currentRandomItem), 150);
 }
+window._randMood = 'all';
+window._randRatingType = 'none';
+window._randMinRating  = 0;
 
+function pickRandomMulti() {
+  let pool = app.data;
+  if (currentRandomType !== 'all') {
+    pool = pool.filter(d => d.type === currentRandomType);
+  }
+  if (window._randMood && window._randMood !== 'all') {
+    const filtered = pool.filter(d => d.genre && d.genre.includes(window._randMood));
+    if (filtered.length > 0) pool = filtered;
+  }
 
+  const ratingType = window._randRatingType || 'none';
+  const minRating  = window._randMinRating  || 0;
+
+  if (ratingType !== 'none' && minRating > 0) {
+    const hint = document.getElementById('rand-rating-hint');
+    if (hint) {
+      hint.style.display = 'block';
+      hint.innerHTML = `<i class="fas fa-spinner fa-spin"></i> داتای نمرەکان دەهێنرێن...`;
+    }
+    Promise.all(pool.map(item =>
+      app.fetchIMDB(item.title).then(({imdb, tmdb}) => {
+        item._imdb = imdb;
+        item._tmdb = tmdb;
+      }).catch(()=>{})
+    )).then(() => {
+      let ratedPool = pool.filter(item => {
+        if (ratingType === 'imdb') {
+          return item._imdb && parseFloat(item._imdb) >= minRating;
+        } else if (ratingType === 'tmdb') {
+          return item._tmdb && parseFloat(item._tmdb) >= minRating;
+        }
+        return true;
+      });
+      if (hint) {
+        if (ratedPool.length === 0) {
+          hint.innerHTML = `<i class="fas fa-exclamation-circle"></i> هیچ کارێک بەم نمرەیە نەدۆزرایەوە، بێ فلتەر هەڵبژێردرا`;
+          ratedPool = pool;
+        } else {
+          hint.innerHTML = `<i class="fas fa-check-circle"></i> ${ratedPool.length} کار پەیداکرا`;
+        }
+      }
+      _doPickRandom(ratedPool);
+    });
+    return;
+  }
+
+  const hint = document.getElementById('rand-rating-hint');
+  if (hint) hint.style.display = 'none';
+  _doPickRandom(pool);
+}
+
+function _doPickRandom(pool) {
+  if (!pool.length) return;
+
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const picks = shuffled.slice(0, Math.min(3, shuffled.length));
+  currentRandomItem = picks[0];
+
+  const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+  const hex = ac.replace('#','').trim();
+  const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+  const typeMap = {drama:'دراما',movie:'فیلم',chinese:'چینی',japanese:'ژاپۆنی'};
+
+  const multiDiv = document.getElementById('rand-multi-results');
+  const cardsRow = document.getElementById('rand-cards-row');
+  if (multiDiv && cardsRow) {
+    cardsRow.innerHTML = picks.map((item, i) => `
+      <div onclick="currentRandomItem=app.data.find(d=>d.id===${item.id});
+        document.getElementById('random-result-card').style.display='flex';
+        document.getElementById('random-img').src='${item.image}';
+        document.getElementById('random-title').innerText='${item.title.replace(/'/g,"\\'")}';
+        document.getElementById('random-genre').innerText='${(item.genre||'').replace(/'/g,"\\'")}';
+        document.getElementById('random-desc').innerText='${(item.desc||'').replace(/'/g,"\\'").slice(0,100)}...';
+        document.getElementById('random-type-badge').innerText='${typeMap[item.type]||'دراما'}';
+        document.getElementById('random-watch-btn').style.display='flex';"
+        style="flex-shrink:0;width:100px;cursor:pointer;
+        border:2px solid ${i===0?`rgba(${r},${g},${b},0.7)`:'rgba(255,255,255,0.12)'};
+        border-radius:14px;overflow:hidden;transition:all 0.3s;
+        box-shadow:${i===0?`0 0 15px rgba(${r},${g},${b},0.3)`:'none'};"
+        onmouseover="this.style.borderColor='rgba(${r},${g},${b},0.8)';this.style.transform='translateY(-4px)'"
+        onmouseout="this.style.borderColor='${i===0?`rgba(${r},${g},${b},0.7)`:'rgba(255,255,255,0.12)'}';this.style.transform='translateY(0)'">
+        <div style="aspect-ratio:2/3;overflow:hidden;position:relative;">
+          <img src="${item.image}" style="width:100%;height:100%;object-fit:cover;display:block;">
+          ${i===0?`<div style="position:absolute;top:5px;right:5px;background:rgba(${r},${g},${b},0.9);
+            color:#fff;font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px;">
+            <i class="fas fa-star" style="font-size:7px;"></i> یەکەم
+          </div>`:''}
+        </div>
+        <div style="padding:6px 5px;background:rgba(0,0,0,0.5);">
+          <div style="font-size:8.5px;font-weight:800;color:#fff;
+            display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+            overflow:hidden;line-height:1.3;font-family:'Rajdhani',sans-serif;">
+            ${item.title}
+          </div>
+        </div>
+      </div>`).join('');
+    multiDiv.style.display = 'block';
+  }
+
+  const card = document.getElementById('random-result-card');
+  if (card) {
+    document.getElementById('random-img').src = picks[0].image;
+    document.getElementById('random-title').innerText = picks[0].title;
+    document.getElementById('random-genre').innerText = picks[0].genre || '';
+    document.getElementById('random-desc').innerText = (picks[0].desc || '').slice(0, 100) + '...';
+    document.getElementById('random-type-badge').innerText = typeMap[picks[0].type] || 'دراما';
+    card.style.display = 'flex';
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = 'fadeSlideIn 0.4s ease';
+    document.getElementById('random-watch-btn').style.display = 'flex';
+  }
+}
+    
 
 function quickRandom(type) {
     currentRandomType = type;
@@ -6698,7 +6817,14 @@ body {
    ============================================= -->
 <div id="modern-sidebar" class="glass-sidebar">
     <div class="sidebar-inner">
-        <div class="sidebar-header-title">HAVE KOREA</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:35px;">
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div style="width:28px;height:1px;background:rgba(140,0,255,0.5);"></div>
+    <span style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:6px;color:#fff;">HAVE <span style="color:rgba(140,0,255,0.95);">K</span>OREA</span>
+    <div style="width:28px;height:1px;background:rgba(140,0,255,0.5);"></div>
+  </div>
+  <div style="width:100%;height:2px;background:rgba(140,0,255,0.55);border-radius:2px;"></div>
+</div>
         
         <div class="menu-grid">
             <button class="menu-item" onclick="openMenuModal('account')">
@@ -6882,7 +7008,8 @@ body {
     left: -320px; 
     width: 310px; 
     height: 100vh; 
-    background: rgba(8, 8, 14, 0.98); 
+        background: linear-gradient(145deg, rgba(18,4,42,0.99) 0%, rgba(9,6,22,0.99) 45%, rgba(6,6,15,0.99) 100%);
+ 
     backdrop-filter: blur(35px); 
     z-index: 10000; 
     transition: 0.5s; 
@@ -7691,7 +7818,12 @@ document.addEventListener('click', (e) => {
   ئاسیا
   <span class="works-count-badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;">0</span>
 </button>
-
+<button class="works-person-btn" data-role="translator" data-name="لینا" data-avatar="lina.png" onclick="filterWorksModal(this)"
+  style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);padding:8px 14px;border-radius:50px;cursor:pointer;font-size:12px;font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;">
+  <img src="lina.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;">
+  لینا
+  <span class="works-count-badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;">0</span>
+</button>
 <button class="works-person-btn" data-role="translator" data-name="شاین" data-avatar="shaian.png" onclick="filterWorksModal(this)"
   style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);padding:8px 14px;border-radius:50px;cursor:pointer;font-size:12px;font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;">
   <img src="shaian.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.3);">
@@ -7743,133 +7875,316 @@ random: (() => {
   function hexToRgba(hex, alpha) {
     hex = hex.replace('#','').trim();
     if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    const r=parseInt(hex.substring(0,2),16), g=parseInt(hex.substring(2,4),16), b=parseInt(hex.substring(4,6),16);
+    const r=parseInt(hex.substring(0,2),16),g=parseInt(hex.substring(2,4),16),b=parseInt(hex.substring(4,6),16);
     return `rgba(${r},${g},${b},${alpha})`;
   }
+  const db = typeof database !== 'undefined' ? database : [];
+  const total = db.length;
+  const dramas = db.filter(d=>d.type==='drama').length;
+  const movies = db.filter(d=>d.type==='movie').length;
+  const chinese = db.filter(d=>d.type==='chinese').length;
+  const japanese = db.filter(d=>d.type==='japanese').length;
+
+  const moods = [
+    { key:'all',        icon:'fa-globe',       label:'هەمووی' },
+    { key:'ڕۆمانسی',   icon:'fa-heart',       label:'ڕۆمانسی' },
+    { key:'ئەکشن',     icon:'fa-bolt',        label:'ئەکشن' },
+    { key:'کۆمیدی',   icon:'fa-face-laugh',  label:'کۆمیدی' },
+    { key:'تاوانکاری', icon:'fa-user-secret', label:'تاوانکاری' },
+    { key:'خەیاڵی',   icon:'fa-wand-sparkles',label:'خەیاڵی' },
+    { key:'پزیشکی',   icon:'fa-stethoscope', label:'پزیشکی' },
+  ];
+
   return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
+<div style="direction:rtl;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
 
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-random" style="color:${ac};font-size:22px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
+  <!-- Hero Banner -->
+  <div style="position:relative;border-radius:20px;overflow:hidden;margin-bottom:20px;
+    background:linear-gradient(135deg,${hexToRgba(ac,0.25)},${hexToRgba(ac,0.08)});
+    border:1px solid ${hexToRgba(ac,0.35)};padding:22px 20px 18px;">
+    <div style="position:absolute;top:-30px;left:-30px;width:140px;height:140px;
+      background:radial-gradient(circle,${hexToRgba(ac,0.3)},transparent 70%);pointer-events:none;"></div>
+    <div style="position:relative;z-index:1;display:flex;align-items:center;gap:14px;">
+      <div style="width:52px;height:52px;border-radius:16px;flex-shrink:0;
+        background:${hexToRgba(ac,0.2)};border:2px solid ${hexToRgba(ac,0.5)};
+        display:flex;align-items:center;justify-content:center;
+        box-shadow:0 0 20px ${hexToRgba(ac,0.3)};">
+        <i class="fas fa-dice" style="color:${ac};font-size:22px;
+          filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.8)});"></i>
       </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">هەڕەمەکیانە</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:1.5px;">RANDOM PICK</span>
+      <div>
+        <div style="color:#fff;font-size:20px;font-weight:900;line-height:1.2;margin-bottom:3px;">هەڕەمەکیانە</div>
+        <div style="color:${al};font-size:10px;font-weight:700;letter-spacing:1px;">RANDOM PICK · ${total} کار بەردەستە</div>
+      </div>
     </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
+    <!-- ئامار -->
+    <div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:6px;margin-top:16px;padding-top:14px;border-top:1px solid ${hexToRgba(ac,0.2)};">
+      ${[
+        {num:total,    label:'کۆی گشتی', icon:'fa-layer-group'},
+        {num:dramas,   label:'دراما',    icon:'fa-tv'},
+        {num:movies,   label:'فیلم',     icon:'fa-film'},
+        {num:chinese+japanese, label:'ئاسیایی', icon:'fa-globe-asia'}
+      ].map(s=>`
+      <div style="text-align:center;background:${hexToRgba(ac,0.12)};
+        border-radius:10px;padding:8px 4px;border:1px solid ${hexToRgba(ac,0.2)};">
+        <i class="fas ${s.icon}" style="color:${hexToRgba(ac,0.7)};font-size:12px;display:block;margin-bottom:4px;"></i>
+        <div style="font-size:17px;font-weight:900;color:#fff;">${s.num}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);margin-top:1px;">${s.label}</div>
+      </div>`).join('')}
+    </div>
   </div>
 
-  <!-- ئاگادارکردنەوە -->
-  <div style="background:${hexToRgba(ac,0.07)};border:1px solid ${hexToRgba(ac,0.25)};
-    border-radius:14px;padding:14px 16px;margin-bottom:20px;
-    display:flex;align-items:flex-start;gap:10px;">
-    <i class="fas fa-info-circle" style="color:${ac};font-size:16px;margin-top:2px;flex-shrink:0;"></i>
-    <p style="color:rgba(255,255,255,0.75);font-size:12px;line-height:1.7;margin:0;">
-      جۆرێک هەڵبژێرە، دراما یان فیلمێکی تازە بۆت دادەنێین!
-    </p>
+  <!-- جۆری دراما -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      جۆر هەڵبژێرە
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;" id="rand-type-row">
+      ${[
+        {type:'all',     icon:'fa-globe',  label:'هەمووی', num:total},
+        {type:'drama',   icon:'fa-tv',     label:'دراما',  num:dramas},
+        {type:'movie',   icon:'fa-film',   label:'فیلم',   num:movies},
+        {type:'chinese', icon:'fa-dragon', label:'چینی',   num:chinese},
+        {type:'japanese',icon:'fa-sun',    label:'ژاپۆنی', num:japanese}
+      ].map((t,i)=>`
+      <button class="random-type-btn ${i===0?'active':''}" data-type="${t.type}"
+        onclick="setRandomType(this)"
+        style="display:flex;flex-direction:column;align-items:center;gap:4px;
+        padding:10px 3px;border-radius:12px;cursor:pointer;
+        border:1.5px solid ${i===0?hexToRgba(ac,0.6):'rgba(255,255,255,0.1)'};
+        background:${i===0?hexToRgba(ac,0.2):'rgba(255,255,255,0.04)'};
+        color:${i===0?'#fff':'rgba(255,255,255,0.5)'};
+        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.3s;">
+        <i class="fas ${t.icon}" style="font-size:14px;"></i>
+        <span style="font-size:9px;font-weight:800;">${t.label}</span>
+        <span style="font-size:10px;font-weight:900;color:${i===0?al:'rgba(255,255,255,0.3)'};">${t.num}</span>
+      </button>`).join('')}
+    </div>
   </div>
 
-  <!-- دوگمەکانی جۆر -->
-  <div style="display:flex;gap:10px;margin-bottom:20px;">
-    <button class="random-type-btn active" data-type="all" onclick="setRandomType(this)"
-      style="flex:1;background:${hexToRgba(ac,0.15)};border:1.5px solid ${hexToRgba(ac,0.4)};
-      color:#fff;padding:12px 6px;border-radius:12px;cursor:pointer;font-size:12px;
-      font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;
-      display:flex;flex-direction:column;align-items:center;gap:6px;">
-      <i class="fas fa-globe" style="font-size:16px;"></i> هەمووی
-    </button>
-    <button class="random-type-btn" data-type="drama" onclick="setRandomType(this)"
-      style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.7);padding:12px 6px;border-radius:12px;cursor:pointer;font-size:12px;
-      font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;
-      display:flex;flex-direction:column;align-items:center;gap:6px;">
-      <i class="fas fa-tv" style="font-size:16px;"></i> دراما
-    </button>
-    <button class="random-type-btn" data-type="movie" onclick="setRandomType(this)"
-      style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.7);padding:12px 6px;border-radius:12px;cursor:pointer;font-size:12px;
-      font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;
-      display:flex;flex-direction:column;align-items:center;gap:6px;">
-      <i class="fas fa-film" style="font-size:16px;"></i> فیلم
-    </button>
-    <button class="random-type-btn" data-type="chinese" onclick="setRandomType(this)"
-      style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.7);padding:12px 6px;border-radius:12px;cursor:pointer;font-size:12px;
-      font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;
-      display:flex;flex-direction:column;align-items:center;gap:6px;">
-      <i class="fas fa-dragon" style="font-size:16px;"></i> چینی
-    </button>
-
-<button class="random-type-btn" data-type="japanese" onclick="setRandomType(this)"
-  style="flex:1;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);
-  color:rgba(255,255,255,0.7);padding:12px 6px;border-radius:12px;cursor:pointer;font-size:12px;
-  font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;
-  display:flex;flex-direction:column;align-items:center;gap:6px;">
-  <i class="fas fa-sun" style="font-size:16px;"></i> ژاپۆنی
-</button>
-
-    
+  <!-- حالەت / مۆد -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      ژانەر (ئارەزوومەند نییە)
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;" id="rand-mood-row">
+      ${moods.map((m,i)=>`
+      <button data-mood="${m.key}"
+        onclick="(function(btn){
+          document.querySelectorAll('#rand-mood-row button').forEach(b=>{
+            b.style.background='rgba(255,255,255,0.04)';
+            b.style.borderColor='rgba(255,255,255,0.12)';
+            b.style.color='rgba(255,255,255,0.6)';
+          });
+          btn.style.background='${hexToRgba(ac,0.2)}';
+          btn.style.borderColor='${hexToRgba(ac,0.6)}';
+          btn.style.color='#fff';
+          window._randMood=btn.dataset.mood;
+        })(this)"
+        style="display:inline-flex;align-items:center;gap:5px;
+        padding:6px 12px;border-radius:50px;cursor:pointer;
+        border:1.5px solid ${i===0?hexToRgba(ac,0.6):'rgba(255,255,255,0.12)'};
+        background:${i===0?hexToRgba(ac,0.2):'rgba(255,255,255,0.04)'};
+        color:${i===0?'#fff':'rgba(255,255,255,0.6)'};
+        font-size:11px;font-weight:800;
+        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.25s;">
+        <i class="fas ${m.icon}" style="font-size:11px;"></i>${m.label}
+      </button>`).join('')}
+    </div>
   </div>
 
-  <!-- کارتی ئەنجام -->
+  <!-- ═══════════════════════════════════════
+       نمرە (ئارەزوومەند نییە) - IMDb / TMDB
+       ═══════════════════════════════════════ -->
+  <div style="margin-bottom:18px;">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      نمرەی کەمترین (ئارەزوومەند نییە)
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+
+    <!-- دوگمەکانی IMDb / TMDB / هیچ -->
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+
+      <!-- هیچ (پێشکەوتوو) -->
+      <button id="rand-rating-none-btn"
+        onclick="window._randRatingType='none';
+          document.getElementById('rand-rating-none-btn').style.cssText+='background:${hexToRgba(ac,0.2)};border-color:${hexToRgba(ac,0.6)};color:#fff;';
+          document.getElementById('rand-imdb-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-tmdb-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-rating-row').style.display='none';"
+        style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+          padding:10px 6px;border-radius:12px;cursor:pointer;
+          border:1.5px solid ${hexToRgba(ac,0.6)};
+          background:${hexToRgba(ac,0.2)};
+          color:#fff;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+          font-size:10px;font-weight:800;transition:all 0.3s;">
+        <i class="fas fa-ban" style="font-size:14px;opacity:0.7;"></i>
+        هیچ
+      </button>
+
+      <!-- IMDb -->
+      <button id="rand-imdb-btn"
+        onclick="window._randRatingType='imdb';
+          document.getElementById('rand-imdb-btn').style.cssText+='background:rgba(245,197,24,0.15);border-color:rgba(245,197,24,0.6);color:#fff;';
+          document.getElementById('rand-tmdb-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-rating-none-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-rating-row').style.display='flex';"
+        style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+          padding:10px 6px;border-radius:12px;cursor:pointer;
+          border:1.5px solid rgba(255,255,255,0.12);
+          background:rgba(255,255,255,0.04);
+          color:rgba(255,255,255,0.6);
+          font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+          font-size:10px;font-weight:800;transition:all 0.3s;">
+        <svg width="36" height="18" viewBox="0 0 36 18">
+          <rect width="36" height="18" rx="3" fill="#f5c518"/>
+          <text x="18" y="13" text-anchor="middle" font-family="Arial Black" font-weight="900" font-size="9" fill="#000">IMDb</text>
+        </svg>
+        نمرەی IMDb
+      </button>
+
+      <!-- TMDB -->
+      <button id="rand-tmdb-btn"
+        onclick="window._randRatingType='tmdb';
+          document.getElementById('rand-tmdb-btn').style.cssText+='background:rgba(1,180,228,0.15);border-color:rgba(1,180,228,0.6);color:#fff;';
+          document.getElementById('rand-imdb-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-rating-none-btn').style.cssText+='background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);';
+          document.getElementById('rand-rating-row').style.display='flex';"
+        style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;
+          padding:10px 6px;border-radius:12px;cursor:pointer;
+          border:1.5px solid rgba(255,255,255,0.12);
+          background:rgba(255,255,255,0.04);
+          color:rgba(255,255,255,0.6);
+          font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+          font-size:10px;font-weight:800;transition:all 0.3s;">
+        <svg width="36" height="18" viewBox="0 0 36 18">
+          <rect width="36" height="18" rx="3" fill="#032541"/>
+          <text x="18" y="13" text-anchor="middle" font-family="Arial Black" font-weight="900" font-size="8" fill="#01b4e4">TMDB</text>
+        </svg>
+        نمرەی TMDB
+      </button>
+
+    </div>
+
+    <!-- نمرەکان ١-١٠ -->
+    <div id="rand-rating-row" style="display:none;flex-wrap:wrap;gap:6px;">
+      ${[1,2,3,4,5,6,7,8,9,10].map(n=>`
+      <button data-ratingval="${n}"
+        onclick="(function(btn){
+          document.querySelectorAll('#rand-rating-row button').forEach(b=>{
+            b.style.background='rgba(255,255,255,0.04)';
+            b.style.borderColor='rgba(255,255,255,0.12)';
+            b.style.color='rgba(255,255,255,0.6)';
+            b.style.fontWeight='700';
+          });
+          btn.style.background='${hexToRgba(ac,0.25)}';
+          btn.style.borderColor='${hexToRgba(ac,0.7)}';
+          btn.style.color='#fff';
+          btn.style.fontWeight='900';
+          window._randMinRating=parseInt(btn.dataset.ratingval);
+        })(this)"
+        style="display:inline-flex;align-items:center;justify-content:center;
+          width:calc(10% - 6px);min-width:36px;height:36px;
+          border-radius:10px;cursor:pointer;
+          border:1.5px solid rgba(255,255,255,0.12);
+          background:rgba(255,255,255,0.04);
+          color:rgba(255,255,255,0.6);
+          font-size:12px;font-weight:700;
+          font-family:'Barlow Condensed','Rajdhani',sans-serif;
+          letter-spacing:0.5px;transition:all 0.2s;">
+        ${n}${n===10?'':'+'}
+      </button>`).join('')}
+    </div>
+
+    <!-- نیشانەی هەڵبژێردراو -->
+    <div id="rand-rating-hint" style="display:none;margin-top:8px;
+      font-size:11px;font-weight:700;color:${hexToRgba(ac,0.8)};
+      font-family:'Noto Kufi Arabic',Tahoma,sans-serif;text-align:center;"></div>
+
+  </div>
+  <!-- کۆتایی بەشی نمرە -->
+
+  <!-- ئەنجامی ٣ کارت -->
+  <div id="rand-multi-results" style="display:none;margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      پێشنیارەکان
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+    <div id="rand-cards-row" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;"></div>
+  </div>
+
+  <!-- کارتی ئەنجامی سەرەکی -->
   <div id="random-result-card" style="display:none;
     background:${hexToRgba(ac,0.07)};border:1px solid ${hexToRgba(ac,0.25)};
-    border-radius:18px;padding:18px;margin-bottom:16px;
-    align-items:center;gap:16px;animation:fadeSlideIn 0.4s ease;">
-    <img id="random-img" src="" style="width:75px;height:112px;object-fit:cover;
-      border-radius:12px;border:2px solid ${ac};flex-shrink:0;
-      box-shadow:0 0 15px ${hexToRgba(ac,0.3)};">
+    border-radius:18px;padding:14px;margin-bottom:14px;
+    align-items:center;gap:14px;animation:fadeSlideIn 0.4s ease;">
+    <div style="flex-shrink:0;position:relative;">
+      <div style="width:78px;height:116px;border-radius:12px;overflow:hidden;
+        border:2px solid ${hexToRgba(ac,0.5)};box-shadow:0 0 18px ${hexToRgba(ac,0.3)};">
+        <img id="random-img" src="" style="width:100%;height:100%;object-fit:cover;display:block;">
+      </div>
+      <div id="random-type-badge" style="position:absolute;bottom:-8px;left:50%;
+        transform:translateX(-50%);background:${hexToRgba(ac,0.9)};
+        font-size:9px;font-weight:800;color:#fff;
+        padding:2px 10px;border-radius:20px;white-space:nowrap;"></div>
+    </div>
     <div style="flex:1;text-align:right;min-width:0;">
-      <div id="random-type-badge" style="display:inline-block;
-        background:${hexToRgba(ac,0.2)};border:1px solid ${hexToRgba(ac,0.4)};
-        color:${al};font-size:10px;font-weight:800;padding:3px 10px;
-        border-radius:6px;margin-bottom:8px;"></div>
-      <h3 id="random-title" style="color:#fff;font-size:15px;margin:0 0 6px;font-weight:900;
-        text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"></h3>
-      <p id="random-genre" style="color:${al};font-size:11px;margin:0 0 6px;font-weight:600;"></p>
-      <p id="random-desc" style="color:rgba(255,255,255,0.65);font-size:11px;line-height:1.6;margin:0;
+      <h3 id="random-title" style="color:#fff;font-size:15px;margin:0 0 6px;font-weight:900;"></h3>
+      <p id="random-genre" style="color:${al};font-size:11px;margin:0 0 6px;font-weight:700;"></p>
+      <p id="random-desc" style="color:rgba(255,255,255,0.6);font-size:11px;
+        line-height:1.6;margin:0;
         display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;"></p>
     </div>
   </div>
 
   <!-- دوگمەی هەڵبژاردن -->
-  <button onclick="pickRandom()" id="random-pick-btn" style="
-    width:100%;padding:14px;border:none;border-radius:12px;
-    background:linear-gradient(135deg,${hexToRgba(ac,0.9)},${al});
-    color:#fff;font-size:14px;font-weight:800;
-    font-family:Tahoma,sans-serif;cursor:pointer;
-    box-shadow:0 8px 25px ${hexToRgba(ac,0.35)};
-    transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;gap:8px;
-    margin-bottom:10px;"
-    onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 35px ${hexToRgba(ac,0.5)}'"
-    onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 25px ${hexToRgba(ac,0.35)}'">
-    <i class="fas fa-dice"></i> هەڵبژێرە
+  <button onclick="pickRandomMulti()" id="random-pick-btn"
+    style="width:100%;padding:14px;border:none;border-radius:14px;
+    background:linear-gradient(135deg,${hexToRgba(ac,0.95)},${al});
+    color:#fff;font-size:14px;font-weight:900;
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
+    box-shadow:0 8px 25px ${hexToRgba(ac,0.4)};transition:all 0.3s;
+    display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;"
+    onmouseover="this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.transform='translateY(0)'">
+    <div style="width:26px;height:26px;border-radius:50%;
+      background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-dice" style="font-size:12px;"></i>
+    </div>
+    هەڵبژارێنە
   </button>
 
   <!-- دوگمەی سەیرکردن -->
-  <button id="random-watch-btn" onclick="watchRandom()" style="
-    display:none;width:100%;padding:14px;border:none;border-radius:12px;
+  <button id="random-watch-btn" onclick="watchRandom()"
+    style="display:none;width:100%;padding:14px;border:none;border-radius:14px;
     background:linear-gradient(135deg,#00aa55,#00dd77);
-    color:#fff;font-size:14px;font-weight:800;
-    font-family:Tahoma,sans-serif;cursor:pointer;
-    box-shadow:0 8px 25px rgba(0,170,85,0.35);
-    transition:all 0.3s ease;display:none;align-items:center;justify-content:center;gap:8px;"
+    color:#fff;font-size:14px;font-weight:900;
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
+    box-shadow:0 8px 25px rgba(0,170,85,0.35);transition:all 0.3s;
+    align-items:center;justify-content:center;gap:10px;"
     onmouseover="this.style.transform='translateY(-2px)'"
     onmouseout="this.style.transform='translateY(0)'">
-    <i class="fas fa-play"></i> ئێستا سەیر بکە
+    <div style="width:26px;height:26px;border-radius:50%;
+      background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-play" style="font-size:10px;margin-right:-1px;"></i>
+    </div>
+    ئێستا سەیر بکە
   </button>
 
-</div>
-  `;
+</div>`;
 })(),
 account: (() => {
   const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
@@ -7991,193 +8306,147 @@ volunteer: (() => {
   }
 
   return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
+<div style="direction:rtl;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;border-radius:20px;overflow:hidden;background:rgba(10,8,20,0.95);">
 
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};
-        border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-file-signature" style="color:${ac};font-size:22px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
+  <div style="position:relative;padding:44px 28px 36px;text-align:center;border-bottom:1px solid rgba(255,255,255,0.06);">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:${hexToRgba(ac,0.12)};border:1px solid ${hexToRgba(ac,0.3)};border-radius:100px;padding:5px 14px;margin-bottom:20px;">
+      <div style="width:6px;height:6px;border-radius:50%;background:${ac};"></div>
+      <span style="font-size:11px;font-weight:700;color:${al};letter-spacing:1.5px;">داواکاری کراوەیە</span>
+    </div>
+    <div style="margin:0 auto 8px;">
+  <svg width="68" height="68" viewBox="0 0 68 68" fill="none">
+    <circle cx="34" cy="34" r="30" fill="none" stroke="${hexToRgba(ac,0.4)}" stroke-width="1"/>
+    <circle cx="34" cy="26" r="9" fill="none" stroke="${al}" stroke-width="1.5"/>
+    <path d="M34 17 L37 23 L34 20 L31 23 Z" fill="${ac}"/>
+    <path d="M18 52 C22 40 46 40 50 52" stroke="${al}" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <path d="M24 54 L30 59 L44 48" stroke="${ac}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  </svg>
+</div>
+    <div style="font-size:30px;font-weight:400;color:#fff;margin-bottom:5px;font-family:'Scheherazade New',sans-serif;letter-spacing:1px;text-shadow:0 0 20px ${hexToRgba(ac,0.5)};">بوون بە وەرگێر</div>
+    <div style="font-size:11px;color:${hexToRgba(ac,0.75)};font-weight:700;letter-spacing:2px;margin-bottom:24px;">JOIN HAVE KOREA</div>
+    <div style="display:flex;gap:0;border:1px solid rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;max-width:360px;margin:0 auto;">
+      <div style="flex:1;padding:13px 8px;text-align:center;border-left:1px solid rgba(255,255,255,0.07);">
+        <div style="font-size:17px;font-weight:900;color:#fff;">٧+</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;">ئەندامی تیم</div>
       </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">بوون بە وەرگێر</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:1.5px;">JOIN HAVE KOREA</span>
+      <div style="flex:1;padding:13px 8px;text-align:center;border-left:1px solid rgba(255,255,255,0.07);">
+        <div style="font-size:17px;font-weight:900;color:#fff;">١٠+</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;">کاری وەرگێڕدراو</div>
+      </div>
+      <div style="flex:1;padding:13px 8px;text-align:center;">
+        <div style="font-size:17px;font-weight:900;color:#fff;">٢٠٢٤</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;">دەستپێکراو</div>
+      </div>
     </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
   </div>
 
-  <!-- ئاگادارکردنەوە -->
-  <div style="
-    background:${hexToRgba(ac,0.07)};
-    border:1px solid ${hexToRgba(ac,0.25)};
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:20px;
-    display:flex;
-    align-items:flex-start;
-    gap:10px;">
-    <i class="fas fa-info-circle" style="color:${ac};font-size:16px;margin-top:2px;flex-shrink:0;"></i>
-    <p style="color:rgba(255,255,255,0.75);font-size:12px;line-height:1.7;margin:0;">
-      شێوازی ماڵپەڕی "هاڤێ کۆریا" خۆبەخشییە. ئەگەر لە داهاتوودا داهاتی هەبێت، بۆ سەرجەم ئەندامەکان بەردەست دەبێت.
-    </p>
+  <div style="display:flex;align-items:flex-start;gap:12px;padding:18px 24px;background:${hexToRgba(ac,0.05)};border-bottom:1px solid rgba(255,255,255,0.05);">
+    <div style="width:30px;height:30px;border-radius:9px;background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.25)};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-info-circle" style="font-size:13px;color:${al};"></i>
+    </div>
+    <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.8;">شێوازی ماڵپەڕی "هاڤێ کۆریا" خۆبەخشییە. ئەگەر لە داهاتوودا داهاتی هەبێت، بۆ سەرجەم ئەندامەکان بەردەست دەبێت.</p>
   </div>
 
-  <!-- فۆرم -->
-  <form id="modal-volunteerForm">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid rgba(255,255,255,0.05);">
+    ${[
+      {n:'١', icon:'fa-edit', t:'فۆرم پڕ بکەرەوە', d:'زانیارییەکانت بنووسە'},
+      {n:'٢', icon:'fa-paper-plane', t:'بنێرە', d:'داواکاریت دەگات'},
+      {n:'٣', icon:'fa-users', t:'بەشداری بکە', d:'بە تیمەکە یەکدەبەیت'}
+    ].map((s,i) => `
+    <div style="padding:18px 12px;text-align:center;${i>0?'border-right:1px solid rgba(255,255,255,0.05);':''}">
+      <div style="width:26px;height:26px;border-radius:50%;background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.3)};display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:11px;font-weight:900;color:${al};">${s.n}</div>
+      <i class="fas ${s.icon}" style="font-size:18px;color:${hexToRgba(ac,0.6)};display:block;margin-bottom:7px;"></i>
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:3px;">${s.t}</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.28);">${s.d}</div>
+    </div>`).join('')}
+  </div>
 
-    <!-- ناوی سیانی -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-user" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="text" name="Full_Name" placeholder="ناوی سیانی" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
+  <form id="modal-volunteerForm" style="padding:22px 24px;">
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      ${[
+        {label:'ناوی سیانی', icon:'fa-user', name:'Full_Name', type:'text', ph:'ناوی تەواو'},
+        {label:'تەمەن', icon:'fa-calendar-alt', name:'Age', type:'number', ph:'١٤ - ٥٠'}
+      ].map(f => `
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:5px;">${f.label}</div>
+        <div style="position:relative;">
+          <i class="fas ${f.icon}" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:${hexToRgba(ac,0.5)};pointer-events:none;"></i>
+          <input type="${f.type}" name="${f.name}" placeholder="${f.ph}" required
+            style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:border-color .2s;"
+            onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'"
+            onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+        </div>
+      </div>`).join('')}
     </div>
 
-    <!-- تەمەن -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-calendar-alt" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="number" name="Age" placeholder="تەمەن (١٤ - ٥٠)" min="14" max="50" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      ${[
+        {label:'ڕەگەز', icon:'fa-venus-mars', name:'Gender', opts:[['','هەڵبژێرە'],['Male','نێر'],['Female','مێ']]},
+        {label:'شارەزایی', icon:'fa-tools', name:'Skill', opts:[['','هەڵبژێرە'],['Designer','دیزاینەر'],['Translator','وەرگێڕ'],['Technician','تەکنیکار'],['Editor','ئیدیتەر']]}
+      ].map(f => `
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:5px;">${f.label}</div>
+        <div style="position:relative;">
+          <i class="fas ${f.icon}" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:${hexToRgba(ac,0.5)};pointer-events:none;z-index:1;"></i>
+          <select name="${f.name}" required style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(10,5,20,0.95);color:#fff;font-size:12px;outline:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;-webkit-appearance:none;appearance:none;transition:border-color .2s;cursor:pointer;"
+            onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'"
+            onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+            ${f.opts.map(o=>`<option value="${o[0]}" style="background:#0a0514;">${o[1]}</option>`).join('')}
+          </select>
+        </div>
+      </div>`).join('')}
     </div>
 
-    <!-- ڕەگەز -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-venus-mars" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;z-index:1;"></i>
-      <select name="Gender" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.95);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;
-        -webkit-appearance:none;appearance:none;transition:all 0.3s;cursor:pointer;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-        <option value="" style="background:#0a0514;">ڕەگەز هەڵبژێرە</option>
-        <option value="Male" style="background:#0a0514;">نێر</option>
-        <option value="Female" style="background:#0a0514;">مێ</option>
-      </select>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      ${[
+        {label:'ڕێگەی پەیوەندی', icon:'fa-share-alt', name:'Contact_Method', opts:[['','هەڵبژێرە'],['Email','ئیمێڵ'],['WhatsApp','وەتس ئەپ'],['Telegram','تیلیگرام'],['TikTok','تیکتۆک']]},
+        {label:'کاتی بەردەست', icon:'fa-clock', name:'Availability', type:'text', ph:'چەند کاتژمێر ڕۆژانە؟'}
+      ].map(f => `
+      <div>
+        <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:5px;">${f.label}</div>
+        <div style="position:relative;">
+          <i class="fas ${f.icon}" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:${hexToRgba(ac,0.5)};pointer-events:none;z-index:1;"></i>
+          ${f.opts
+            ? `<select name="${f.name}" required style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(10,5,20,0.95);color:#fff;font-size:12px;outline:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;-webkit-appearance:none;appearance:none;transition:border-color .2s;cursor:pointer;"
+                onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+                ${f.opts.map(o=>`<option value="${o[0]}" style="background:#0a0514;">${o[1]}</option>`).join('')}
+              </select>`
+            : `<input type="${f.type}" name="${f.name}" placeholder="${f.ph}" required
+                style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:border-color .2s;"
+                onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">`
+          }
+        </div>
+      </div>`).join('')}
     </div>
 
-    <!-- شارەزایی -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-tools" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;z-index:1;"></i>
-      <select name="Skill" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.95);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;
-        -webkit-appearance:none;appearance:none;transition:all 0.3s;cursor:pointer;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-        <option value="" style="background:#0a0514;">شارەزایت لە چیدا هەیە؟</option>
-        <option value="Designer" style="background:#0a0514;">دیزاینەر</option>
-        <option value="Translator" style="background:#0a0514;">وەرگێڕ</option>
-        <option value="Technician" style="background:#0a0514;">تەکنیکار</option>
-        <option value="Editor" style="background:#0a0514;">ئیدیتەر</option>
-      </select>
+    ${[
+      {label:'ناونیشانی پەیوەندی', icon:'fa-at', name:'Contact_Details', ph:'یوسەر یان ئیمێڵ یان ژمارە...'},
+      {label:'زمانەکان', icon:'fa-language', name:'Languages', ph:'چی زمانێک دەزانیت؟'}
+    ].map(f => `
+    <div style="margin-bottom:10px;">
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:5px;">${f.label}</div>
+      <div style="position:relative;">
+        <i class="fas ${f.icon}" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:${hexToRgba(ac,0.5)};pointer-events:none;"></i>
+        <input type="text" name="${f.name}" placeholder="${f.ph}" required
+          style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:border-color .2s;"
+          onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+      </div>
+    </div>`).join('')}
+
+    <div style="margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:5px;">هۆکار</div>
+      <textarea name="Reason" rows="3" placeholder="بۆچی دەتەوێت ببیتە ئەندام؟" required
+        style="width:100%;box-sizing:border-box;padding:10px 12px;border-radius:9px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.04);color:#fff;font-size:12px;outline:none;resize:none;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:border-color .2s;"
+        onfocus="this.style.borderColor='${hexToRgba(ac,0.5)}'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'"></textarea>
     </div>
 
-    <!-- ڕێگەی پەیوەندی -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-share-alt" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;z-index:1;"></i>
-      <select name="Contact_Method" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.95);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;
-        -webkit-appearance:none;appearance:none;transition:all 0.3s;cursor:pointer;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-        <option value="" style="background:#0a0514;">لە کوێ پەیوەندیت پێوە بکەین؟</option>
-        <option value="Email" style="background:#0a0514;">ئیمێڵ</option>
-        <option value="WhatsApp" style="background:#0a0514;">وەتس ئەپ</option>
-        <option value="Telegram" style="background:#0a0514;">تیلیگرام</option>
-        <option value="TikTok" style="background:#0a0514;">تیکتۆک</option>
-      </select>
-    </div>
+    <div style="height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.25)},transparent);margin-bottom:16px;"></div>
 
-    <!-- ناونیشانی پەیوەندی -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-at" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="text" name="Contact_Details" placeholder="یوسەر یان ئیمێڵ یان ژمارە..." required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-    </div>
-
-    <!-- زمانەکان -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-language" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="text" name="Languages" placeholder="چی زمانێک دەزانیت؟" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-    </div>
-
-    <!-- کاتی بەردەست -->
-    <div style="position:relative;margin-bottom:12px;">
-      <i class="fas fa-clock" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="text" name="Availability" placeholder="ڕۆژانە چەند کاتت هەیە؟" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
-    </div>
-
-    <!-- هۆکار -->
-    <div style="position:relative;margin-bottom:16px;">
-      <i class="fas fa-comment-alt" style="position:absolute;right:14px;top:16px;color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <textarea name="Reason" placeholder="بۆچی دەتەوێت ببیتە ئەندام؟" rows="3" required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
-        background:rgba(10,5,20,0.7);
-        color:#fff;font-size:13px;outline:none;resize:vertical;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;"
-        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'"></textarea>
-    </div>
-
-    <!-- دوگمەی ناردن -->
-    <button type="submit" id="modal-submitFormBtn" style="
-      width:100%;padding:14px;border:none;border-radius:12px;
-      background:linear-gradient(135deg,${hexToRgba(ac,0.9)},${al});
-      color:#fff;font-size:14px;font-weight:800;
-      font-family:Tahoma,sans-serif;cursor:pointer;
-      box-shadow:0 8px 25px ${hexToRgba(ac,0.35)};
-      transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;gap:8px;"
-      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 35px ${hexToRgba(ac,0.5)}'"
-      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 25px ${hexToRgba(ac,0.35)}'">
+    <button type="submit" id="modal-submitFormBtn"
+      style="width:100%;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,${ac},${al});color:#fff;font-size:14px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .2s,transform .15s;"
+      onmouseover="this.style.opacity='.88';this.style.transform='translateY(-1px)'"
+      onmouseout="this.style.opacity='1';this.style.transform='translateY(0)'">
       <i class="fas fa-paper-plane"></i> ناردنی داواکاری
     </button>
 
@@ -8370,6 +8639,7 @@ staffall: (() => {
     ${staffCard('admin1.png','هێلین','وەرگێڕ',counts.helin_t,'https://www.instagram.com/helin.jill')}
     ${staffCard('سانا.png','سەنا ئەحمەد','وەرگێڕ',counts.sana_t,'https://www.instagram.com/sana.sa_n4')}
     ${staffCard('shaian.png','شاین','سەرپەرشتیار',counts.shaian_t,null)}
+        ${staffCard('lina.png','لینا','وەرگێڕ',0,null)}
     ${staffCard('admin2.png','کێڵوا','وەرگێڕ',counts.kelwa_t,'https://www.instagram.com/y9u7x')}
     ${staffCard('nena.png','ئیمان','وەرگێڕ',counts.iman_t,'https://www.instagram.com/emannn.404')}
     ${staffCard('asia.png','ئاسیا','وەرگێڕ',counts.asia_t,'https://www.instagram.com/asia_asiaa7')}
@@ -8390,155 +8660,411 @@ staffall: (() => {
 
 </div>`;
 })(),
-          about: `
-    <h2><i class="fas fa-info-circle" style="color:var(--accent-light)"></i> دەربارەی ماڵپەڕ</h2>
-    
-    <!-- لۆگۆ و ناوی سایت -->
-    <div style="text-align:center; margin-bottom:25px; padding-bottom:20px; border-bottom:1px solid rgba(140,0,255,0.2);">
-        <div style="position:relative; width:90px; height:90px; margin:0 auto 15px;">
-            <div style="position:absolute; inset:0; border-radius:50%; background:conic-gradient(#8c00ff, #b366ff, transparent 70%); animation:rotateBorder 3s linear infinite;"></div>
-            <img src="logologo.png" style="position:absolute; inset:3px; width:calc(100% - 6px); height:calc(100% - 6px); border-radius:50%; object-fit:cover; background:var(--bg-card);">
-        </div>
-        <div style="font-size:18px; font-weight:900; color:#fff; letter-spacing:2px; margin-bottom:4px;">HAVE KOREA</div>
-        <div style="font-family:'Noto Kufi Arabic',Tahoma,sans-serif; font-size:14px; font-weight:700; background:linear-gradient(90deg,#fff,#c499ff,#8c00ff); background-size:200% auto; -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; animation:shineText 4s linear infinite;">هاڤێ کۆریا</div>
-    </div>
-
-    <!-- کارتی کورتەی دەربارەی سایت -->
-    <div style="background:rgba(140,0,255,0.08); border:1px solid rgba(140,0,255,0.25); border-radius:18px; padding:20px; margin-bottom:20px; position:relative; overflow:hidden;">
-        <div style="position:absolute; top:-30px; right:-30px; width:120px; height:120px; background:radial-gradient(circle, rgba(140,0,255,0.15), transparent 70%); border-radius:50%;"></div>
-        <div style="display:flex; align-items:flex-start; gap:12px; position:relative; z-index:1;">
-            <div style="width:40px; height:40px; border-radius:12px; background:rgba(140,0,255,0.25); border:1px solid rgba(140,0,255,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <i class="fas fa-tv" style="color:#c499ff; font-size:16px;"></i>
-            </div>
-            <div>
-                <div style="font-size:13px; font-weight:800; color:#fff; margin-bottom:6px; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دەربارەی هاڤێ کۆریا</div>
-                <p style="color:#ccc; font-size:12px; line-height:1.8; margin:0; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">هاڤێ کۆریا؛ خێراترین و باشترین سەرچاوەی کوردی بۆ فیلم و دراما کۆرییەکان بە بەرزترین کوالێتی و ژێرنووسی پڕۆفیشناڵی کوردی.</p>
-            </div>
-        </div>
-    </div> 
-
-    <!-- ئامارەکان -->
-<div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px;">
-    <div style="background:rgba(140,0,255,0.08); border:1px solid rgba(140,0,255,0.2); border-radius:14px; padding:14px 8px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:4px;">${database.filter(d=>d.type==='drama').length}</div>
-        <div style="font-size:11px; color:#b366ff; font-weight:700; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دراما</div>
-    </div>
-    <div style="background:rgba(140,0,255,0.08); border:1px solid rgba(140,0,255,0.2); border-radius:14px; padding:14px 8px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:4px;">${database.filter(d=>d.type==='movie').length}</div>
-        <div style="font-size:11px; color:#b366ff; font-weight:700; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">فیلم</div>
-    </div>
-    <div style="background:rgba(140,0,255,0.08); border:1px solid rgba(140,0,255,0.2); border-radius:14px; padding:14px 8px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:4px;">${database.filter(d=>d.type==='chinese').length}</div>
-        <div style="font-size:11px; color:#b366ff; font-weight:700; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">چینی</div>
-    </div>
-    <div style="background:rgba(140,0,255,0.08); border:1px solid rgba(140,0,255,0.2); border-radius:14px; padding:14px 8px; text-align:center;">
-        <div style="font-size:22px; font-weight:900; color:#fff; margin-bottom:4px;">${database.filter(d=>d.type==='japanese').length}</div>
-        <div style="font-size:11px; color:#b366ff; font-weight:700; font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">ژاپۆنی</div>
-    </div>
-</div>
-
-    <!-- سۆشیاڵ میدیا -->
-    <div style="display:flex; gap:12px;">
-        <a href="https://www.tiktok.com/@have.korea?_r=1&_t=ZS-93VQbM8aGOb" target="_blank" 
-           style="flex:1; display:flex; align-items:center; justify-content:center; gap:10px; padding:14px; border-radius:14px; background:rgba(0,0,0,0.3); border:1.5px solid rgba(255,255,255,0.1); color:#fff; text-decoration:none; font-weight:700; font-size:14px; transition:all 0.3s ease;"
-           onmouseover="this.style.background='rgba(0,0,0,0.6)'; this.style.borderColor='rgba(255,255,255,0.4)'; this.style.transform='translateY(-3px)'"
-           onmouseout="this.style.background='rgba(0,0,0,0.3)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)'">
-            <i class="fab fa-tiktok" style="font-size:18px;"></i> TikTok
-        </a>
-        <a href="https://www.instagram.com/have.korea?igsh=d3M5ajB3enpvOWZx" target="_blank"
-           style="flex:1; display:flex; align-items:center; justify-content:center; gap:10px; padding:14px; border-radius:14px; background:rgba(193,53,132,0.15); border:1.5px solid rgba(193,53,132,0.3); color:#fff; text-decoration:none; font-weight:700; font-size:14px; transition:all 0.3s ease;"
-           onmouseover="this.style.background='rgba(193,53,132,0.3)'; this.style.borderColor='rgba(193,53,132,0.6)'; this.style.transform='translateY(-3px)'"
-           onmouseout="this.style.background='rgba(193,53,132,0.15)'; this.style.borderColor='rgba(193,53,132,0.3)'; this.style.transform='translateY(0)'">
-            <i class="fab fa-instagram" style="font-size:18px;"></i> Instagram
-        </a>
-    </div>
-`,
-suggest: (() => {
+        about: (() => {
   const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
   const al = getComputedStyle(document.documentElement).getPropertyValue('--accent-light').trim() || '#b366ff';
-
   function hexToRgba(hex, alpha) {
     hex = hex.replace('#','').trim();
-    if(hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    const r = parseInt(hex.substring(0,2),16);
-    const g = parseInt(hex.substring(2,4),16);
-    const b = parseInt(hex.substring(4,6),16);
+    if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    const r=parseInt(hex.substring(0,2),16),g=parseInt(hex.substring(2,4),16),b=parseInt(hex.substring(4,6),16);
     return `rgba(${r},${g},${b},${alpha})`;
   }
+  const db = typeof database !== 'undefined' ? database : [];
 
   return `
-<div style="direction:rtl;font-family:Tahoma,sans-serif;">
+<div style="direction:rtl;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
 
-  <!-- سەردێڕ -->
-  <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;position:relative;">
-    <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${hexToRgba(ac,0.12)};
-        border:1.5px solid ${hexToRgba(ac,0.4)};">
-        <i class="fas fa-lightbulb" style="color:${ac};font-size:22px;filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.6)});"></i>
-        <div style="position:absolute;top:-1px;right:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 4px 0 0;"></div>
-        <div style="position:absolute;top:-1px;left:-1px;width:7px;height:7px;border-top:2px solid ${ac};border-left:2px solid ${ac};border-radius:4px 0 0 0;"></div>
-        <div style="position:absolute;bottom:-1px;right:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-right:2px solid ${ac};border-radius:0 0 4px 0;"></div>
-        <div style="position:absolute;bottom:-1px;left:-1px;width:7px;height:7px;border-bottom:2px solid ${ac};border-left:2px solid ${ac};border-radius:0 0 0 4px;"></div>
+  <!-- کارتی سەرەکی - لۆگۆ + ئامار -->
+  <div style="position:relative;border-radius:20px;overflow:hidden;margin-bottom:16px;
+    background:linear-gradient(135deg,${hexToRgba(ac,0.22)},${hexToRgba(ac,0.06)});
+    border:1px solid ${hexToRgba(ac,0.3)};padding:20px;">
+    <div style="position:absolute;top:-40px;left:-40px;width:160px;height:160px;
+      background:radial-gradient(circle,${hexToRgba(ac,0.2)},transparent 70%);pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-20px;right:-20px;width:100px;height:100px;
+      background:radial-gradient(circle,${hexToRgba(al,0.15)},transparent 70%);pointer-events:none;"></div>
+
+    <!-- لۆگۆ + ناو -->
+    <div style="position:relative;z-index:1;display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <div style="width:60px;height:60px;border-radius:50%;flex-shrink:0;overflow:hidden;
+        border:2px solid ${hexToRgba(ac,0.6)};
+        box-shadow:0 0 20px ${hexToRgba(ac,0.35)},0 0 40px ${hexToRgba(ac,0.15)};">
+        <img src="logo2.png" style="width:100%;height:100%;object-fit:cover;display:block;">
       </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;letter-spacing:0.5px;">پێشنیار بکە</span>
-      <span style="color:${hexToRgba(ac,0.65)};font-size:11px;font-weight:700;letter-spacing:1.5px;">SUGGEST A DRAMA</span>
+      <div style="flex:1;">
+        <div style="color:#fff;font-size:20px;font-weight:900;letter-spacing:1.5px;
+          font-family:'Rajdhani',sans-serif;line-height:1.1;">HAVE KOREA</div>
+        <div style="font-size:12px;font-weight:700;margin-top:3px;
+          background:linear-gradient(90deg,#fff,${al},${ac});background-size:200% auto;
+          -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">
+          هاڤێ کۆریا</div>
+        <div style="margin-top:6px;display:flex;align-items:center;gap:5px;">
+          <div style="width:6px;height:6px;border-radius:50%;background:#00e676;
+            box-shadow:0 0 6px rgba(0,230,118,0.8);"></div>
+          <span style="font-size:10px;color:rgba(255,255,255,0.45);">ئۆنلاین · بەردەوام نوێدەکرێتەوە</span>
+        </div>
+      </div>
     </div>
-    <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${hexToRgba(ac,0.45)},transparent);"></div>
-    <div style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:${ac};opacity:0.7;"></div>
+
+    <!-- ئامارەکان -->
+    <div style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,1fr);
+      gap:6px;padding-top:14px;border-top:1px solid ${hexToRgba(ac,0.18)};">
+      ${[
+        {num:db.filter(d=>d.type==='drama').length,   label:'دراما',   icon:'fa-tv'},
+        {num:db.filter(d=>d.type==='movie').length,   label:'فیلم',    icon:'fa-film'},
+        {num:db.filter(d=>d.type==='chinese').length, label:'چینی',    icon:'fa-dragon'},
+        {num:db.filter(d=>d.type==='japanese').length,label:'ژاپۆنی', icon:'fa-sun'}
+      ].map(s=>`
+      <div style="text-align:center;background:${hexToRgba(ac,0.1)};
+        border-radius:10px;padding:9px 4px;border:1px solid ${hexToRgba(ac,0.18)};
+        transition:all 0.3s;"
+        onmouseover="this.style.background='${hexToRgba(ac,0.22)}';this.style.borderColor='${hexToRgba(ac,0.4)}'"
+        onmouseout="this.style.background='${hexToRgba(ac,0.1)}';this.style.borderColor='${hexToRgba(ac,0.18)}'">
+        <i class="fas ${s.icon}" style="color:${hexToRgba(ac,0.8)};font-size:11px;display:block;margin-bottom:4px;
+          filter:drop-shadow(0 0 4px ${hexToRgba(ac,0.5)});"></i>
+        <div style="font-size:19px;font-weight:900;color:#fff;line-height:1;">${s.num}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.38);margin-top:3px;">${s.label}</div>
+      </div>`).join('')}
+    </div>
   </div>
 
-  <!-- ئاگادارکردنەوە -->
-  <div style="
-    background:${hexToRgba(ac,0.07)};
-    border:1px solid ${hexToRgba(ac,0.25)};
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:22px;
-    display:flex;
-    align-items:flex-start;
-    gap:10px;">
-    <i class="fas fa-info-circle" style="color:${ac};font-size:16px;margin-top:2px;flex-shrink:0;"></i>
-    <p style="color:rgba(255,255,255,0.75);font-size:12px;line-height:1.7;margin:0;">
-      ناوی ئەو دراما یان فیلمەی دەتەوێت وەرگێڕانی بۆ بکەین بنووسە. ئێمە هەوڵ دەدەین زووترین کاتدا بیخەینە سەر سایت.
+  <!-- نووسینی دەربارەی -->
+  <div style="padding:14px 16px;border-radius:14px;margin-bottom:16px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.07);
+    border-right:2px solid ${hexToRgba(ac,0.6)};">
+    <p style="color:rgba(255,255,255,0.6);font-size:12px;line-height:1.9;margin:0;">
+      هاڤێ کۆریا؛ باشترین سەرچاوەی کوردی بۆ دراما و فیلمی کۆری بە ژێرنووسی پڕۆفیشناڵ. هەموو کارەکان بە کوالێتی بەرز و وەرگێڕانی دەستی تیمی هاڤێ کۆریا دادەنرێن. ئامانجمان ئەوەیە کە خەڵکی کوردستان بتوانن بەئاسانی دراما و فیلمی کۆری بەکوردی بیبینن.
     </p>
   </div>
 
-  <!-- فۆرم -->
+  <!-- تایبەتمەندییەکان -->
+  <div style="margin-bottom:16px;">
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+      چیتان پێشکەش دەکەین ؟
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      ${[
+        {icon:'fa-closed-captioning', title:'ژێرنووسی کوردی',  desc:'وەرگێڕانی دەستی پڕۆفیشناڵ'},
+        {icon:'fa-film',              title:'کوالێتی بەرز',     desc:'HD 1080p بۆ هەموو کارەکان'},
+        {icon:'fa-bolt',              title:'نوێترین کارەکان', desc:'بەردەوام زیادکردنی نوێ'},
+        {icon:'fa-heart',             title:'بەخۆڕایی',         desc:'تەواو بەخۆڕایی و پرۆفیشناڵ'}
+      ].map(s=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:11px 12px;
+        background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+        border-radius:12px;transition:all 0.25s;"
+        onmouseover="this.style.background='${hexToRgba(ac,0.07)}';this.style.borderColor='${hexToRgba(ac,0.2)}'"
+        onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.06)'">
+        <div style="width:32px;height:32px;border-radius:9px;flex-shrink:0;
+          background:${hexToRgba(ac,0.12)};border:1px solid ${hexToRgba(ac,0.3)};
+          display:flex;align-items:center;justify-content:center;">
+          <i class="fas ${s.icon}" style="color:${ac};font-size:12px;"></i>
+        </div>
+        <div style="min-width:0;">
+          <div style="font-size:11px;font-weight:800;color:#fff;margin-bottom:1px;">${s.title}</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35);">${s.desc}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+<!-- سۆشیاڵ میدیا -->
+  <div>
+    <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.25);
+      letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+      پەیوەندیمان پێوە بکە
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.06);"></div>
+    </div>
+    <div style="position:relative;border-radius:18px;overflow:hidden;
+      background:linear-gradient(135deg,${hexToRgba(ac,0.12)},${hexToRgba(ac,0.04)});
+      border:1px solid ${hexToRgba(ac,0.2)};padding:14px;">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;
+        background:radial-gradient(circle,${hexToRgba(ac,0.15)},transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;
+        background:radial-gradient(circle,${hexToRgba(al,0.1)},transparent 70%);pointer-events:none;"></div>
+      <div style="position:relative;z-index:1;display:flex;flex-direction:column;gap:8px;">
+        ${[
+          {href:'https://t.me/havekorea',              icon:'fa-telegram', label:'Telegram',  sub:'@havekorea',  cr:'0,136,204',  ic:'#29b6f6', glow:'rgba(0,136,204,0.4)'},
+          {href:'https://www.instagram.com/have.korea', icon:'fa-instagram',label:'Instagram', sub:'@have.korea', cr:'193,53,132', ic:'#e1306c', glow:'rgba(193,53,132,0.4)'},
+          {href:'https://www.tiktok.com/@have.korea',   icon:'fa-tiktok',   label:'TikTok',    sub:'@have.korea', cr:'255,255,255',ic:'#ffffff', glow:'rgba(255,255,255,0.2)'}
+        ].map(s=>`
+        <a href="${s.href}" target="_blank" style="
+          display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;
+          background:linear-gradient(135deg,rgba(${s.cr},0.12),rgba(${s.cr},0.04));
+          border:1px solid rgba(${s.cr},0.25);
+          border-top:1px solid rgba(${s.cr},0.4);
+          color:#fff;text-decoration:none;
+          backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+          box-shadow:0 4px 15px rgba(${s.cr},0.1),inset 0 1px 0 rgba(255,255,255,0.06);
+          transition:all 0.3s ease;position:relative;overflow:hidden;"
+          onmouseover="this.style.background='linear-gradient(135deg,rgba(${s.cr},0.25),rgba(${s.cr},0.1))';this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(${s.cr},0.25),inset 0 1px 0 rgba(255,255,255,0.1)';this.style.borderColor='rgba(${s.cr},0.55)'"
+          onmouseout="this.style.background='linear-gradient(135deg,rgba(${s.cr},0.12),rgba(${s.cr},0.04))';this.style.transform='none';this.style.boxShadow='0 4px 15px rgba(${s.cr},0.1),inset 0 1px 0 rgba(255,255,255,0.06)';this.style.borderColor='rgba(${s.cr},0.25)'">
+          <!-- شاینی سەرەوەی ناوەوە -->
+          <div style="position:absolute;top:0;left:0;right:0;height:1px;
+            background:linear-gradient(90deg,transparent,rgba(${s.cr},0.6),transparent);
+            pointer-events:none;"></div>
+          <!-- ئایکۆن -->
+          <div style="position:relative;width:42px;height:42px;border-radius:12px;flex-shrink:0;
+            background:linear-gradient(135deg,rgba(${s.cr},0.25),rgba(${s.cr},0.1));
+            border:1px solid rgba(${s.cr},0.4);
+            display:flex;align-items:center;justify-content:center;
+            box-shadow:0 0 14px rgba(${s.cr},0.2),inset 0 1px 0 rgba(255,255,255,0.1);">
+            <i class="fab ${s.icon}" style="color:${s.ic};font-size:18px;
+              filter:drop-shadow(0 0 6px ${s.glow});"></i>
+          </div>
+          <!-- نووسین -->
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:800;letter-spacing:0.3px;">${s.label}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;">${s.sub}</div>
+          </div>
+          <!-- ئەرەکە -->
+          <div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;
+            background:rgba(${s.cr},0.1);border:1px solid rgba(${s.cr},0.25);
+            display:flex;align-items:center;justify-content:center;">
+            <i class="fas fa-chevron-left" style="color:rgba(${s.cr},0.7);font-size:9px;"></i>
+          </div>
+        </a>`).join('')}
+      </div>
+    </div>
+  </div>
+
+  <!-- کۆپیرایت -->
+  <div style="text-align:center;margin-top:18px;padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.05);">
+    <div style="font-size:10px;color:rgba(255,255,255,0.18);">
+      هەموو مافێک پارێزراوە ·
+      <span style="font-family:'Rajdhani',sans-serif;color:${hexToRgba(ac,0.45)};">Have Korea</span>
+      2026 ©
+    </div>
+  </div>
+
+</div>`;
+})(),
+suggest: (() => {
+  const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+  const al = getComputedStyle(document.documentElement).getPropertyValue('--accent-light').trim() || '#b366ff';
+  function hexToRgba(hex, alpha) {
+    hex = hex.replace('#','').trim();
+    if(hex.length===3) hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+    const r=parseInt(hex.substring(0,2),16),g=parseInt(hex.substring(2,4),16),b=parseInt(hex.substring(4,6),16);
+    return `rgba(${r},${g},${b},${alpha})`;
+  }
+  const total = typeof database !== 'undefined' ? database.length : 0;
+  return `
+<div style="direction:rtl;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
+
+  <!-- Hero Banner -->
+  <div style="position:relative;border-radius:20px;overflow:hidden;margin-bottom:22px;
+    background:linear-gradient(135deg,${hexToRgba(ac,0.25)},${hexToRgba(ac,0.08)});
+    border:1px solid ${hexToRgba(ac,0.35)};padding:24px 20px 20px;">
+    
+    <!-- ڕووناکی گۆشە -->
+    <div style="position:absolute;top:-30px;left:-30px;width:140px;height:140px;
+      background:radial-gradient(circle,${hexToRgba(ac,0.3)},transparent 70%);
+      pointer-events:none;"></div>
+    <div style="position:absolute;bottom:-20px;right:-20px;width:100px;height:100px;
+      background:radial-gradient(circle,${hexToRgba(al,0.2)},transparent 70%);
+      pointer-events:none;"></div>
+
+    <!-- ناوەڕۆک -->
+    <div style="position:relative;z-index:1;display:flex;align-items:center;gap:16px;">
+      <div style="width:56px;height:56px;border-radius:16px;flex-shrink:0;
+        background:${hexToRgba(ac,0.2)};border:2px solid ${hexToRgba(ac,0.5)};
+        display:flex;align-items:center;justify-content:center;
+        box-shadow:0 0 20px ${hexToRgba(ac,0.3)};">
+        <i class="fas fa-lightbulb" style="color:${ac};font-size:22px;
+          filter:drop-shadow(0 0 8px ${hexToRgba(ac,0.8)});"></i>
+      </div>
+      <div>
+        <div style="color:#fff;font-size:20px;font-weight:900;line-height:1.2;margin-bottom:4px;">
+          پێشنیاری دراما بکە
+        </div>
+        <div style="color:${al};font-size:11px;font-weight:700;letter-spacing:1px;">
+          SUGGEST A DRAMA / MOVIE
+        </div>
+      </div>
+    </div>
+
+    <!-- ئامار -->
+    <div style="position:relative;z-index:1;display:flex;gap:10px;margin-top:18px;padding-top:16px;
+      border-top:1px solid ${hexToRgba(ac,0.2)};">
+      <div style="flex:1;text-align:center;background:${hexToRgba(ac,0.12)};
+        border-radius:12px;padding:10px 6px;border:1px solid ${hexToRgba(ac,0.2)};">
+        <div style="font-size:20px;font-weight:900;color:#fff;">${total}</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">کاری ئێستا</div>
+      </div>
+      <div style="flex:1;text-align:center;background:${hexToRgba(ac,0.12)};
+        border-radius:12px;padding:10px 6px;border:1px solid ${hexToRgba(ac,0.2)};">
+        <div style="font-size:20px;font-weight:900;color:#fff;">بەخۆڕای</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">دادەندرێت</div>
+      </div>
+      <div style="flex:1;text-align:center;background:${hexToRgba(ac,0.12)};
+        border-radius:12px;padding:10px 6px;border:1px solid ${hexToRgba(ac,0.2)};">
+        <div style="font-size:20px;font-weight:900;color:${al};">HD</div>
+        <div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:2px;">کوالێتی</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- چۆنیەتی کار دەکات -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      چۆن کار دەکات
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
+    
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      ${[
+        { n:'١', icon:'fa-pen', title:'ناوی دراماکە بنووسە', desc:'ناوی ئەو دراما یان فیلمەی دەتەوێت وەرگێڕانی بکرێت' },
+        { n:'٢', icon:'fa-paper-plane', title:'بینێرە', desc:'تیمەکەی هاڤێ کۆریا دەیبینێت و پرۆسەکە دەستپێدەکات' },
+        { n:'٣', icon:'fa-tv', title:'لە سایت دادەنرێت', desc:'دراماکە بە ژێرنووسی کوردی بۆ سایتەکە دەزیادکرێت' }
+      ].map(s=>`
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
+        background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+        border-radius:14px;transition:all 0.3s;"
+        onmouseover="this.style.background='${hexToRgba(ac,0.08)}';this.style.borderColor='${hexToRgba(ac,0.25)}'"
+        onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+        <div style="width:36px;height:36px;border-radius:10px;flex-shrink:0;
+          background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.35)};
+          display:flex;align-items:center;justify-content:center;">
+          <i class="fas ${s.icon}" style="color:${ac};font-size:13px;"></i>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <span style="font-size:10px;font-weight:900;color:${hexToRgba(ac,0.7)};
+              background:${hexToRgba(ac,0.1)};padding:1px 7px;border-radius:20px;">${s.n}</span>
+            <span style="font-size:12px;font-weight:800;color:#fff;">${s.title}</span>
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,0.45);line-height:1.5;">${s.desc}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- فۆرمی پێشنیار -->
   <form id="modal-drama-proposal-form">
+    
+    <div style="font-size:11px;font-weight:800;color:rgba(255,255,255,0.3);
+      letter-spacing:1.5px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+      فۆرمی پێشنیار
+      <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
+    </div>
 
     <!-- ناوی دراما -->
-    <div style="position:relative;margin-bottom:16px;">
-      <i class="fas fa-search" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:${hexToRgba(ac,0.6)};font-size:14px;pointer-events:none;"></i>
-      <input type="text" id="modal-drama-name-input" name="drama_name"
-        placeholder="بۆ نموونە: My Name 2021..."
+    <div style="position:relative;margin-bottom:12px;">
+      <div style="position:absolute;right:14px;top:50%;transform:translateY(-50%);
+        width:28px;height:28px;border-radius:8px;
+        background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.3)};
+        display:flex;align-items:center;justify-content:center;pointer-events:none;">
+        <i class="fas fa-film" style="color:${ac};font-size:11px;"></i>
+      </div>
+      <input type="text" name="drama_name" id="modal-drama-name-input"
+        placeholder="ناوی دراما یان فیلمەکە..."
         required
-        style="width:100%;padding:13px 42px 13px 14px;border-radius:12px;
-        border:1.5px solid ${hexToRgba(ac,0.25)};
+        style="width:100%;padding:14px 52px 14px 14px;border-radius:14px;
+        border:1.5px solid ${hexToRgba(ac,0.2)};
         background:rgba(10,5,20,0.7);
         color:#fff;font-size:13px;outline:none;
-        box-sizing:border-box;font-family:Tahoma,sans-serif;text-align:right;transition:all 0.3s;margin:0;"
+        box-sizing:border-box;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+        text-align:right;transition:all 0.3s;margin:0;"
         onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.2)}'"
-        onblur="this.style.borderColor='${hexToRgba(ac,0.25)}';this.style.boxShadow='none'">
+        onblur="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.boxShadow='none'">
+    </div>
+
+    <!-- جۆری دراما -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      ${[
+        { val:'drama', label:'دراما', icon:'fa-tv' },
+        { val:'movie', label:'فیلم', icon:'fa-film' },
+        { val:'chinese', label:'چینی', icon:'fa-dragon' },
+        { val:'japanese', label:'ژاپۆنی', icon:'fa-sun' }
+      ].map((t,i)=>`
+      <label style="flex:1;cursor:pointer;">
+        <input type="radio" name="suggest_type" value="${t.val}" ${i===0?'checked':''} style="display:none;"
+          onchange="document.querySelectorAll('.stype-btn').forEach(b=>{b.style.background='rgba(255,255,255,0.04)';b.style.borderColor='rgba(255,255,255,0.1)';b.style.color='rgba(255,255,255,0.5)';});this.parentElement.querySelector('.stype-btn').style.background='${hexToRgba(ac,0.2)}';this.parentElement.querySelector('.stype-btn').style.borderColor='${hexToRgba(ac,0.6)}';this.parentElement.querySelector('.stype-btn').style.color='#fff';">
+        <div class="stype-btn" style="display:flex;flex-direction:column;align-items:center;gap:4px;
+          padding:10px 4px;border-radius:12px;transition:all 0.25s;
+          background:${i===0?hexToRgba(ac,0.2):'rgba(255,255,255,0.04)'};
+          border:1px solid ${i===0?hexToRgba(ac,0.6):'rgba(255,255,255,0.1)'};
+          color:${i===0?'#fff':'rgba(255,255,255,0.5)'};">
+          <i class="fas ${t.icon}" style="font-size:14px;"></i>
+          <span style="font-size:10px;font-weight:800;">${t.label}</span>
+        </div>
+      </label>`).join('')}
+    </div>
+
+    <!-- تێبینی زیاتر -->
+    <div style="position:relative;margin-bottom:16px;">
+      <textarea name="suggest_note"
+        placeholder="تێبینی زیاتر (ئارەزوومەند نییە)..."
+        rows="3"
+        style="width:100%;padding:12px 14px;border-radius:14px;
+        border:1.5px solid ${hexToRgba(ac,0.2)};
+        background:rgba(10,5,20,0.7);
+        color:#fff;font-size:12px;outline:none;resize:none;
+        box-sizing:border-box;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+        direction:rtl;transition:all 0.3s;"
+        onfocus="this.style.borderColor='${ac}';this.style.boxShadow='0 0 15px ${hexToRgba(ac,0.15)}'"
+        onblur="this.style.borderColor='${hexToRgba(ac,0.2)}';this.style.boxShadow='none'"></textarea>
     </div>
 
     <!-- دوگمەی ناردن -->
     <button type="submit" id="modal-proposal-submit-btn" style="
-      width:100%;padding:14px;border:none;border-radius:12px;
-      background:linear-gradient(135deg,${hexToRgba(ac,0.9)},${al});
-      color:#fff;font-size:14px;font-weight:800;
-      font-family:Tahoma,sans-serif;cursor:pointer;
-      box-shadow:0 8px 25px ${hexToRgba(ac,0.35)};
-      transition:all 0.3s ease;display:flex;align-items:center;justify-content:center;gap:8px;"
-      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 35px ${hexToRgba(ac,0.5)}'"
-      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 25px ${hexToRgba(ac,0.35)}'">
-      <i class="fas fa-paper-plane"></i> ناردنی پێشنیار
+      width:100%;padding:15px;border:none;border-radius:14px;
+      background:linear-gradient(135deg,${hexToRgba(ac,0.95)},${al});
+      color:#fff;font-size:14px;font-weight:900;
+      font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
+      box-shadow:0 8px 25px ${hexToRgba(ac,0.4)};
+      transition:all 0.3s ease;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+      position:relative;overflow:hidden;"
+      onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 14px 35px ${hexToRgba(ac,0.55)}'"
+      onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 8px 25px ${hexToRgba(ac,0.4)}'">
+      <div style="width:28px;height:28px;border-radius:50%;
+        background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);
+        display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="fas fa-paper-plane" style="font-size:11px;transform:rotate(-15deg);"></i>
+      </div>
+      ناردنی پێشنیار
     </button>
 
   </form>
 
   <div id="modal-proposal-result" style="display:none;margin-top:14px;"></div>
+
+  <!-- پەیوەندی ڕاستەوخۆ -->
+  <div style="margin-top:20px;padding:14px 16px;
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px;">
+    <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:10px;text-align:center;">
+      یان ڕاستەوخۆ پەیوەندیمان پێوە بکە
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <a href="https://t.me/havekorea" target="_blank" style="
+        display:inline-flex;align-items:center;gap:7px;
+        background:rgba(0,136,204,0.15);border:1px solid rgba(0,136,204,0.35);
+        color:#fff;padding:9px 18px;border-radius:50px;text-decoration:none;
+        font-size:12px;font-weight:800;transition:all 0.3s;"
+        onmouseover="this.style.background='rgba(0,136,204,0.3)'"
+        onmouseout="this.style.background='rgba(0,136,204,0.15)'">
+        <i class="fab fa-telegram" style="color:#29b6f6;font-size:15px;"></i> Telegram
+      </a>
+      <a href="https://www.instagram.com/have.korea" target="_blank" style="
+        display:inline-flex;align-items:center;gap:7px;
+        background:rgba(193,53,132,0.15);border:1px solid rgba(193,53,132,0.35);
+        color:#fff;padding:9px 18px;border-radius:50px;text-decoration:none;
+        font-size:12px;font-weight:800;transition:all 0.3s;"
+        onmouseover="this.style.background='rgba(193,53,132,0.3)'"
+        onmouseout="this.style.background='rgba(193,53,132,0.15)'">
+        <i class="fab fa-instagram" style="color:#e1306c;font-size:15px;"></i> Instagram
+      </a>
+    </div>
+  </div>
 
 </div>`;
 })(),
@@ -9496,7 +10022,12 @@ app.renderRatingSection = async function(item) {
         </div>
     `;
     
+    const commentSection = document.getElementById('hk-comment-section');
+if (commentSection) {
+    commentSection.insertAdjacentHTML('afterend', html);
+} else {
     serverContainer.insertAdjacentHTML('afterend', html);
+}
     this.setupRatingEvents(item, hasVoted);
   app.renderMediaImages = async function(item) {
     const old = document.querySelector('.media-images-section');
