@@ -2194,9 +2194,9 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
 {
 
     id: 15,
-    title: "New Normal 2022",
+    title: "New Normal 2023",
     type: "movie",
-    tmdb_id: 1011654,
+    tmdb_id: 987072,
         backdrop: "https://image.tmdb.org/t/p/original/x7Cw7EJXcxcK2pkWKGLmLH2KkLK.jpg", // ← ئەمە زیاد بکە
 
     genre: "ترسناک • هەستبزوێن • کۆمیدی",
@@ -6826,8 +6826,7 @@ body {
     text-align: center;
     margin: 0 auto 22px;
 }
-
-.footer-tagline span { color: #b366ff; font-weight: 900; font-family: 'Vazirmatn', sans-serif; font-size: 16px; letter-spacing: 0.3px; }
+.footer-tagline span { color: #b366ff; font-weight: 770; font-family: 'Noto Kufi Arabic', sans-serif; font-size: 13px; letter-spacing: 0.3px; }
 .footer-socials {
     display: flex;
     justify-content: center;
@@ -6955,59 +6954,60 @@ body {
    ============================================= -->
 <div id="menu-modal-overlay" class="menu-modal-overlay" onclick="closeMenuModal()">
     <div class="menu-modal-box" onclick="event.stopPropagation()">
-        <div class="modal-x-btn">
-    <!-- تیشکی سەرەوە -->
-    <div style="position:absolute;top:0;left:0;right:0;height:1px;
-        background:linear-gradient(90deg,transparent,rgba(140,0,255,0.8),rgba(179,102,255,0.5),transparent);"></div>
+      <div class="modal-x-btn">
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;
+        background:linear-gradient(90deg,#8c00ff,#00bfff,#b366ff,#00e5ff,#8c00ff);
+        background-size:200% 100%;"></div>
 
-    <!-- لۆگۆ + ناو -->
-    <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;">
+    <div style="position:absolute;top:0;right:0;bottom:0;width:60%;
+        background:linear-gradient(135deg,rgba(100,50,255,0.18) 0%,rgba(0,180,255,0.1) 50%,transparent 100%);
+        clip-path:polygon(15% 0%,100% 0%,100% 100%,0% 100%);"></div>
+
+    <div style="display:flex;align-items:center;gap:11px;padding:13px 16px;position:relative;z-index:1;">
         <div style="position:relative;">
-            <div style="width:36px;height:36px;border-radius:50%;padding:2px;
-                background:conic-gradient(var(--accent-color),var(--accent-light),transparent 70%,var(--accent-color));
-                box-shadow:0 0 12px rgba(140,0,255,0.4);">
-                <img src="logo2.png" style="width:100%;height:100%;border-radius:50%;
-                    object-fit:cover;display:block;">
+            <div style="width:40px;height:40px;border-radius:50%;
+                background:linear-gradient(135deg,#8c00ff 0%,#00bfff 100%);
+                padding:2px;box-shadow:0 0 14px rgba(100,50,255,0.5);">
+                <div style="width:100%;height:100%;border-radius:50%;
+                    background:#08051a;display:flex;align-items:center;
+                    justify-content:center;overflow:hidden;">
+                    <img src="logo2.png" style="width:88%;height:88%;
+                        border-radius:50%;object-fit:cover;">
+                </div>
             </div>
-            <div style="position:absolute;bottom:-1px;right:-1px;
-                width:10px;height:10px;border-radius:50%;
-                background:#00e676;border:2px solid rgba(8,5,15,0.95);
-                box-shadow:0 0 6px rgba(0,230,118,0.7);"></div>
+            <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;
+                border-radius:50%;background:#00e5ff;border:2px solid #08051a;
+                box-shadow:0 0 6px rgba(0,229,255,0.9);"></div>
         </div>
-        <div style="display:flex;flex-direction:column;line-height:1.2;">
-            <span style="font-size:13px;font-weight:900;color:#fff;
-                letter-spacing:1.5px;font-family:'Rajdhani',sans-serif;">HAVE KOREA</span>
-           <span style="font-size:10px;font-weight:700;
-    color:var(--accent-light);
-    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">هاڤێ کۆریا</span>
+        <div style="line-height:1.3;">
+            <div style="font-size:13px;font-weight:900;letter-spacing:2px;
+                background:linear-gradient(90deg,#a78bfa,#38bdf8);
+                -webkit-background-clip:text;
+                background-clip:text;
+                -webkit-text-fill-color:transparent;
+                color:transparent;
+                font-family:'Rajdhani',sans-serif;">HAVE KOREA</div>
+            <div style="font-size:10px;color:rgba(130,200,255,0.7);
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">هاڤێ کۆریا</div>
         </div>
     </div>
 
-    <!-- دوگمەی داخستن -->
-    <button onclick="closeMenuModal()" style="
-        display:flex;align-items:center;gap:7px;
-        margin-left:12px;
-        background:rgba(255,255,255,0.06);
-        border:1px solid rgba(255,255,255,0.12);
-        border-top:1px solid rgba(255,255,255,0.2);
-        color:rgba(255,255,255,0.8);
-        padding:8px 14px;
-        border-radius:50px;
-        cursor:pointer;
-        font-size:11px;
-        font-weight:800;
-        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
-        backdrop-filter:blur(10px);
-        transition:all 0.3s ease;
-        box-shadow:inset 0 1px 0 rgba(255,255,255,0.1);"
-        onmouseover="this.style.background='rgba(255,50,50,0.2)';this.style.borderColor='rgba(255,50,50,0.4)';this.style.color='#fff'"
-        onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.12)';this.style.color='rgba(255,255,255,0.8)'">
-        <div style="width:18px;height:18px;border-radius:50%;
-            background:rgba(255,50,50,0.2);
-            border:1px solid rgba(255,50,50,0.4);
-            display:flex;align-items:center;justify-content:center;">
-            <i class="fas fa-times" style="font-size:8px;color:rgba(255,100,100,0.9);"></i>
-        </div>
+    <button onclick="closeMenuModal()"
+        style="margin-left:14px;display:flex;align-items:center;gap:7px;
+        padding:8px 15px;border-radius:50px;
+        background:rgba(255,255,255,0.04);
+        border:1px solid rgba(100,50,255,0.3);
+        color:rgba(200,220,255,0.8);font-size:11px;font-weight:800;
+        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
+        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+        transition:all 0.25s ease;position:relative;z-index:1;"
+        onmouseover="this.style.background='rgba(180,30,30,0.2)';this.style.borderColor='rgba(255,80,80,0.45)';this.style.color='#fff'"
+        onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(100,50,255,0.3)';this.style.color='rgba(200,220,255,0.8)'">
+        <span style="width:18px;height:18px;border-radius:50%;
+            border:1px solid rgba(255,80,80,0.4);
+            background:rgba(220,50,50,0.1);
+            display:flex;align-items:center;justify-content:center;
+            font-size:10px;color:rgba(255,130,130,0.85);">✕</span>
         دەرچوون
     </button>
 </div>
@@ -7271,8 +7271,8 @@ body {
 .menu-modal-box::-webkit-scrollbar { width: 6px; }
 .menu-modal-box::-webkit-scrollbar-thumb { background: rgba(140,0,255,0.5); border-radius: 10px; }
 .modal-x-btn {
-    position: sticky;
-    top: 0;
+    position: relative;
+    top: auto;
     left: 0;
     right: 0;
     width: 100%;
@@ -8090,7 +8090,7 @@ random: (() => {
     <div style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.3);
       letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
       <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
-      نمرەی کەمترین (ئارەزوومەند نییە)
+      نمرە (ئارەزوومەند نییە)
       <div style="flex:1;height:1px;background:rgba(255,255,255,0.07);"></div>
     </div>
 
@@ -8283,13 +8283,49 @@ account: (() => {
   <!-- سەردێڕ -->
   <div style="text-align:center;margin-bottom:24px;padding-bottom:20px;position:relative;">
     <div style="display:inline-flex;flex-direction:column;align-items:center;gap:6px;">
-      <div style="position:relative;display:flex;align-items:center;justify-content:center;
-        width:58px;height:58px;border-radius:16px;margin-bottom:8px;
-        background:${acRgba(0.12)};border:1.5px solid ${acRgba(0.4)};">
-        <i class="fas fa-user-circle" style="color:${ac};font-size:24px;filter:drop-shadow(0 0 8px ${acRgba(0.6)});"></i>
-      </div>
-      <span style="color:#fff;font-size:18px;font-weight:900;">هەژمارەکەم</span>
-      <span style="color:${acRgba(0.65)};font-size:11px;font-weight:700;letter-spacing:1.5px;">MY ACCOUNT</span>
+      <div style="
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:64px; height:64px;
+  border-radius:20px;
+  margin-bottom:10px;
+  background:linear-gradient(145deg, ${acRgba(0.18)} 0%, ${acRgba(0.08)} 100%);
+  border:1px solid ${acRgba(0.35)};
+  box-shadow:0 0 0 4px ${acRgba(0.06)}, inset 0 1px 0 rgba(255,255,255,0.08);
+">
+  <!-- خاڵی شاینی گۆشەی سەرەوە -->
+  <div style="
+    position:absolute;
+    top:6px; right:7px;
+    width:4px; height:4px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.45);
+  "></div>
+  <!-- ئایکۆنی کەس -->
+  <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+    <circle cx="15" cy="11" r="5.5" fill="${ac}" opacity="0.92"/>
+    <path d="M3.5 27c0-6.351 5.149-11.5 11.5-11.5S26.5 20.649 26.5 27" stroke="${ac}" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.85"/>
+  </svg>
+</div>
+     <span style="
+  color:#fff;
+  font-size:19px;
+  font-weight:900;
+  font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+  letter-spacing:0.3px;
+  text-shadow:0 0 20px ${acRgba(0.4)};
+">هەژمارەکەم</span>
+
+<span style="
+  color:${acRgba(0.55)};
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:3px;
+  font-family:'Rajdhani','Barlow Condensed',sans-serif;
+  text-transform:uppercase;
+">— MY ACCOUNT —</span>
     </div>
     <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,${acRgba(0.45)},transparent);"></div>
   </div>
@@ -8462,96 +8498,69 @@ account: (() => {
   </div>
 <!-- پرۆفایل (دوای داخلبوون) -->
 <div id="modal-user-profile" style="display:none;">
-<!-- هێرۆی پرۆفایل -->
-  <div style="position:relative;border-radius:20px;margin-bottom:46px;">
-    <!-- باکگراوند -->
-    <div style="height:90px;background:linear-gradient(135deg,
-      rgba(140,0,255,0.4),rgba(179,102,255,0.2));
-      border:1px solid rgba(140,0,255,0.3);border-radius:20px;overflow:hidden;"></div>
 
-    <!-- ئاواتار -->
-    <div style="position:absolute;bottom:-40px;right:20px;">
-      <div style="width:70px;height:70px;border-radius:50%;padding:3px;
-        background:linear-gradient(135deg,var(--accent-color),var(--accent-light));
-        box-shadow:0 0 20px rgba(140,0,255,0.4);">
-        <img id="modal-displayImg"
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-          style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;
-          background:rgba(10,5,20,0.9);">
+  <div style="position:relative;margin-bottom:56px;">
+    <div style="height:110px;border-radius:20px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0d0020,#1a0040,#2a0060,#8c00ff22);border:1px solid rgba(140,0,255,0.35);">
+      <div style="position:absolute;inset:0;background:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6) 0%,transparent 100%),radial-gradient(1px 1px at 60% 50%,rgba(179,102,255,0.8) 0%,transparent 100%),radial-gradient(1.5px 1.5px at 80% 20%,rgba(255,255,255,0.5) 0%,transparent 100%),radial-gradient(1px 1px at 40% 70%,rgba(140,0,255,0.9) 0%,transparent 100%);"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(140,0,255,0.8),rgba(179,102,255,1),rgba(140,0,255,0.8),transparent);filter:blur(1px);"></div>
+      <div style="position:absolute;top:50%;left:16px;transform:translateY(-50%);font-size:10px;font-weight:900;letter-spacing:3px;color:rgba(140,0,255,0.4);font-family:'Rajdhani',sans-serif;">HAVE KOREA</div>
+    </div>
+
+    <!-- ئاواتار + کامێرای سەرەوە -->
+    <div style="position:absolute;bottom:-44px;right:18px;">
+      <div style="position:relative;width:82px;height:82px;">
+        <div style="width:82px;height:82px;border-radius:50%;padding:3px;background:conic-gradient(#8c00ff,#b366ff,#ff00ff,#8c00ff);box-shadow:0 0 25px rgba(140,0,255,0.6),0 0 50px rgba(140,0,255,0.2);">
+          <img id="modal-displayImg" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:rgba(10,5,20,0.95);border:2px solid #0a0514;">
+        </div>
+        <!-- ئایکۆنی کامێرا -->
+        <div onclick="document.getElementById('profile-img-input').click()" style="position:absolute;bottom:2px;left:2px;width:24px;height:24px;border-radius:50%;background:#8c00ff;border:2px solid #0a0514;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 8px rgba(140,0,255,0.8);transition:all 0.3s;"
+          onmouseover="this.style.background='#b366ff';this.style.transform='scale(1.15)'"
+          onmouseout="this.style.background='#8c00ff';this.style.transform='scale(1)'">
+          <i class="fas fa-camera" style="font-size:10px;color:#fff;"></i>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ناو و زانیاری -->
-  <div style="padding:10px 0 16px;border-bottom:1px solid rgba(255,255,255,0.07);margin-bottom:16px;">
-    <h3 id="modal-displayName" style="color:#fff;font-size:18px;font-weight:900;
-      margin:0 0 4px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;"></h3>
-    <p id="modal-displayEmail" style="color:rgba(140,0,255,0.8);font-size:12px;
-      margin:0 0 10px;direction:ltr;text-align:right;"></p>
-    <div id="modal-provider-badge" style="display:inline-flex;align-items:center;gap:5px;
-      background:rgba(140,0,255,0.15);border:1px solid rgba(140,0,255,0.35);
-      color:var(--accent-color);font-size:10px;font-weight:800;
-      padding:3px 10px;border-radius:6px;"></div>
+  <input type="file" id="profile-img-input" accept="image/*" style="display:none" onchange="uploadProfileImage(this)">
+
+  <div style="padding:8px 0 16px;border-bottom:1px solid rgba(140,0,255,0.15);margin-bottom:16px;">
+    <h3 id="modal-displayName" style="color:#fff;font-size:20px;font-weight:900;margin:0 0 3px;font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;text-shadow:0 0 20px rgba(140,0,255,0.5);"></h3>
+    <p id="modal-displayEmail" style="color:rgba(140,0,255,0.75);font-size:11px;margin:0 0 10px;direction:ltr;text-align:right;letter-spacing:0.5px;"></p>
+    <div id="modal-provider-badge" style="display:inline-flex;align-items:center;gap:5px;background:rgba(140,0,255,0.12);border:1px solid rgba(140,0,255,0.35);color:var(--accent-color);font-size:10px;font-weight:800;padding:4px 12px;border-radius:8px;"></div>
   </div>
 
-  <!-- ئامارەکان -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-    <div style="background:rgba(140,0,255,0.08);border:1px solid rgba(140,0,255,0.2);
-      border-radius:14px;padding:14px;text-align:center;">
-      <div id="profile-comment-count" style="font-size:24px;font-weight:900;color:#fff;">0</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;
-        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">کۆمێنت</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;">
+    <div style="background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(140,0,255,0.05));border:1px solid rgba(140,0,255,0.3);border-radius:16px;padding:16px 12px;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:40px;height:40px;background:radial-gradient(circle,rgba(140,0,255,0.3),transparent);border-radius:50%;"></div>
+      <div id="profile-comment-count" style="font-size:28px;font-weight:900;color:#fff;text-shadow:0 0 15px rgba(140,0,255,0.8);line-height:1;">0</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:5px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;letter-spacing:0.5px;">کۆمێنت</div>
     </div>
-    <div style="background:rgba(140,0,255,0.08);border:1px solid rgba(140,0,255,0.2);
-      border-radius:14px;padding:14px;text-align:center;">
-      <div id="profile-join-date" style="font-size:14px;font-weight:900;color:#fff;">-</div>
-      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:3px;
-        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">ئەندام لە</div>
+    <div style="background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(140,0,255,0.05));border:1px solid rgba(140,0,255,0.3);border-radius:16px;padding:16px 12px;text-align:center;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:-10px;right:-10px;width:40px;height:40px;background:radial-gradient(circle,rgba(179,102,255,0.3),transparent);border-radius:50%;"></div>
+      <div id="profile-join-date" style="font-size:13px;font-weight:900;color:#fff;text-shadow:0 0 15px rgba(140,0,255,0.6);line-height:1.2;">-</div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-top:5px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;letter-spacing:0.5px;">ئەندام لە</div>
     </div>
   </div>
 
-  <!-- کۆمێنتەکانم -->
   <div style="margin-bottom:16px;">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <i class="fas fa-comments" style="color:var(--accent-color);font-size:14px;"></i>
-      <span style="font-size:13px;font-weight:800;color:#fff;
-        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">کۆمێنتەکانم</span>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:10px 14px;background:rgba(140,0,255,0.08);border-radius:12px;border-right:3px solid var(--accent-color);">
+      <i class="fas fa-comments" style="color:var(--accent-color);font-size:15px;filter:drop-shadow(0 0 6px rgba(140,0,255,0.7));"></i>
+      <span style="font-size:13px;font-weight:800;color:#fff;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">کۆمێنتەکانم</span>
+      <i class="fas fa-chevron-left" style="margin-right:auto;color:rgba(140,0,255,0.5);font-size:11px;"></i>
     </div>
-
     <div id="profile-comments-list">
       <div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">
-        <i class="fas fa-spinner fa-spin" style="font-size:20px;display:block;margin-bottom:8px;"></i>
+        <i class="fas fa-spinner fa-spin" style="font-size:20px;display:block;margin-bottom:8px;color:rgba(140,0,255,0.5);"></i>
         <span style="font-size:12px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دەهێنرێن...</span>
       </div>
     </div>
   </div>
-<!-- گۆڕینی وێنە -->
-  <button onclick="document.getElementById('profile-img-input').click()" style="
-    width:100%;padding:10px;border-radius:12px;
-    background:rgba(140,0,255,0.1);
-    border:1.5px dashed rgba(140,0,255,0.4);
-    color:rgba(255,255,255,0.6);font-size:12px;font-weight:800;
-    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
-    margin-bottom:10px;transition:all 0.3s;"
-    onmouseover="this.style.background='rgba(140,0,255,0.2)';this.style.color='#fff'"
-    onmouseout="this.style.background='rgba(140,0,255,0.1)';this.style.color='rgba(255,255,255,0.6)'">
-    <i class="fas fa-camera" style="margin-left:6px;"></i>
-    گۆڕینی وێنەی پرۆفایل
-  </button>
-  <input type="file" id="profile-img-input" accept="image/*" style="display:none"
-    onchange="uploadProfileImage(this)">
 
-  <!-- دەرچوون -->
-  <button onclick="signOutUser()" style="
-    width:100%;padding:13px;border-radius:12px;
-    background:rgba(255,50,50,0.1);border:1.5px solid rgba(255,50,50,0.3);
-    color:#ff6b6b;font-size:14px;font-weight:800;
-    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
-    transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;"
-    onmouseover="this.style.background='rgba(255,50,50,0.22)';this.style.transform='translateY(-2px)'"
-    onmouseout="this.style.background='rgba(255,50,50,0.1)';this.style.transform='translateY(0)'">
+  <button onclick="signOutUser()" style="width:100%;padding:13px;border-radius:14px;background:rgba(255,50,50,0.08);border:1.5px solid rgba(255,80,80,0.35);color:#ff7070;font-size:14px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(255,50,50,0.2)';this.style.borderColor='rgba(255,80,80,0.6)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(255,50,50,0.2)'" onmouseout="this.style.background='rgba(255,50,50,0.08)';this.style.borderColor='rgba(255,80,80,0.35)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
     <i class="fas fa-sign-out-alt"></i> دەرچوون لە هەژمار
   </button>
+
 </div>
 
 </div>`;
@@ -8598,7 +8607,7 @@ volunteer: (() => {
         <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;">کاری وەرگێڕدراو</div>
       </div>
       <div style="flex:1;padding:13px 8px;text-align:center;">
-        <div style="font-size:17px;font-weight:900;color:#fff;">٢٠٢٤</div>
+        <div style="font-size:17px;font-weight:900;color:#fff;">٢٠٢٧</div>
         <div style="font-size:10px;color:rgba(255,255,255,0.35);font-weight:600;">دەستپێکراو</div>
       </div>
     </div>
@@ -8615,7 +8624,7 @@ volunteer: (() => {
     ${[
       {n:'١', icon:'fa-edit', t:'فۆرم پڕ بکەرەوە', d:'زانیارییەکانت بنووسە'},
       {n:'٢', icon:'fa-paper-plane', t:'بنێرە', d:'داواکاریت دەگات'},
-      {n:'٣', icon:'fa-users', t:'بەشداری بکە', d:'بە تیمەکە یەکدەبەیت'}
+      {n:'٣', icon:'fa-users', t:'بەشداری بکە', d:'دێیتە تیمی هاڤێ کۆریا'}
     ].map((s,i) => `
     <div style="padding:18px 12px;text-align:center;${i>0?'border-right:1px solid rgba(255,255,255,0.05);':''}">
       <div style="width:26px;height:26px;border-radius:50%;background:${hexToRgba(ac,0.15)};border:1px solid ${hexToRgba(ac,0.3)};display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:11px;font-weight:900;color:${al};">${s.n}</div>
@@ -8828,11 +8837,10 @@ staffall: (() => {
         </defs>
       </svg>
     </div>
-
-    <!-- ناونیشان -->
-    <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;line-height:1.2;color:#fff;">
+<h2 style="font-family: 'Scheherazade New', serif; margin:0 0 8px; font-size:22px; font-weight:900; line-height:1.2; color:#fff;">
       ستافی&nbsp;
       <span style="
+        font-family: 'Scheherazade New', serif;
         background:linear-gradient(90deg,${ac},${al},#ff6b6b);
         -webkit-background-clip:text;background-clip:text;
         -webkit-text-fill-color:transparent;color:transparent;">
@@ -8840,14 +8848,6 @@ staffall: (() => {
       </span>
     </h2>
 
-    <!-- وێنەی بانەر -->
-    <img src="korean.png" alt="Have Korea Banner" style="
-      width:100%;max-width:380px;
-      border-radius:14px;margin:10px auto 0;display:block;
-      object-fit:cover;
-      border:1px solid ${hexToRgba(ac,0.3)};
-      box-shadow:0 8px 25px rgba(0,0,0,0.5);"
-      onerror="this.style.display='none'">
 
     <!-- تێبینی -->
     <p style="color:rgba(255,255,255,0.55);font-size:11px;line-height:1.8;
@@ -9183,9 +9183,9 @@ suggest: (() => {
     
     <div style="display:flex;flex-direction:column;gap:8px;">
       ${[
-        { n:'١', icon:'fa-pen', title:'ناوی دراماکە بنووسە', desc:'ناوی ئەو دراما یان فیلمەی دەتەوێت وەرگێڕانی بکرێت' },
+        { n:'١', icon:'fa-pen', title:'ناوی دراماکە بنووسە', desc:'ناوی ئەو درامایەی یان ئەو فیلمەی دەتەوێت وەرگێڕانی بکەین' },
         { n:'٢', icon:'fa-paper-plane', title:'بینێرە', desc:'تیمەکەی هاڤێ کۆریا دەیبینێت و پرۆسەکە دەستپێدەکات' },
-        { n:'٣', icon:'fa-tv', title:'لە سایت دادەنرێت', desc:'دراماکە بە ژێرنووسی کوردی بۆ سایتەکە دەزیادکرێت' }
+        { n:'٣', icon:'fa-tv', title:'لە سایت دادەنرێت', desc:'دراماکە بە ژێرنووسی کوردی بۆ سایتەکە زیاد دەکرێت' }
       ].map(s=>`
       <div style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;
         background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
