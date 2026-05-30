@@ -979,7 +979,7 @@
  #hero-backdrop {
     position: fixed !important;
     height: 100vh !important;
-    top: 0 !important;
+    top:17px !important;
     filter: brightness(0.3) saturate(1.2) !important;
     background-position: center top !important;
     background-size: contain !important;
@@ -1891,95 +1891,81 @@ const slides = sliderItems.map((item, i) => `
       rgba(5,5,8,1) 100%
     );
   "></div>
+<!-- ناوەڕۆکی سەرەکی -->
+<div style="position:relative;z-index:2;min-height:100vh;padding-bottom:80px;">
+<div style="position:sticky;top:0;z-index:50;padding:8px 12px 10px;
+  background:linear-gradient(to bottom,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.2) 80%,transparent 100%);">
 
-  <!-- ناوەڕۆکی سەرەکی -->
-  <div style="position:relative;z-index:2;min-height:100vh;overflow-y:auto;padding-bottom:80px;">
-
-    <div style="position:sticky;top:0;z-index:50;padding:14px 16px 10px;
-  background:linear-gradient(to bottom,rgba(0,0,0,0.5),transparent);">
-
-  <!-- شوشەی گلاس -->
   <div style="
     display:flex;align-items:center;justify-content:space-between;
-    background:rgba(255,255,255,0.06);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.12);
+    background:linear-gradient(135deg,rgba(140,0,255,0.08),rgba(255,255,255,0.04));
+    backdrop-filter:blur(28px);
+    -webkit-backdrop-filter:blur(28px);
+    border:1px solid rgba(179,102,255,0.18);
     border-top:1px solid rgba(255,255,255,0.2);
-    border-radius:20px;
-    padding:10px 14px;
-    box-shadow:0 8px 32px rgba(0,0,0,0.3),
-               inset 0 1px 0 rgba(255,255,255,0.1);
+    border-radius:50px;
+    padding:5px 5px 5px 10px;
+    box-shadow:0 4px 30px rgba(0,0,0,0.35),
+               0 0 20px rgba(140,0,255,0.08),
+               inset 0 1px 0 rgba(255,255,255,0.1),
+               inset 0 -1px 0 rgba(0,0,0,0.1);
   ">
-<button onclick="app.goHome()" style="
-  display:inline-flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,0.08);
-  border:none;
-  color:#fff;padding:6px 12px;
-  border-radius:50px;font-size:11px;font-weight:800;
-  cursor:pointer;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
-  transition:all 0.3s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.15),
-             inset 0 -1px 0 rgba(0,0,0,0.2);
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-">
-  <div style="
-    width:22px;height:22px;border-radius:50%;
-    background:rgba(255,255,255,0.1);
-    border:1px solid rgba(255,255,255,0.2);
-    display:flex;align-items:center;justify-content:center;
-    flex-shrink:0;
-  ">
-    <i class="fas fa-arrow-right" style="font-size:9px;"></i>
-  </div>
-  گەڕانەوە
-</button>
-<!-- لۆگۆ -->
-    <div onclick="app.goHome()" style="display:flex;align-items:center;gap:8px;cursor:pointer;flex-shrink:0;">
-      <img src="logo2.png" alt="Logo" style="
-        width:34px;height:34px;border-radius:50%;object-fit:cover;
-        border:2px solid rgba(179,102,255,0.6);
-        box-shadow:0 0 12px rgba(140,0,255,0.45);
+
+    <!-- دوگمەی گەڕانەوە -->
+    <button onclick="app.goHome()" style="
+      display:inline-flex;align-items:center;gap:7px;
+      background:linear-gradient(135deg,rgba(140,0,255,0.22),rgba(179,102,255,0.1));
+      border:1px solid rgba(179,102,255,0.35);
+      border-top:1px solid rgba(255,255,255,0.15);
+      color:#fff;padding:7px 15px 7px 8px;
+      border-radius:50px;font-size:11px;font-weight:800;
+      cursor:pointer;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+      transition:all 0.3s ease;
+      box-shadow:0 0 14px rgba(140,0,255,0.18),
+                 inset 0 1px 0 rgba(255,255,255,0.12);
+    ">
+      <div style="
+        width:25px;height:25px;border-radius:50%;
+        background:linear-gradient(135deg,rgba(140,0,255,0.5),rgba(179,102,255,0.3));
+        border:1px solid rgba(179,102,255,0.5);
+        display:flex;align-items:center;justify-content:center;
         flex-shrink:0;
+        box-shadow:0 0 10px rgba(140,0,255,0.3);
       ">
-      <div style="display:flex;flex-direction:column;line-height:1.2;">
+        <i class="fas fa-arrow-right" style="font-size:9px;"></i>
+      </div>
+      گەڕانەوە
+    </button>
+
+    <!-- لۆگۆ -->
+    <div onclick="app.goHome()" style="display:flex;align-items:center;gap:9px;cursor:pointer;flex-shrink:0;">
+      <div style="display:flex;flex-direction:column;line-height:1.25;text-align:left;">
         <span style="
           font-size:13px;font-weight:800;color:#fff;
-          letter-spacing:1.5px;
+          letter-spacing:2px;
           font-family:'Rajdhani',sans-serif;
+          text-shadow:0 0 20px rgba(179,102,255,0.5);
         ">HAVE KOREA</span>
         <span style="
           font-family:'Noto Kufi Arabic',serif;
           font-size:11px;font-weight:700;
           background:linear-gradient(90deg,#ffffff,#c499ff,#8c00ff);
-          background-size:200% auto;
           -webkit-background-clip:text;background-clip:text;
           -webkit-text-fill-color:transparent;
           color:transparent;
-          animation:shineText 4s linear infinite;
         ">هاڤێ کۆریا</span>
       </div>
+      <img src="logo2.png" alt="Logo" style="
+        width:38px;height:38px;border-radius:50%;object-fit:cover;
+        border:2px solid rgba(179,102,255,0.65);
+        box-shadow:0 0 16px rgba(140,0,255,0.5),
+                   0 0 4px rgba(179,102,255,0.3);
+        flex-shrink:0;
+      ">
     </div>
 
   </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2039,6 +2025,57 @@ const slides = sliderItems.map((item, i) => `
           <span id="movie-genre"><i class="fas fa-tags"></i> ژانەر: -</span>
           <span id="movie-type-display" style="display:none;">دراما</span>
         </div>
+
+        <!-- دوگمەکانی لیست - دێسکتۆپ -->
+        <div style="display:inline-flex;gap:8px;margin:4px 0 12px;">
+          <button id="btn-fav-desktop" onclick="toggleFavorite()" style="
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 14px 7px 10px;
+  border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+  font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.3s;
+  background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05));
+  border:1px solid rgba(140,0,255,0.4);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
+  position:relative;overflow:hidden;">
+  <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,#8c00ff,#c499ff);
+    box-shadow:0 0 8px rgba(140,0,255,0.8);
+    border-radius:0 10px 10px 0;"></div>
+  <i class="fas fa-heart" style="font-size:11px;
+    background:linear-gradient(45deg,#8c00ff,#c499ff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+  <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;">لیستی دڵخواز</span>
+</button>
+          <button id="btn-watch-desktop" onclick="toggleWatchlist()" style="
+            display:inline-flex;align-items:center;gap:7px;
+            padding:7px 14px 7px 10px;
+            border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.3s;
+            background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05));
+            border:1px solid rgba(140,0,255,0.4);
+            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+            box-shadow:0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+              background:linear-gradient(180deg,#8c00ff,#c499ff);
+              box-shadow:0 0 8px rgba(140,0,255,0.8);
+              border-radius:0 10px 10px 0;"></div>
+            <i class="fas fa-eye" style="font-size:11px;
+              background:linear-gradient(45deg,#8c00ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;
+              filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+            <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;">لیستی بینراو</span>
+          </button>
+        </div>
+
 <!-- دوگمەی سەیرکردن -->
 <button onclick="document.getElementById('video-frame').scrollIntoView({behavior:'smooth', block:'center'})"
   style="
@@ -2096,13 +2133,34 @@ const slides = sliderItems.map((item, i) => `
       <!-- ئەلقە ← سەرەوەی ڤیدیۆ -->
       <div id="episode-container">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-          <div style="display:inline-flex;align-items:center;gap:8px;
-            background:rgba(140,0,255,0.08);
-            border:1px solid rgba(140,0,255,0.25);
-            border-radius:50px;padding:6px 14px 6px 10px;">
-            <i class="fas fa-play-circle" style="color:var(--accent-color);font-size:13px;
-              filter:drop-shadow(0 0 6px var(--accent-color));"></i>
-            <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);letter-spacing:0px;">ئەلقە</span>
+          <div style="
+            display:inline-flex;align-items:center;gap:10px;
+            background:linear-gradient(135deg,rgba(140,0,255,0.13),rgba(0,210,255,0.05));
+            border:1px solid rgba(140,0,255,0.45);
+            border-radius:10px;padding:5px 11px 5px 8px;
+            position:relative;overflow:hidden;
+            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+            box-shadow:0 0 22px rgba(140,0,255,0.18),inset 0 1px 0 rgba(255,255,255,0.07);">
+            <!-- بارەی ڕووناکی ڕاست -->
+            <div style="
+              position:absolute;right:0;top:0;bottom:0;width:3px;
+              background:linear-gradient(180deg,#8c00ff,#00d2ff);
+              box-shadow:0 0 10px rgba(140,0,255,0.9);
+              border-radius:0 12px 12px 0;">
+            </div>
+            <i class="fas fa-layer-group" style="
+              font-size:11px;
+              background:linear-gradient(45deg,#8c00ff,#00d2ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;
+              filter:drop-shadow(0 0 6px rgba(140,0,255,0.8));">
+            </i>
+            <span id="episode-section-label" style="
+              font-size:11px;font-weight:800;
+              font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+              background:linear-gradient(90deg,#c499ff,#8c00ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;">ئەلقە</span>
           </div>
         </div>
         <div id="episode-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
@@ -2312,7 +2370,7 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
     title: "S line 2025",
     tmdb_id: 232402,
     type: "drama",
-    
+    season: 1,
     genre: "ڕۆمانسی • خەیاڵی", 
     desc: "   ",
     image: "sline.png",
@@ -2397,7 +2455,7 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
         tmdb_id: 238084,  // ← ئایدی TMDB
     slider_image: "https://image.tmdb.org/t/p/original/ayeTPl4AvAWreEQxCbiF5IG1IyE.jpg",  // ← ئەمە
     backdrop: "https://image.tmdb.org/t/p/original/d60hqfP13yatHuMhNR9dl5m4Y9Y.jpg", // ← ئەمە زیاد بکە
-
+season: 1,
     genre: " ئەکشن • سەرکێشی • تاوانکاری• ", 
     desc: "لە وڵاتێکی وەک کۆریای باشووردا کە یاساکانی هەڵگرتنی چەک زۆر توندن و تاوانی تەقەکردن تێیدا دەگمەنە، لەناکاو کۆمەڵێک چەکی نایاسایی و بێ مۆڵەت بە وڵاتدا بڵاو دەبنەوە. ئەمەش دەبێتە هۆی دروستبوونی پشێوی و زیادبوونی تاوانە خوێناوییەکان.",
     image: "trigger.png",
@@ -2563,7 +2621,7 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
     type: "drama",
     tmdb_id: 310024,      // ← ئایدی ڕاستەکە
     slider_image: "https://image.tmdb.org/t/p/original/5T4ij5RgI7y5UHNgI2scH8BU5J9.jpg",  // ← ئەمە
-
+season: 1,
     genre: " تاوانکاری • پزیشکی",
     desc: "(لی وو گیۆم) بکوژێکی زنجیرەییە، بەڵام خاوەنی بەهرەیەکی پزیشکییە بۆ چارەسەرکردنی نەخۆشییە چارەسەرنەکراوەکان",
     image: "IMG_2778.JPG",
@@ -2618,7 +2676,7 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
         tmdb_id: 281005,  // ← ئایدی TMDB
     slider_image: "https://image.tmdb.org/t/p/original/fZSHDrZgR4PS3YMzfO3EvAYEiNu.jpg",  // ← ئەمە
     backdrop: "https://image.tmdb.org/t/p/original/5IWLBO4oGhpjg2kv5QL5JBfouWd.jpg", // ← ئەمە زیاد بکە
-
+season: 1,
     genre: "ڕۆمانسی - درامایی",
     desc:"(لی کیۆنگ دۆ) کارمەندێکی ئاسایی ڕۆژنامەنووس کار دەکات، کاتێک تەمەنی ۲۰ سال بوو، له گروپی شانودا (سيۆ جی وۆ)ـی ناسی و عاشقی یەکتر بوون بەڵام بەهۆی بێئومێد بوونی (سیۆ جی وۆ) لە ژیان دووجار جیابوونەوە",
     image: "11.png",
@@ -2884,6 +2942,19 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
     this.currentMovie = item;
     this.currentEpisodeIndex = 0;
 
+    // نوێکردنەوەی لیبلی ئەلقەکان
+    const episodeLabel = document.getElementById('episode-section-label');
+    if (episodeLabel) {
+        const isMovie = (item.type === 'movie' || item.subtype === 'movie');
+        if (isMovie) {
+            episodeLabel.textContent = 'فیلم';
+        } else {
+            const seasonNames = ['','یەکەم','دووەم','سێیەم','چوارەم','پێنجەم'];
+            const s = item.season || 1;
+            episodeLabel.textContent = 'وەرزی ' + (seasonNames[s] || s);
+        }
+    }
+
     // ✅ نوێکردنەوەی تایتڵ و مێتا بۆ SEO
     document.title = item.title + " kurdish subtitle - ژێرنووسی کوردی | have Korea";
     
@@ -2915,6 +2986,12 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
     document.getElementById('sidebar-trigger').style.display = 'none';
     document.getElementById('home-view').style.display = 'none';
     document.getElementById('player-modal').style.display = 'block';
+    // نوێکردنەوەی دوگمەکانی لیست
+    if (auth.currentUser) {
+        loadUserLists(auth.currentUser.uid);
+    } else {
+        updateListButtons();
+    }
                 // پۆستەر
 document.getElementById('hero-poster-img').src = item.image;
 // زیادکردنی ناو و نمرە لە سەرەوەی player-bottom بۆ مۆبایل
@@ -3019,6 +3096,54 @@ if (window.innerWidth <= 768) {
                     font-family:'Noto Kufi Arabic',Tahoma,sans-serif;letter-spacing:1px;">ژانەر</span>
             </div>
             ${genrePills}
+        </div>
+
+        <!-- دوگمەکانی لیست - مۆبایل -->
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button id="btn-fav-mobile" onclick="toggleFavorite()" style="
+  flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+  font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.3s;
+  background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05));
+  border:1px solid rgba(140,0,255,0.4);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
+  position:relative;overflow:hidden;">
+  <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,#8c00ff,#c499ff);
+    box-shadow:0 0 8px rgba(140,0,255,0.8);
+    border-radius:0 10px 10px 0;"></div>
+  <i class="fas fa-heart" style="font-size:11px;
+    background:linear-gradient(45deg,#8c00ff,#c499ff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+    filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+  <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;">لیستی دڵخواز</span>
+</button>
+          <button id="btn-watch-mobile" onclick="toggleWatchlist()" style="
+            flex:1;display:flex;align-items:center;justify-content:center;gap:7px;
+            padding:10px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;
+            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;transition:all 0.3s;
+            background:linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05));
+            border:1px solid rgba(140,0,255,0.4);
+            backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+            box-shadow:0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06);
+            position:relative;overflow:hidden;">
+            <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+              background:linear-gradient(180deg,#8c00ff,#c499ff);
+              box-shadow:0 0 8px rgba(140,0,255,0.8);
+              border-radius:0 10px 10px 0;"></div>
+            <i class="fas fa-eye" style="font-size:11px;
+              background:linear-gradient(45deg,#8c00ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;
+              filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+            <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;">لیستی بینراو</span>
+          </button>
         </div>
 
     </div>`;
@@ -4291,15 +4416,17 @@ renderEpisodes: function() {
     episodes.forEach((ep, index) => {
         const btn = document.createElement('button');
         btn.className = `action-btn ${index === 0 ? 'active' : ''}`;
+// ژمارەی ئەلقە بەبێ وێنە
+        const isMovieType = (this.currentMovie.type === 'movie' || this.currentMovie.subtype === 'movie');
+        const epTopLabel = isMovieType ? 'تەواوی فیلم' : 'ئەلقەی';
 
-        // ژمارەی ئەلقە بەبێ وێنە
         btn.innerHTML = `
             <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
                 <span style="font-size:9px;font-weight:700;
                     color:rgba(255,255,255,0.45);
                     font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
                     letter-spacing:0px;">
-                    ئەلقە
+                    ${epTopLabel}
                 </span>
                 <span style="font-size:22px;font-weight:900;
                     font-family:'Barlow Condensed','Rajdhani',sans-serif;
@@ -8526,7 +8653,27 @@ account: (() => {
 
   <div style="padding:8px 0 16px;border-bottom:1px solid rgba(140,0,255,0.15);margin-bottom:16px;">
     <h3 id="modal-displayName" style="color:#fff;font-size:20px;font-weight:900;margin:0 0 3px;font-family:'Rajdhani',sans-serif;letter-spacing:1.5px;text-shadow:0 0 20px rgba(140,0,255,0.5);"></h3>
-    <p id="modal-displayEmail" style="color:rgba(140,0,255,0.75);font-size:11px;margin:0 0 10px;direction:ltr;text-align:right;letter-spacing:0.5px;"></p>
+    <p id="modal-displayEmail" style="color:rgba(140,0,255,0.75);font-size:11px;margin:0 0 8px;direction:ltr;text-align:right;letter-spacing:0.5px;"></p>
+
+    <!-- بەشی بایۆ -->
+    <div id="modal-bio-wrap" style="margin:0 0 10px;position:relative;">
+      <p id="modal-user-bio" style="color:rgba(255,255,255,0.55);font-size:12px;margin:0 0 5px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;line-height:1.7;display:none;word-break:break-word;"></p>
+      <div id="modal-bio-edit-wrap" style="display:none;margin-top:4px;">
+        <textarea id="modal-bio-input" maxlength="150" placeholder="دەربارەی خۆت بنووسە..." style="width:100%;background:rgba(140,0,255,0.08);border:1px solid rgba(140,0,255,0.35);border-radius:10px;padding:8px 10px;color:#fff;font-size:12px;resize:none;height:64px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;outline:none;direction:rtl;"></textarea>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
+          <span id="modal-bio-charcount" style="font-size:10px;color:rgba(255,255,255,0.3);">0/150</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:5px;">
+          <button onclick="saveBio()" style="flex:1;padding:7px;background:rgba(140,0,255,0.25);border:1px solid rgba(140,0,255,0.5);color:#fff;border-radius:8px;font-size:12px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;font-weight:800;transition:all 0.3s;" onmouseover="this.style.background='rgba(140,0,255,0.4)'" onmouseout="this.style.background='rgba(140,0,255,0.25)'"><i class="fas fa-check" style="font-size:10px;margin-left:4px;"></i>پاشەکەوتکردن</button>
+          <button onclick="cancelBioEdit()" style="padding:7px 12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);border-radius:8px;font-size:12px;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <button id="modal-bio-edit-btn" onclick="startBioEdit()" style="margin-top:3px;padding:4px 11px;background:rgba(140,0,255,0.1);border:1px solid rgba(140,0,255,0.28);color:rgba(179,102,255,0.85);border-radius:8px;font-size:11px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;" onmouseover="this.style.background='rgba(140,0,255,0.22)'" onmouseout="this.style.background='rgba(140,0,255,0.1)'">
+        <i class="fas fa-pen" style="font-size:9px;margin-left:4px;"></i><span id="modal-bio-btn-text">بایۆ زیادکە</span>
+      </button>
+    </div>
+    <!-- /بایۆ -->
+
     <div id="modal-provider-badge" style="display:inline-flex;align-items:center;gap:5px;background:rgba(140,0,255,0.12);border:1px solid rgba(140,0,255,0.35);color:var(--accent-color);font-size:10px;font-weight:800;padding:4px 12px;border-radius:8px;"></div>
   </div>
 
@@ -8556,8 +8703,25 @@ account: (() => {
       </div>
     </div>
   </div>
+<!-- لیستی دڵخواز و بینراو -->
+  <div id="profile-lists-section" style="margin-bottom:16px;">
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button onclick="showListTab('favorites')" id="tab-fav-btn"
+        style="flex:1;padding:9px 6px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(255,60,100,0.2);border:1.5px solid rgba(255,60,100,0.55);color:#ff6080;display:flex;align-items:center;justify-content:center;gap:5px;">
+        <i class="fas fa-heart" style="font-size:10px;"></i>لیستی دڵخوازەکانم
+        <span id="fav-count-badge" style="background:rgba(255,60,100,0.3);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
+      </button>
+      <button onclick="showListTab('watchlist')" id="tab-watch-btn"
+        style="flex:1;padding:9px 6px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(0,180,255,0.06);border:1.5px solid rgba(0,180,255,0.2);color:rgba(0,180,255,0.6);display:flex;align-items:center;justify-content:center;gap:5px;">
+        <i class="fas fa-eye" style="font-size:10px;"></i>لیستی بینراوەکانم
+        <span id="watch-count-badge" style="background:rgba(0,180,255,0.2);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
+      </button>
+    </div>
+    <div id="profile-favorites-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <div id="profile-watchlist-list" style="display:none;flex-direction:column;gap:8px;"></div>
+  </div>
 
-  <button onclick="signOutUser()" style="width:100%;padding:13px;border-radius:14px;background:rgba(255,50,50,0.08);border:1.5px solid rgba(255,80,80,0.35);color:#ff7070;font-size:14px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:8px;" onmouseover="this.style.background='rgba(255,50,50,0.2)';this.style.borderColor='rgba(255,80,80,0.6)';this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 20px rgba(255,50,50,0.2)'" onmouseout="this.style.background='rgba(255,50,50,0.08)';this.style.borderColor='rgba(255,80,80,0.35)';this.style.transform='translateY(0)';this.style.boxShadow='none'">
+  <button onclick="signOutUser()" style="width:100%;padding:13px;border-radius:14px;background:rgba(255,50,50,0.08);border:1.5px solid rgba(255,80,80,0.35);color:#ff7070;
     <i class="fas fa-sign-out-alt"></i> دەرچوون لە هەژمار
   </button>
 
@@ -9631,6 +9795,30 @@ if (imgEl) {
 // هێنانی کۆمێنتەکان
     loadUserComments(user.uid);
 
+    // هێنانی لیستی دڵخواز و بینراو
+    loadUserLists(user.uid).then(() => renderProfileLists());
+
+    // هێنانی بایۆی بەکارهێنەر لە Firestore
+    (async function loadBio() {
+        try {
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            const bio = (userDoc.exists && userDoc.data().bio) ? userDoc.data().bio : '';
+            const bioEl = document.getElementById('modal-user-bio');
+            const bioInput = document.getElementById('modal-bio-input');
+            const bioBtnText = document.getElementById('modal-bio-btn-text');
+            if (bioEl) {
+                if (bio) {
+                    bioEl.innerText = bio;
+                    bioEl.style.display = 'block';
+                } else {
+                    bioEl.style.display = 'none';
+                }
+            }
+            if (bioInput) bioInput.value = bio;
+            if (bioBtnText) bioBtnText.innerText = bio ? 'بایۆ دەستکاری بکە' : 'بایۆ زیادکە';
+        } catch(e) { console.log('Bio load error:', e); }
+    })();
+
     // ئۆتۆماتیک نوێکردنەوەی وێنە لە کۆمێنتە کۆنەکاندا
     (async function syncOldComments() {
         const savedPhoto = localStorage.getItem(`user_photo_${user.uid}`);
@@ -9867,6 +10055,214 @@ async function signOutUser() {
     await auth.signOut();
     closeMenuModal();
 }
+// تابەکانی بایۆ
+function startBioEdit() {
+    const editWrap = document.getElementById('modal-bio-edit-wrap');
+    const editBtn = document.getElementById('modal-bio-edit-btn');
+    const bioInput = document.getElementById('modal-bio-input');
+    const charCount = document.getElementById('modal-bio-charcount');
+    if (editWrap) editWrap.style.display = 'block';
+    if (editBtn) editBtn.style.display = 'none';
+    if (bioInput) {
+        bioInput.focus();
+        if (charCount) charCount.innerText = bioInput.value.length + '/150';
+        bioInput.oninput = function() {
+            if (charCount) charCount.innerText = this.value.length + '/150';
+        };
+    }
+}
+
+function cancelBioEdit() {
+    const editWrap = document.getElementById('modal-bio-edit-wrap');
+    const editBtn = document.getElementById('modal-bio-edit-btn');
+    if (editWrap) editWrap.style.display = 'none';
+    if (editBtn) editBtn.style.display = '';
+}
+
+async function saveBio() {
+    const user = auth.currentUser;
+    if (!user) return;
+    const bioInput = document.getElementById('modal-bio-input');
+    if (!bioInput) return;
+    const bio = bioInput.value.trim();
+    try {
+        await db.collection('users').doc(user.uid).set({ bio: bio }, { merge: true });
+        const bioEl = document.getElementById('modal-user-bio');
+        const bioBtnText = document.getElementById('modal-bio-btn-text');
+        if (bioEl) {
+            if (bio) { bioEl.innerText = bio; bioEl.style.display = 'block'; }
+            else { bioEl.style.display = 'none'; }
+        }
+        if (bioBtnText) bioBtnText.innerText = bio ? 'بایۆ دەستکاری بکە' : 'بایۆ زیادکە';
+        cancelBioEdit();
+    } catch(e) {
+        console.log('Bio save error:', e);
+        alert('کێشەیەک ڕوویدا: ' + e.message);
+    }
+}
+// لیستی دڵخواز و بینراو
+let _userFavorites = [];
+let _userWatchlist = [];
+
+async function loadUserLists(userId) {
+    try {
+        const userDoc = await db.collection('users').doc(userId).get();
+        if (userDoc.exists) {
+            _userFavorites = (userDoc.data().favorites || []).map(String);
+            _userWatchlist = (userDoc.data().watchlist || []).map(String);
+        } else {
+            _userFavorites = [];
+            _userWatchlist = [];
+        }
+        updateListButtons();
+    } catch(e) { console.log('loadUserLists error:', e); }
+}
+
+function updateListButtons() {
+    const movie = app.currentMovie;
+    if (!movie) return;
+    const id = String(movie.id);
+    const isFav = _userFavorites.includes(id);
+    const isWatch = _userWatchlist.includes(id);
+    ['btn-fav-desktop','btn-fav-mobile'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        btn.style.background = isFav
+    ? 'linear-gradient(135deg,rgba(140,0,255,0.35),rgba(179,102,255,0.12))'
+    : 'linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05))';
+btn.style.borderColor = isFav ? 'rgba(140,0,255,0.85)' : 'rgba(140,0,255,0.4)';
+btn.style.boxShadow = isFav
+    ? '0 0 22px rgba(140,0,255,0.35),inset 0 1px 0 rgba(255,255,255,0.08)'
+    : '0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06)';
+btn.innerHTML = `
+    <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+      background:linear-gradient(180deg,#8c00ff,#c499ff);
+      box-shadow:0 0 8px rgba(140,0,255,0.8);
+      border-radius:0 10px 10px 0;"></div>
+    <i class="fas fa-heart" style="font-size:11px;
+      background:linear-gradient(45deg,#8c00ff,#c499ff);
+      -webkit-background-clip:text;background-clip:text;
+      -webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+    <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+      -webkit-background-clip:text;background-clip:text;
+      -webkit-text-fill-color:transparent;">
+      ${isFav ? 'دڵخواز ✓' : 'لیستی دڵخواز'}
+    </span>`;
+    });
+    ['btn-watch-desktop','btn-watch-mobile'].forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        btn.style.background = isWatch
+            ? 'linear-gradient(135deg,rgba(140,0,255,0.35),rgba(179,102,255,0.12))'
+            : 'linear-gradient(135deg,rgba(140,0,255,0.15),rgba(179,102,255,0.05))';
+        btn.style.borderColor = isWatch ? 'rgba(140,0,255,0.85)' : 'rgba(140,0,255,0.4)';
+        btn.style.boxShadow = isWatch
+            ? '0 0 22px rgba(140,0,255,0.35),inset 0 1px 0 rgba(255,255,255,0.08)'
+            : '0 0 18px rgba(140,0,255,0.12),inset 0 1px 0 rgba(255,255,255,0.06)';
+        btn.innerHTML = `
+            <div style="position:absolute;right:0;top:0;bottom:0;width:3px;
+              background:linear-gradient(180deg,#8c00ff,#c499ff);
+              box-shadow:0 0 8px rgba(140,0,255,0.8);
+              border-radius:0 10px 10px 0;"></div>
+            <i class="fas fa-eye" style="font-size:11px;
+              background:linear-gradient(45deg,#8c00ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;
+              filter:drop-shadow(0 0 5px rgba(140,0,255,0.7));"></i>
+            <span style="background:linear-gradient(90deg,#b366ff,#c499ff);
+              -webkit-background-clip:text;background-clip:text;
+              -webkit-text-fill-color:transparent;">
+              ${isWatch ? 'بینراو ✓' : 'لیستی بینراو'}
+            </span>`;
+    });
+}
+
+async function toggleFavorite() {
+    const user = auth.currentUser;
+    if (!user) { if(typeof openMenuModal!=='undefined') openMenuModal('account'); return; }
+    const movie = app.currentMovie;
+    if (!movie) return;
+    const id = String(movie.id);
+    const idx = _userFavorites.indexOf(id);
+    if (idx === -1) _userFavorites.push(id);
+    else _userFavorites.splice(idx, 1);
+    try {
+        await db.collection('users').doc(user.uid).set({ favorites: _userFavorites }, { merge: true });
+        updateListButtons();
+    } catch(e) {
+        console.log('toggleFavorite error:', e);
+        if (idx === -1) _userFavorites.pop(); else _userFavorites.splice(idx, 0, id);
+    }
+}
+
+async function toggleWatchlist() {
+    const user = auth.currentUser;
+    if (!user) { if(typeof openMenuModal!=='undefined') openMenuModal('account'); return; }
+    const movie = app.currentMovie;
+    if (!movie) return;
+    const id = String(movie.id);
+    const idx = _userWatchlist.indexOf(id);
+    if (idx === -1) _userWatchlist.push(id);
+    else _userWatchlist.splice(idx, 1);
+    try {
+        await db.collection('users').doc(user.uid).set({ watchlist: _userWatchlist }, { merge: true });
+        updateListButtons();
+    } catch(e) {
+        console.log('toggleWatchlist error:', e);
+        if (idx === -1) _userWatchlist.pop(); else _userWatchlist.splice(idx, 0, id);
+    }
+}
+
+function showListTab(tab) {
+    const favList   = document.getElementById('profile-favorites-list');
+    const watchList = document.getElementById('profile-watchlist-list');
+    const favBtn    = document.getElementById('tab-fav-btn');
+    const watchBtn  = document.getElementById('tab-watch-btn');
+    if (tab === 'favorites') {
+        if (favList)  favList.style.display = 'flex';
+        if (watchList) watchList.style.display = 'none';
+        if (favBtn)   { favBtn.style.background='rgba(255,60,100,0.2)';favBtn.style.borderColor='rgba(255,60,100,0.55)';favBtn.style.color='#ff6080'; }
+        if (watchBtn) { watchBtn.style.background='rgba(0,180,255,0.06)';watchBtn.style.borderColor='rgba(0,180,255,0.2)';watchBtn.style.color='rgba(0,180,255,0.6)'; }
+    } else {
+        if (favList)  favList.style.display = 'none';
+        if (watchList) watchList.style.display = 'flex';
+        if (watchBtn) { watchBtn.style.background='rgba(0,180,255,0.2)';watchBtn.style.borderColor='rgba(0,180,255,0.55)';watchBtn.style.color='#40c0ff'; }
+        if (favBtn)   { favBtn.style.background='rgba(255,60,100,0.06)';favBtn.style.borderColor='rgba(255,60,100,0.2)';favBtn.style.color='rgba(255,60,100,0.6)'; }
+    }
+}
+
+function renderProfileLists() {
+    const favBadge   = document.getElementById('fav-count-badge');
+    const watchBadge = document.getElementById('watch-count-badge');
+    if (favBadge)   favBadge.innerText   = _userFavorites.length;
+    if (watchBadge) watchBadge.innerText = _userWatchlist.length;
+    function buildCards(ids, containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const empty = '<div style="text-align:center;padding:18px;border:1px dashed rgba(255,255,255,0.07);border-radius:12px;color:rgba(255,255,255,0.22);font-size:12px;font-family:\'Noto Kufi Arabic\',Tahoma,sans-serif;"><i class="fas fa-film" style="font-size:20px;display:block;margin-bottom:6px;opacity:0.3;"></i>هیچ نییە</div>';
+        if (!ids.length) { container.innerHTML = empty; return; }
+        const items = ids.map(id => (typeof database!=='undefined') ? database.find(x=>String(x.id)===id) : null).filter(Boolean);
+        if (!items.length) { container.innerHTML = empty; return; }
+        container.innerHTML = items.map(item => `
+            <div onclick="closeMenuModal();setTimeout(()=>app.openPlayer(database.find(d=>String(d.id)==='${item.id}')),200);"
+                style="display:flex;gap:10px;padding:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;cursor:pointer;transition:all 0.3s;align-items:center;"
+                onmouseover="this.style.background='rgba(140,0,255,0.1)';this.style.borderColor='rgba(140,0,255,0.3)'"
+                onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+                <div style="flex-shrink:0;width:40px;height:58px;border-radius:8px;overflow:hidden;border:1px solid rgba(140,0,255,0.3);">
+                    <img src="${item.image}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                </div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:12px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">${item.title}</div>
+                    <div style="font-size:10px;color:rgba(255,255,255,0.33);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${item.genre||''}</div>
+                </div>
+                <i class="fas fa-chevron-left" style="color:rgba(140,0,255,0.4);font-size:11px;flex-shrink:0;"></i>
+            </div>`).join('');
+    }
+    buildCards(_userFavorites, 'profile-favorites-list');
+    buildCards(_userWatchlist, 'profile-watchlist-list');
+}
+
 async function uploadProfileImage(input) {
     const file = input.files[0];
     if (!file) return;
@@ -9996,9 +10392,29 @@ async function showPublicProfile(docId, userId, userName, userPhoto) {
                     margin-bottom:8px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;">
                     ${userName || 'بەکارهێنەر'}
                 </div>
+<!-- بایۆی بەکارهێنەر -->
+                <div id="pub-bio" style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 10px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;line-height:1.7;display:none;word-break:break-word;"></div>
+<!-- لیستی دڵخواز و بینراو -->
+                <div style="width:100%;margin:12px 0 4px;">
+                  <div style="display:flex;gap:8px;margin-bottom:10px;">
+                    <button onclick="pubShowTab('favorites')" id="pub-tab-fav"
+                      style="flex:1;padding:8px 5px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(255,60,100,0.18);border:1.5px solid rgba(255,60,100,0.5);color:#ff6080;display:flex;align-items:center;justify-content:center;gap:5px;">
+                      <i class="fas fa-heart" style="font-size:10px;"></i>دڵخوازەکان
+                      <span id="pub-fav-badge" style="background:rgba(255,60,100,0.3);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
+                    </button>
+                    <button onclick="pubShowTab('watchlist')" id="pub-tab-watch"
+                      style="flex:1;padding:8px 5px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(0,180,255,0.06);border:1.5px solid rgba(0,180,255,0.2);color:rgba(0,180,255,0.6);display:flex;align-items:center;justify-content:center;gap:5px;">
+                      <i class="fas fa-eye" style="font-size:10px;"></i>بینراوەکان
+                      <span id="pub-watch-badge" style="background:rgba(0,180,255,0.2);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
+                    </button>
+                  </div>
+                  <div id="pub-favorites-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+                  <div id="pub-watchlist-list" style="display:none;flex-direction:column;gap:8px;"></div>
+                </div>
 
                 <!-- باجی ئەندام -->
-                <div style="display:inline-flex;align-items:center;gap:5px;
+                <div style="display:inline-flex;
+               
                     background:rgba(${r},${g},${b},0.15);
                     border:1px solid rgba(${r},${g},${b},0.35);
                     color:rgba(${r},${g},${b},1);
@@ -10030,6 +10446,50 @@ async function showPublicProfile(docId, userId, userName, userPhoto) {
             </div>
         </div>
     `;
+// هێنانی بایۆ + لیستی دڵخواز و بینراو
+    try {
+        const userDoc = await db.collection('users').doc(userId).get();
+        const data = userDoc.exists ? userDoc.data() : {};
+
+        // بایۆ
+        const bio = data.bio || '';
+        const bioEl = document.getElementById('pub-bio');
+        if (bioEl && bio) { bioEl.innerText = bio; bioEl.style.display = 'block'; }
+
+        // لیستەکان
+        const pubFavs   = (data.favorites || []).map(String);
+        const pubWatch  = (data.watchlist || []).map(String);
+        const favBadge  = document.getElementById('pub-fav-badge');
+        const watchBadge = document.getElementById('pub-watch-badge');
+        if (favBadge)   favBadge.innerText   = pubFavs.length;
+        if (watchBadge) watchBadge.innerText = pubWatch.length;
+
+        function buildPubCards(ids, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const empty = '<div style="text-align:center;padding:14px;color:rgba(255,255,255,0.2);font-size:12px;font-family:\'Noto Kufi Arabic\',Tahoma,sans-serif;"><i class="fas fa-film" style="display:block;font-size:18px;margin-bottom:5px;opacity:0.25;"></i>هیچ نییە</div>';
+            if (!ids.length) { container.innerHTML = empty; return; }
+            const items = ids.map(id => (typeof database!=='undefined') ? database.find(x=>String(x.id)===id) : null).filter(Boolean);
+            if (!items.length) { container.innerHTML = empty; return; }
+            container.innerHTML = items.map(item => `
+                <div onclick="document.getElementById('public-profile-modal').style.display='none';document.body.style.overflow='';app.openPlayer(database.find(d=>String(d.id)==='${item.id}'));"
+                    style="display:flex;gap:10px;padding:10px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;cursor:pointer;transition:all 0.3s;align-items:center;"
+                    onmouseover="this.style.background='rgba(${r},${g},${b},0.1)';this.style.borderColor='rgba(${r},${g},${b},0.3)'"
+                    onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.borderColor='rgba(255,255,255,0.07)'">
+                    <div style="flex-shrink:0;width:38px;height:54px;border-radius:7px;overflow:hidden;border:1px solid rgba(${r},${g},${b},0.3);">
+                        <img src="${item.image}" style="width:100%;height:100%;object-fit:cover;display:block;">
+                    </div>
+                    <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px;">${item.title}</div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.3);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${item.genre||''}</div>
+                    </div>
+                    <i class="fas fa-chevron-left" style="color:rgba(${r},${g},${b},0.4);font-size:10px;flex-shrink:0;"></i>
+                </div>`).join('');
+        }
+        buildPubCards(pubFavs,  'pub-favorites-list');
+        buildPubCards(pubWatch, 'pub-watchlist-list');
+
+    } catch(e) { console.log('Public profile error:', e); }
 
     // هێنانی کۆمێنتەکان
     try {
@@ -10375,6 +10835,22 @@ grid.innerHTML = works.map(work => `
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeMenuModal();
     });
+
+    function pubShowTab(tab) {
+    const fL  = document.getElementById('pub-favorites-list');
+    const wL  = document.getElementById('pub-watchlist-list');
+    const fB  = document.getElementById('pub-tab-fav');
+    const wB  = document.getElementById('pub-tab-watch');
+    if (tab === 'favorites') {
+        if(fL) fL.style.display='flex'; if(wL) wL.style.display='none';
+        if(fB){fB.style.background='rgba(255,60,100,0.18)';fB.style.borderColor='rgba(255,60,100,0.5)';fB.style.color='#ff6080';}
+        if(wB){wB.style.background='rgba(0,180,255,0.06)';wB.style.borderColor='rgba(0,180,255,0.2)';wB.style.color='rgba(0,180,255,0.6)';}
+    } else {
+        if(fL) fL.style.display='none'; if(wL) wL.style.display='flex';
+        if(wB){wB.style.background='rgba(0,180,255,0.2)';wB.style.borderColor='rgba(0,180,255,0.55)';wB.style.color='#40c0ff';}
+        if(fB){fB.style.background='rgba(255,60,100,0.06)';fB.style.borderColor='rgba(255,60,100,0.2)';fB.style.color='rgba(255,60,100,0.6)';}
+    }
+}
 </script>
 
 
