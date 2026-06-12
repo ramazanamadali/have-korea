@@ -67,6 +67,40 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+
+// ✅ سیستەمی بینەرانی ڕاستی (بەبێ درۆ)
+const _viewsCache = {};
+
+async function trackDramaView(dramaId) {
+    // ئەگەر لە ماوەی ٦ کاتژمێردا بینیووتی، دووبارە زیادمەکە
+    const key = 'hk_viewed_' + dramaId;
+    const last = localStorage.getItem(key);
+    const now = Date.now();
+    if (last && (now - parseInt(last)) < 6 * 3600000) return;
+    try {
+        await db.collection('drama_views').doc(String(dramaId)).set({
+            views: firebase.firestore.FieldValue.increment(1),
+            updated: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+        localStorage.setItem(key, String(now));
+    } catch(e) {}
+}
+
+async function getDramaViews(dramaId) {
+    if (_viewsCache[dramaId] !== undefined) return _viewsCache[dramaId];
+    try {
+        const doc = await db.collection('drama_views').doc(String(dramaId)).get();
+        const v = doc.exists ? (doc.data().views || 0) : 0;
+        _viewsCache[dramaId] = v;
+        return v;
+    } catch(e) { return 0; }
+}
+
+function fmtViews(n) {
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return Math.round(n/1000) + 'K';
+    return String(n);
+}
 </script>
     <!-- ✅ لێرە هێنرایەوە - ناو head -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -1761,7 +1795,7 @@ const slides = sliderItems.map((item, i) => `
         
         <div class="filter-dropdown" id="filter-dropdown">
             <div class="filter-dropdown-content">
-              <div class="filter-main-buttons">
+          <div class="filter-main-buttons" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;">
     <button class="filter-main-btn" onclick="toggleFilterSection('genre')">
         <i class="fas fa-film"></i> ژانەر
         <i class="fas fa-chevron-left filter-arrow"></i>
@@ -1772,6 +1806,13 @@ const slides = sliderItems.map((item, i) => `
     </button>
     <button class="filter-main-btn" onclick="toggleFilterSection('rating')">
         <i class="fas fa-star"></i> پلەبەندی
+        <i class="fas fa-chevron-left filter-arrow"></i>
+    </button>
+</div>
+
+<div class="filter-main-buttons" style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;">
+    <button class="filter-main-btn" onclick="toggleFilterSection('sort')">
+        <i class="fas fa-sort"></i> لیستکردن بە پێی
         <i class="fas fa-chevron-left filter-arrow"></i>
     </button>
 </div>
@@ -1850,6 +1891,22 @@ const slides = sliderItems.map((item, i) => `
 
 </div>
 
+                <div class="filter-section" id="sort-section" style="display: none;">
+                    <div class="filter-options" style="grid-template-columns: 1fr 1fr 1fr;">
+                       <label id="sort-newest-label" class="sort-label-active" onclick="setSortOrder('newest')">
+    <span class="check-dot"><i class="fas fa-check"></i></span>
+    <i class="fas fa-clock-rotate-left" style="transform:scaleX(-1);"></i> نوێترین
+</label>
+<label id="sort-oldest-label" onclick="setSortOrder('oldest')">
+    <span class="check-dot"><i class="fas fa-check"></i></span>
+    <i class="fas fa-hourglass-half"></i> کۆنترین
+</label>
+<label id="sort-mostviewed-label" onclick="setSortOrder('mostviewed')">
+    <span class="check-dot"><i class="fas fa-check"></i></span>
+    <i class="fas fa-eye"></i> زۆرترین بینراو
+</label>
+                    </div>
+                </div>
                 <div class="filter-actions">
                     <button onclick="applyFilters()" class="apply-btn"><i class="fas fa-check"></i> جێبەجێکردن</button>
                     <button onclick="clearFilters()" class="clear-btn"><i class="fas fa-times"></i> سڕینەوە</button>
@@ -2185,18 +2242,18 @@ const slides = sliderItems.map((item, i) => `
             pointer-events:none;">
             <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.4);font-size:10px;"></i>
           </div>
-          <div id="server-list" style="
-            display:flex;
-            gap:8px;
-            overflow-x:auto;
-            scroll-snap-type:x mandatory;
-            -webkit-overflow-scrolling:touch;
-            scrollbar-width:none;
-            padding:10px 36px;
-            background:rgba(255,255,255,0.03);
-            border:1px solid rgba(255,255,255,0.07);
-            border-radius:14px;
-          "></div>
+         <div id="server-list" style="
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:10px 36px 10px 0;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px;
+"></div>
         </div>
       </div>
 
@@ -2358,9 +2415,10 @@ desc: "(وو-سوک) دوبلێرێکە (ئەو کەسەی دیمەنە مەتر
             ep: 1,
             name: "تەواوی فیلم",
             servers: [
-                { name: "vip have korea", link: "لینک" },
-                { name: "mixdrop", link: "لینک" },
-                { name: "streamtabe", link: "لینک" }
+                { name: "vip have korea", link: "https://vidmoly.biz/embed-kjuw241ap2t6.html" },
+                 { name: "stream", link: "https://streamtape.com/e/MX8QpVXryVUmRGq/City_Hunter_2024_Full_movie_online_MyFlixer.mp4_%7E_pixeldrain.mkv"  },
+                    { name: "mixdrop", link: "https://mixdrop.top/e/l7nrr0w4iqgle1l"  },
+                    { name: "voe", link: "https://voe.sx/e/zkeldz4pjvb8" }
             ]
         }
     ]
@@ -2484,49 +2542,100 @@ season: 1,
                 ep: 1, 
                 servers: [
                     { name: "vip have korea", link: "https://vidmoly.net/embed-snv52bb0ak78.html" },
-                    { name: "mixdrop", link: "https://mixdrop.top/e/03jznw9qu40gpg"  },
-                    { name: "streamtabe", link: "https://streamtape.com/e/Y10VzV8amltvV7x/Trigger_%282025%29_Episode_1_kisskh.mkv" }
+                    { name: "mixdrop", link: "https://mixdrop.top/e/wlkr0nv0c0zwgw"  },
+                    { name: "streamtabe", link: "https://streamtape.com/e/xrmzkG4eVVTox4/Trigger_%282025%29_Episode_1_kisskh.mkv" },
+                    { name: "voe", link: "https://voe.sx/e/owchsm1c6bpg" }     
+
                 ]
             },
             { 
                 ep: 2, 
                 servers: [
                     { name: "vip have korea", link: "https://vidmoly.net/embed-neihxk28z18c.html" },
-                    { name: "mixdrop", link: "https://mixdrop.top/e/mknnzoo4azkq14" },
-                    { name: "streamtabe", link: "https://streamtape.com/e/RB4MKejDXMiJAD/Trigger_%282025%29_Episode_2_kisskh.mkv" }
+                    { name: "mixdrop", link: "https://mixdrop.top/e/039wdvzds04wx8" },
+                    { name: "streamtabe", link: "https://streamtape.com/e/DlQwOVayz6CkePy/Trigger_%282025%29_Episode_2_kisskh.mkv" },
+                     { name: "voe", link: "https://voe.sx/e/wfjxgrhsbwkl" }     
+
                 ]
             },
             { 
                 ep: 3, 
                 servers: [
                     { name: "vip have korea", link: "https://vidmoly.net/embed-6pxf6hcbpcga.html" },
-                    { name: "streamtabe", link: "https://streamtape.com/e/WqYykY8vOZubO1O/Trigger_%282025%29_Episode_3_kisskh.mkv" },
-                    { name: "mixdrop", link: "https://mixdrop.top/e/pj996o6oa67v8d" }
+                    { name: "streamtabe", link: "https://streamtape.com/e/mqMk9m4WVKfbaJJ/Trigger_%282025%29_Episode_3_kisskh.mkv" },
+                    { name: "mixdrop", link: "https://mixdrop.top/e/369xkn8wfgg34g" },
+                     { name: "voe", link: "https://voe.sx/e/jhnq6pb39h1r" }     
+
                 ]
             },
             { 
                 ep: 4, 
                 servers: [
                     { name: "vip have korea", link: "https://vidmoly.net/embed-82jmk2agc7nm.html" },
-                    { name: "mixdrop", link: "https://mixdrop.top/e/r6909e6oho94p1" },
-                    { name: "streamtabe", link: "https://streamtape.com/e/7wXpDoVlmDCADVq/S.LINE.S01E04.mkv" }
+                    { name: "mixdrop", link: "https://mixdrop.top/e/jdqg7d8vu0e4rl" },
+                    { name: "streamtabe", link: "https://streamtape.com/e/GMvJgWwGPec1rYW/Trigger_%282025%29_Episode_4_kisskh.mkv" },
+                    { name: "voe", link: "https://voe.sx/e/hudhoxujli0g" }     
+
                 ]
             },
-            // لێرەوە ئەڵقەی ٥ و ٦ دەستپێدەکات
             { 
                 ep: 5, 
                 servers: [
                     { name: "vip have korea", link: "https://vidmoly.net/embed-yjjug83mzne7.html" }, // لینکەکەی لێرە دابنێ
-                    { name: "mixdrop", link: "https://mixdrop.top/e/q19vxkwxhx7gvo3" },        // لینکەکەی لێرە دابنێ
-                    { name: "streamtabe", link: "https://streamtape.com/e/46wWm0aQR4CKvPl/Trigger_%282025%29_Episode_5_kisskh.mkv" }      // لینکەکەی لێرە دابنێ
+                    { name: "mixdrop", link: "https://mixdrop.top/e/pj4qxklmfl6pkx" },        // لینکەکەی لێرە دابنێ
+                    { name: "streamtabe", link: "https://streamtape.com/e/a7D3l7Ak8aFxRk8/Trigger_%282025%29_Episode_5_kisskh.mkv" },
+                    { name: "voe", link: "https://voe.sx/e/y83udkp2w7rc" }     
+
                 ]
             },
             { 
                 ep: 6, 
                 servers: [
-                    { name: "vip have korea", link: "https://vidmoly.net/embed-fvgq08r31h2g.html" }, // لینکەکەی لێرە دابنێ
-                    { name: "mixdrop", link: "https://mixdrop.top/e/dkdr3mk9cedq03" },        // لینکەکەی لێرە دابنێ
-                    { name: "streamtabe", link: "https://streamtape.com/e/3pKP1PYAZVur2o/S_Line_-_SLine_Episode_6_kisskh.mkv" }      // لینکەکەی لێرە دابنێ
+                    { name: "vip have korea", link: "https://vidmoly.biz/embed-njpyr5jc4htp.html" }, 
+                    { name: "mixdrop", link: "https://mixdrop.top/e/mk1rwnkpix1pq6z" },        
+                    { name: "streamtabe", link: "https://streamtape.com/e/rxMJdVQweeCbqoL/Trigger_%282025%29_Episode_6_kisskh.mkv" },
+                    { name: "voe", link: "https://voe.sx/e/fvhhk1565niw" }     
+     
+                ]
+            },
+            { 
+                ep: 7, 
+                servers: [
+                    { name: "vip have korea", link: "https://vidmoly.biz/embed-z3x7fpfxnjkh.html" }, 
+                    { name: "mixdrop", link: "https://mixdrop.top/e/el6jq86qs31nze" },        
+                    { name: "streamtabe", link: "https://streamtape.com/e/r0VgR8aJBBCbw28/Trigger_%282025%29_Episode_7_kisskh.mkv" },  
+                                        { name: "voe", link: "https://voe.sx/e/yyxuigeb4xq0" } 
+    
+                ]
+            },
+            { 
+                ep: 8, 
+                servers: [
+                    { name: "vip have korea", link: "https://vidmoly.biz/embed-hk3cbc19fihm.html" }, 
+                    { name: "mixdrop", link: "https://mixdrop.top/e/mk1rwvn9a38v3j" },        
+                    { name: "streamtabe", link: "https://streamtape.com/e/xg20BaRdJzckpYJ/Trigger_%282025%29_Episode_8_kisskh.mkv" },
+                    { name: "voe", link: "https://voe.sx/e/xllt4rrc2y35" } 
+
+
+                ]
+            },
+            { 
+                ep: 9, 
+                servers: [
+                   { name: "vip have korea", link: "https://vidmoly.biz/embed-ub6n9iboic2q.html" }, 
+                    { name: "mixdrop", link: "https://mixdrop.top/e/67pgjw14awl7rg" },        
+                    { name: "streamtabe", link: "https://streamtape.com/e/1zbVVMOjpah0MX/Trigger_%282025%29_Episode_9_kisskh.mkv" },
+                     { name: "voe", link: "https://voe.sx/e/sotvvmrghcbp" }
+                ]
+            },
+            
+            { 
+                ep: 10, 
+                servers: [
+                     { name: "vip have korea", link: "https://vidmoly.biz/embed-8vntufw3rkcc.html" }, 
+                    { name: "mixdrop", link: "https://mixdrop.top/e/7k9614o8idd4kqg" },        
+                    { name: "streamtabe", link: "https://streamtape.com/e/2LPaMv8vQJIZLAy/Trigger_%282025%29_Episode_10_kisskh.mkv" },
+                     { name: "voe", link: "https://voe.sx/e/oi11gzkswxj7" }
                 ]
             }
         ]
@@ -2562,8 +2671,10 @@ season: 1,
                 name: "تەواوی فلیم", 
                 servers: [
                     { name: "have korea vip", link: "https://vidmoly.net/embed-u29zxqtt6ibv.html" },
-                    { name: "streamtabe", link: "https://streamtape.com/e/2WbL93MD0pUZk82/Daddy_You_Daughter_Me_2017_Full_movie_online_MyFlixer_File_%23dzp3MWiLGAk2.mkv.mp4" },
-                    { name: "Mixdrop", link:"https://mixdrop.top/e/4dmnp3k4tq4q7nz" }
+                    { name: "streamtabe", link: "https://streamtape.com/e/zPr27xxLY4SYRBb/Daddy_You_Daughter_Me_2017_Full_movie_online_MyFlixer_File_%23dzp3MWiLGAk2.mkv" },
+                    { name: "Mixdrop", link:"https://mixdrop.top/e/ow4r11dpuvpqoj" },
+                                        { name: "voe", link:"https://voe.sx/e/b6opqmsbukhi" }
+
                 ] 
             }
         ]
@@ -2607,8 +2718,10 @@ season: 1,
                 name: "تەواوی فلیم", 
                 servers: [
                     { name: "have korea vip", link: "https://vidmoly.net/embed-insli16l2uh3.html" },
-                    { name: "streamtabe", link: "https://streamtape.com/e/ZwoeVJW1GVHq20Y/Watch_Devils_2023_English_Sub_KissAsian_Devils_2023_DoodStream1.mkv" },
-                    { name: "Mixdrop", link:"https://mixdrop.top/e/wlmlg7gxarjpve" }
+                    { name: "streamtabe", link: "https://streamtape.com/e/qZ0XddoYGMuzPML/Watch_Devils_2023_English_Sub_KissAsian_Devils_2023_DoodStream1.mkv" },
+                    { name: "Mixdrop", link:"https://mixdrop.top/e/wlmlg7gxarjpve" },
+                     { name: "voe", link: "https://voe.sx/e/vrtlavtisxrw" }     
+
                 ] 
             }
         ]
@@ -2931,6 +3044,31 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
             </div>`;
         }
     });
+const viewBadge = document.createElement('div');
+    const _vac=getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim()||'#8c00ff';
+    const _vh=_vac.replace('#','').trim();
+    const _vr=parseInt(_vh.substring(0,2),16),_vg=parseInt(_vh.substring(2,4),16),_vb=parseInt(_vh.substring(4,6),16);
+    viewBadge.setAttribute('data-view-badge','true');
+    viewBadge.style.cssText = `
+        position:absolute;top:16px;right:6px;z-index:10;
+        display:flex;align-items:center;gap:3px;
+        background:rgba(${_vr},${_vg},${_vb},0.18);
+        backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+        border-top:1px solid rgba(${_vr},${_vg},${_vb},0.6);
+        border-right:1px solid rgba(${_vr},${_vg},${_vb},0.3);
+        border-left:1px solid rgba(${_vr},${_vg},${_vb},0.1);
+        border-bottom:1px solid rgba(${_vr},${_vg},${_vb},0.1);
+        border-radius:5px;padding:2px 5px;
+        box-shadow:0 2px 8px rgba(${_vr},${_vg},${_vb},0.2),inset 0 1px 0 rgba(255,255,255,0.1);`;
+    viewBadge.innerHTML = `<i class="fas fa-eye" style="font-size:7px;color:rgba(${_vr},${_vg},${_vb},1);filter:drop-shadow(0 0 4px rgba(${_vr},${_vg},${_vb},0.8));"></i><span style="font-size:8px;font-weight:800;color:#fff;letter-spacing:0.4px;text-shadow:0 0 5px rgba(${_vr},${_vg},${_vb},0.6);">-</span>`;
+    card.appendChild(viewBadge);
+    getDramaViews(item.id).then(count => {
+        if (count > 0) {
+            viewBadge.querySelector('span').textContent = fmtViews(count);
+        } else {
+            viewBadge.style.display = 'none';
+        }
+    });
 
     wrapper.appendChild(card);
     wrapper.appendChild(info);
@@ -2941,6 +3079,9 @@ japanese: { label: 'Japanese', icon: 'fa-sun' }
            openPlayer: function(item) {
     this.currentMovie = item;
     this.currentEpisodeIndex = 0;
+
+    // ✅ ژمارەی بینەری ڕاستی زیاد بکە
+    if (item && item.id) trackDramaView(item.id);
 
     // نوێکردنەوەی لیبلی ئەلقەکان
     const episodeLabel = document.getElementById('episode-section-label');
@@ -4120,200 +4261,365 @@ const knownWorks = [
                     ${work.title || work.name || ''}
                 </div>
             </div>`).join('');
+modal.innerHTML = `
+<style>
+#actor-modal-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 0 80px;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+}
+.actor-hero {
+    position: relative;
+    min-height: 260px;
+    overflow: hidden;
+    border-radius: 0 0 32px 32px;
+}
+.actor-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(${r},${g},${b},0.25) 0%, rgba(5,5,12,0.95) 100%);
+}
+.actor-hero-glow {
+    position: absolute;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(${r},${g},${b},0.22) 0%, transparent 70%);
+    top: -80px; right: -60px;
+    pointer-events: none;
+}
+.actor-close-btn {
+    position: fixed;
+    top: 14px; left: 14px;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(10,10,20,0.85);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.8);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 15px;
+    transition: all 0.25s ease;
+    z-index: 200;
+    backdrop-filter: blur(12px);
+}
+.actor-close-btn:hover {
+    background: rgba(255,50,50,0.25);
+    border-color: rgba(255,50,50,0.5);
+    color: #fff;
+    transform: scale(1.1);
+}
+.actor-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 18px;
+    padding: 24px 20px 28px;
+    align-items: flex-end;
+}
+.actor-photo-ring {
+    width: 100px; height: 140px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 2px solid rgba(${r},${g},${b},0.6);
+    box-shadow: 0 0 30px rgba(${r},${g},${b},0.3), 0 20px 40px rgba(0,0,0,0.6);
+    flex-shrink: 0;
+}
+.actor-photo-ring img { width:100%;height:100%;object-fit:cover;display:block; }
+.actor-photo-placeholder {
+    width:100%;height:100%;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(${r},${g},${b},0.08);
+}
+.actor-info-main { flex:1;min-width:0;padding-bottom:4px; }
+.actor-name {
+    font-size: 22px; font-weight: 900; color: #fff;
+    margin: 0 0 6px; line-height: 1.2;
+}
+.actor-dept-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(${r},${g},${b},0.2);
+    border: 1px solid rgba(${r},${g},${b},0.45);
+    color: rgba(${r},${g},${b},1);
+    font-size: 10px; font-weight: 800;
+    padding: 3px 10px; border-radius: 20px; margin-bottom: 12px;
+}
+.actor-meta-row { display:flex;flex-direction:column;gap:7px; }
+.actor-meta-item { display:flex;align-items:center;gap:7px;font-size:12px; }
+.actor-meta-icon { color:rgba(${r},${g},${b},0.75);width:13px;text-align:center;flex-shrink:0;font-size:11px; }
+.actor-meta-label { color:rgba(255,255,255,0.4);flex-shrink:0; }
+.actor-meta-value { color:#fff;font-weight:700; }
 
-        // ✅ چوارەم: ئێستا نیشان بدە — هەموو بە کوردی
-        modal.innerHTML = `
-            <div style="max-width:700px;margin:0 auto;padding:20px 20px 100px;">
-                
-                <button onclick="document.getElementById('actor-modal').style.display='none';document.body.style.overflow='';"
-                    style="position:fixed;top:16px;left:16px;background:rgba(255,50,50,0.15);border:1px solid rgba(255,50,50,0.4);
-                    color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;font-size:16px;
-                    display:flex;align-items:center;justify-content:center;transition:all 0.3s;z-index:100;backdrop-filter:blur(10px);"
-                    onmouseover="this.style.background='rgba(255,50,50,0.35)';this.style.transform='rotate(90deg)'"
-                    onmouseout="this.style.background='rgba(255,50,50,0.15)';this.style.transform='rotate(0)'">
-                    <i class="fas fa-times"></i>
-                </button>
+.actor-birthday-row {
+    display: flex; align-items: flex-start; gap: 7px;
+    margin-bottom: 4px;
+}
+.actor-age-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(${r},${g},${b},0.13);
+    border: 1px solid rgba(${r},${g},${b},0.3);
+    color: rgba(${r},${g},${b},1);
+    font-size: 10px; font-weight: 800;
+    padding: 2px 8px; border-radius: 12px;
+    margin-top: 4px; margin-right: 20px;
+}
 
-                <!-- کارتی زانیاری -->
-                <div style="display:flex;gap:20px;margin-bottom:25px;background:rgba(${r},${g},${b},0.07);
-                    border:1px solid rgba(${r},${g},${b},0.2);border-radius:20px;padding:20px;align-items:flex-start;">
-                    
-                    <div style="flex-shrink:0;">
-                        <div style="width:110px;height:155px;border-radius:14px;overflow:hidden;
-                            border:2px solid rgba(${r},${g},${b},0.5);box-shadow:0 0 25px rgba(${r},${g},${b},0.3);">
-                            ${profileImg 
-                                ? `<img src="${profileImg}" alt="${actor.name}" style="width:100%;height:100%;object-fit:cover;">`
-                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(20,20,30,0.8);">
-                                       <i class="fas fa-user" style="color:rgba(${r},${g},${b},0.5);font-size:40px;"></i>
-                                   </div>`}
+.actor-stats-bar {
+    display: flex; gap: 10px;
+    padding: 0 16px;
+    margin: -18px 0 0;
+    position: relative; z-index: 3;
+}
+.actor-stat-pill {
+    flex: 1;
+    background: rgba(14,14,24,0.92);
+    border: 1px solid rgba(${r},${g},${b},0.22);
+    border-radius: 16px; padding: 12px 10px; text-align: center;
+    backdrop-filter: blur(16px); transition: all 0.25s;
+}
+.actor-stat-pill:hover {
+    border-color: rgba(${r},${g},${b},0.5);
+    background: rgba(${r},${g},${b},0.1);
+}
+.actor-stat-number {
+    font-size: 22px; font-weight: 900;
+    color: rgba(${r},${g},${b},1); line-height: 1;
+    font-family: 'Rajdhani','Barlow Condensed',sans-serif; letter-spacing: 1px;
+}
+.actor-stat-label {
+    font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 3px;
+    font-family: 'Noto Kufi Arabic',Tahoma,sans-serif;
+}
+
+.actor-section { padding: 20px 16px 0; }
+.actor-section-title {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+}
+.actor-section-title-icon {
+    width: 26px; height: 26px; border-radius: 8px;
+    background: rgba(${r},${g},${b},0.15);
+    border: 1px solid rgba(${r},${g},${b},0.3);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(${r},${g},${b},1); font-size: 11px; flex-shrink: 0;
+}
+.actor-section-title-text {
+    font-size: 13px; font-weight: 800;
+    color: rgba(255,255,255,0.85);
+    font-family: 'Noto Kufi Arabic',Tahoma,sans-serif;
+}
+
+.actor-bio-box {
+    background: linear-gradient(135deg, rgba(${r},${g},${b},0.06) 0%, rgba(5,5,15,0.5) 100%);
+    border: 1px solid rgba(${r},${g},${b},0.18);
+    border-right: 3px solid rgba(${r},${g},${b},0.7);
+    border-radius: 14px; padding: 16px 18px;
+    position: relative; overflow: hidden;
+}
+.actor-bio-box::before {
+    content: '';
+    position: absolute; top: -30px; left: -30px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(${r},${g},${b},0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+.actor-bio-text {
+    color: rgba(255,255,255,0.72); font-size: 13px; line-height: 1.95;
+    margin: 0; direction: rtl; text-align: right;
+    font-family: 'Noto Kufi Arabic',Tahoma,sans-serif;
+    position: relative; z-index: 1;
+}
+
+.actor-works-scroll {
+    display: flex; gap: 10px; overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(${r},${g},${b},0.3) transparent;
+}
+.actor-work-card { flex-shrink: 0; width: 80px; cursor: pointer; }
+.actor-work-poster-wrap {
+    width: 80px; height: 116px; border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(${r},${g},${b},0.25);
+    margin-bottom: 6px; transition: all 0.28s ease;
+    position: relative;
+    background: rgba(${r},${g},${b},0.05);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+}
+.actor-work-poster-wrap::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(${r},${g},${b},0.25) 100%);
+    pointer-events: none;
+}
+.actor-work-card:hover .actor-work-poster-wrap {
+    border-color: rgba(${r},${g},${b},0.85);
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 28px rgba(${r},${g},${b},0.22);
+}
+.actor-work-poster-wrap img { width:100%;height:100%;object-fit:cover;display:block; }
+.actor-work-title {
+    font-size: 9px; color: rgba(255,255,255,0.65);
+    text-align: center; line-height: 1.35;
+    display: -webkit-box; -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical; overflow: hidden;
+    font-family: 'Noto Kufi Arabic',Tahoma,sans-serif;
+}
+
+.actor-photos-scroll {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+}
+.actor-photo-thumb {
+    flex-shrink: 0;
+    width: 86px; height: 120px;
+    border-radius: 12px; overflow: hidden;
+    border: 1px solid rgba(${r},${g},${b},0.22);
+    transition: all 0.28s ease;
+    position: relative;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+    background: rgba(${r},${g},${b},0.05);
+}
+.actor-photo-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none; z-index: 1;
+}
+.actor-photo-thumb:hover {
+    border-color: rgba(${r},${g},${b},0.9);
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 14px 30px rgba(${r},${g},${b},0.2);
+}
+.actor-photo-thumb img { width:100%;height:100%;object-fit:cover;display:block; }
+
+.actor-social-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px;
+}
+.actor-social-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 5px 13px; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    text-decoration: none; transition: all 0.25s ease; color: #fff;
+}
+.actor-social-ig { background:rgba(193,53,132,0.12);border:1px solid rgba(193,53,132,0.35); }
+.actor-social-ig:hover { background:rgba(193,53,132,0.28); }
+.actor-social-tw { background:rgba(29,161,242,0.12);border:1px solid rgba(29,161,242,0.35); }
+.actor-social-tw:hover { background:rgba(29,161,242,0.28); }
+.actor-social-tt { background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.18); }
+.actor-social-tt:hover { background:rgba(255,255,255,0.12); }
+
+.actor-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.25), transparent);
+    margin: 20px 16px 0;
+}
+</style>
+
+<div id="actor-modal-inner">
+
+    <button class="actor-close-btn" onclick="document.getElementById('actor-modal').style.display='none';document.body.style.overflow='';">
+        <i class="fas fa-times"></i>
+    </button>
+
+    <div class="actor-hero">
+        ${profileImg ? `<div style="position:absolute;inset:0;background-image:url('${profileImg}');background-size:cover;background-position:top center;filter:blur(20px) brightness(0.3);transform:scale(1.12);"></div>` : ''}
+        <div class="actor-hero-bg"></div>
+        <div class="actor-hero-glow"></div>
+        <div class="actor-hero-content">
+            <div class="actor-photo-ring">
+                ${profileImg
+                    ? `<img src="${profileImg}" alt="${actor.name}">`
+                    : `<div class="actor-photo-placeholder"><i class="fas fa-user" style="color:rgba(${r},${g},${b},0.4);font-size:36px;"></i></div>`}
+            </div>
+            <div class="actor-info-main">
+                <h2 class="actor-name">${actor.name}</h2>
+                ${departmentKu ? `<div class="actor-dept-badge"><i class="fas fa-star" style="font-size:8px;"></i>${departmentKu}</div>` : ''}
+                <div class="actor-meta-row">
+                    <div>
+                        <div class="actor-meta-item">
+                            <i class="fas fa-birthday-cake actor-meta-icon"></i>
+                            <span class="actor-meta-label">ڕۆژی لە دایکبوون :</span>
+                            <span class="actor-meta-value" style="font-size:11px;">${birthdayKu}</span>
                         </div>
+                        ${age ? `<div class="actor-age-chip"><i class="fas fa-hourglass-half" style="font-size:9px;"></i>${age} ساڵ</div>` : ''}
                     </div>
-                    
-                    <div style="flex:1;min-width:0;">
-                        <h2 style="color:#fff;font-size:20px;font-weight:900;margin:0 0 8px;">${actor.name}</h2>
-                        
-                        ${departmentKu ? `
-                        <div style="display:inline-flex;align-items:center;gap:6px;
-                            background:rgba(${r},${g},${b},0.15);border:1px solid rgba(${r},${g},${b},0.35);
-                            color:rgba(${r},${g},${b},1);font-size:10px;font-weight:800;
-                            padding:3px 10px;border-radius:6px;margin-bottom:12px;
-                            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
-                            <i class="fas fa-star" style="font-size:8px;"></i>
-                            ${departmentKu}
-                        </div>` : ''}
-                        
-                       <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:center;gap:5px;font-size:12px;">
-        <i class="fas fa-birthday-cake" style="color:rgba(${r},${g},${b},0.7);width:14px;flex-shrink:0;"></i>
-        <span style="color:rgba(255,255,255,0.5);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;white-space:nowrap;">لە دایک بوون:</span>
-        <span style="color:#fff;font-weight:700;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;font-size:10px;">${birthdayKu}</span>
-</div>
-
-<div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;">
-    <i class="fas fa-calendar" style="color:rgba(${r},${g},${b},0.7);width:14px;margin-top:2px;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">ساڵ:</span>
-    <span style="color:#fff;font-weight:700;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${age ? `${age} ساڵ` : ''}</span>
-                            </div>
-                       <div style="display:flex;align-items:flex-start;gap:8px;font-size:12px;">
-    <i class="fas fa-map-marker-alt" style="color:rgba(${r},${g},${b},0.7);width:14px;margin-top:2px;flex-shrink:0;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;white-space:nowrap;">شوێن:</span>
-    <span style="color:#fff;font-weight:700;line-height:1.4;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${birthplaceKu}</span>
-
-    
-</div>
-<div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;">
-    <!-- کۆی دراماکان (cast + crew) -->
-<div style="display:flex;align-items:center;gap:6px;
-    background:rgba(${r},${g},${b},0.08);
-    border:1px solid rgba(${r},${g},${b},0.25);
-    border-radius:10px;padding:6px 12px;">
-    <i class="fas fa-tv" style="color:rgba(${r},${g},${b},0.8);font-size:11px;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-size:11px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دراما:</span>
-    <span style="color:#fff;font-weight:800;font-size:11px;">${[
-        ...(actor.combined_credits?.cast||[]),
-        ...(actor.combined_credits?.crew||[])
-    ].filter(w => w.media_type === 'tv')
-     .filter((w, i, arr) => arr.findIndex(x => x.id === w.id && x.media_type === w.media_type) === i)
-     .length}</span>
-</div>
-
-<!-- کۆی فیلمەکان (cast + crew) -->
-<div style="display:flex;align-items:center;gap:6px;
-    background:rgba(${r},${g},${b},0.08);
-    border:1px solid rgba(${r},${g},${b},0.25);
-    border-radius:10px;padding:6px 12px;">
-    <i class="fas fa-film" style="color:rgba(${r},${g},${b},0.8);font-size:11px;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-size:11px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">فیلم:</span>
-    <span style="color:#fff;font-weight:800;font-size:11px;">${[
-        ...(actor.combined_credits?.cast||[]),
-        ...(actor.combined_credits?.crew||[])
-    ].filter(w => w.media_type === 'movie')
-    .filter((w, i, arr) => arr.findIndex(x => x.id === w.id && x.media_type === w.media_type) === i)
-     .length}</span>
-</div>
-
-</div>
-<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
-    <i class="fas fa-star" style="color:rgba(${r},${g},${b},0.7);width:14px;flex-shrink:0;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;white-space:nowrap;">ناسراوە بە:</span>
-    <span style="color:#fff;font-weight:700;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${actor.known_for_department ? departmentKu : 'نادیارە'}</span>
-</div>
-
-<div style="display:flex;align-items:center;gap:8px;font-size:12px;">
-    <i class="fas fa-film" style="color:rgba(${r},${g},${b},0.7);width:14px;flex-shrink:0;"></i>
-    <span style="color:rgba(255,255,255,0.5);font-family:'Noto Kufi Arabic',Tahoma,sans-serif;white-space:nowrap;">کۆی کارەکانی:</span>
-    <span style="color:#fff;font-weight:700;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">${[
-    ...(actor.combined_credits?.cast||[]),
-    ...(actor.combined_credits?.crew||[])
-].filter((w, i, arr) => arr.findIndex(x => x.id === w.id && x.media_type === w.media_type) === i)
-.length} کار</span>
-</div>
-                           ${(actor.external_ids?.instagram_id || actor.external_ids?.twitter_id || actor.external_ids?.tiktok_id) ? `
-<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-    ${actor.external_ids?.instagram_id ? `
-    <a href="https://www.instagram.com/${actor.external_ids.instagram_id}" target="_blank"
-        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;
-        background:rgba(193,53,132,0.15);border:1px solid rgba(193,53,132,0.35);
-        color:#fff;font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-        onmouseover="this.style.background='rgba(193,53,132,0.35)'"
-        onmouseout="this.style.background='rgba(193,53,132,0.15)'">
-        <i class="fab fa-instagram" style="color:#e1306c;font-size:13px;"></i> Instagram
-    </a>` : ''}
-    ${actor.external_ids?.twitter_id ? `
-    <a href="https://twitter.com/${actor.external_ids.twitter_id}" target="_blank"
-        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;
-        background:rgba(29,161,242,0.15);border:1px solid rgba(29,161,242,0.35);
-        color:#fff;font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-        onmouseover="this.style.background='rgba(29,161,242,0.35)'"
-        onmouseout="this.style.background='rgba(29,161,242,0.15)'">
-        <i class="fab fa-x-twitter" style="color:#1da1f2;font-size:13px;"></i> Twitter / X
-    </a>` : ''}
-    ${actor.external_ids?.tiktok_id ? `
-    <a href="https://www.tiktok.com/@${actor.external_ids.tiktok_id}" target="_blank"
-        style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;
-        background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);
-        color:#fff;font-size:11px;font-weight:700;text-decoration:none;transition:all 0.25s ease;"
-        onmouseover="this.style.background='rgba(255,255,255,0.1)'"
-        onmouseout="this.style.background='rgba(0,0,0,0.3)'">
-        <i class="fab fa-tiktok" style="font-size:13px;"></i> TikTok
-    </a>` : ''}
-</div>` : ''}
-                        </div>
+                    <div class="actor-meta-item" style="align-items:flex-start;">
+                        <i class="fas fa-map-marker-alt actor-meta-icon" style="margin-top:1px;"></i>
+                        <span class="actor-meta-label">شوێن:</span>
+                        <span class="actor-meta-value" style="line-height:1.4;">${birthplaceKu}</span>
                     </div>
                 </div>
-
-                <!-- ✅ Biography بە کوردی -->
-                ${bioKu ? `
-                <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
-                    border-right:3px solid rgba(${r},${g},${b},0.8);border-radius:16px;padding:16px;margin-bottom:20px;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
-                        <div style="width:24px;height:24px;border-radius:7px;background:rgba(${r},${g},${b},0.2);
-                            border:1px solid rgba(${r},${g},${b},0.4);display:flex;align-items:center;justify-content:center;">
-                            <i class="fas fa-align-right" style="color:rgba(${r},${g},${b},1);font-size:11px;"></i>
-                        </div>
-                        <span style="font-size:12px;font-weight:800;color:rgba(${r},${g},${b},0.9);
-                            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دەربارەی ئەکتەر</span>
-                    </div>
-                    <p style="color:rgba(255,255,255,0.75);font-size:13px;line-height:1.9;margin:0;
-                        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;direction:rtl;text-align:right;">${bioKu}</p>
+                ${(actor.external_ids?.instagram_id || actor.external_ids?.twitter_id || actor.external_ids?.tiktok_id) ? `
+                <div class="actor-social-row">
+                    ${actor.external_ids?.instagram_id ? `<a href="https://www.instagram.com/${actor.external_ids.instagram_id}" target="_blank" class="actor-social-btn actor-social-ig"><i class="fab fa-instagram" style="color:#e1306c;font-size:12px;"></i>Instagram</a>` : ''}
+                    ${actor.external_ids?.twitter_id ? `<a href="https://twitter.com/${actor.external_ids.twitter_id}" target="_blank" class="actor-social-btn actor-social-tw"><i class="fab fa-x-twitter" style="color:#1da1f2;font-size:12px;"></i>Twitter</a>` : ''}
+                    ${actor.external_ids?.tiktok_id ? `<a href="https://www.tiktok.com/@${actor.external_ids.tiktok_id}" target="_blank" class="actor-social-btn actor-social-tt"><i class="fab fa-tiktok" style="font-size:12px;"></i>TikTok</a>` : ''}
                 </div>` : ''}
-
-                <!-- کارە باشەکان -->
-                ${knownWorks.length > 0 ? `
-                <div>
-                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(${r},${g},${b},0.08);
-                        border:1px solid rgba(${r},${g},${b},0.25);border-radius:50px;padding:6px 14px;margin-bottom:14px;">
-                        <i class="fas fa-film" style="color:rgba(${r},${g},${b},1);font-size:12px;"></i>
-                        <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);
-                            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">کارە باشەکان</span>
-                    </div>
-                    <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;">
-                        ${worksHTML}
-                    </div>
-                </div>` : ''}
-${actor.images?.profiles?.length > 1 ? `
-<div style="margin-top:20px;">
-    <div style="display:inline-flex;align-items:center;gap:8px;
-        background:rgba(${r},${g},${b},0.08);
-        border:1px solid rgba(${r},${g},${b},0.25);
-        border-radius:50px;padding:6px 14px;margin-bottom:14px;">
-        <i class="fas fa-images" style="color:var(--accent-color);font-size:13px;"></i>
-        <span style="font-size:12px;font-weight:800;color:rgba(255,255,255,0.7);
-            font-family:'Noto Kufi Arabic',Tahoma,sans-serif;"> وێنەی زیاتر</span>
-    </div>
-    <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;">
-        ${actor.images.profiles.slice(0,6).map(img => `
-            <div style="flex-shrink:0;width:80px;height:110px;border-radius:10px;overflow:hidden;
-                border:1px solid rgba(${r},${g},${b},0.3);transition:all 0.3s ease;"
-                onmouseover="this.style.borderColor='rgba(${r},${g},${b},0.9)';this.style.transform='translateY(-3px)'"
-                onmouseout="this.style.borderColor='rgba(${r},${g},${b},0.3)';this.style.transform='none'">
-                <img src="https://image.tmdb.org/t/p/w185${img.file_path}"
-                    style="width:100%;height:100%;object-fit:cover;">
             </div>
-        `).join('')}
+        </div>
     </div>
-</div>` : ''}
-            </div>`;
+
+    <div class="actor-stats-bar">
+ <div class="actor-stat-pill">
+            <div class="actor-stat-number">${[...(actor.combined_credits?.cast||[]),...(actor.combined_credits?.crew||[])].filter((w,i,arr)=>arr.findIndex(x=>x.id===w.id&&x.media_type===w.media_type)===i).length}</div>
+            <div class="actor-stat-label">کۆی کارەکانی</div>
+        </div>
+
+        <div class="actor-stat-pill">
+            <div class="actor-stat-number">${[...(actor.combined_credits?.cast||[]),...(actor.combined_credits?.crew||[])].filter(w=>w.media_type==='movie').filter((w,i,arr)=>arr.findIndex(x=>x.id===w.id&&x.media_type===w.media_type)===i).length}</div>
+            <div class="actor-stat-label">ژمارەی فیلمەکانی</div>
+        </div>
+       
+        <div class="actor-stat-pill">
+            <div class="actor-stat-number">${[...(actor.combined_credits?.cast||[]),...(actor.combined_credits?.crew||[])].filter(w=>w.media_type==='tv').filter((w,i,arr)=>arr.findIndex(x=>x.id===w.id&&x.media_type===w.media_type)===i).length}</div>
+            <div class="actor-stat-label">ژمارەی دراماکانی</div>
+        </div>
+    </div>
+
+    ${bioKu ? `
+    <div class="actor-divider"></div>
+    <div class="actor-section">
+        <div class="actor-section-title">
+            <div class="actor-section-title-icon"><i class="fas fa-align-right"></i></div>
+            <span class="actor-section-title-text">دەربارەی ئەکتەر</span>
+        </div>
+        <div class="actor-bio-box">
+            <p class="actor-bio-text">${bioKu}</p>
+        </div>
+    </div>` : ''}
+
+    ${knownWorks.length > 0 ? `
+    <div class="actor-divider"></div>
+    <div class="actor-section">
+        <div class="actor-section-title">
+            <div class="actor-section-title-icon"><i class="fas fa-film"></i></div>
+            <span class="actor-section-title-text">کارە باشەکان</span>
+        </div>
+        <div class="actor-works-scroll">
+            ${knownWorks.map(work => `
+            <div class="actor-work-card">
+                <div class="actor-work-poster-wrap">
+                    <img src="https://image.tmdb.org/t/p/w154${work.poster_path}" loading="lazy">
+                </div>
+                <div class="actor-work-title">${work.title || work.name || ''}</div>
+            </div>`).join('')}
+        </div>
+    </div>` : ''}
+
+    ${actor.images?.profiles?.length > 1 ? `
+    <div class="actor-divider"></div>
+    <div class="actor-section">
+        <div class="actor-section-title">
+            <div class="actor-section-title-icon"><i class="fas fa-images"></i></div>
+            <span class="actor-section-title-text">وێنەی زیاتر</span>
+        </div>
+        <div class="actor-photos-scroll">
+            ${actor.images.profiles.slice(0,8).map(img => `
+                <div class="actor-photo-thumb">
+                    <img src="https://image.tmdb.org/t/p/w185${img.file_path}" loading="lazy">
+                </div>
+            `).join('')}
+        </div>
+    </div>` : ''}
+
+</div>`;
 
     } catch(err) {
         modal.innerHTML = `
@@ -4520,6 +4826,10 @@ btn.innerHTML = `<i class="fas fa-server"></i> ${srv.name}`;
                         serverContainer.appendChild(btn);
                     });
 
+                    const spacer = document.createElement('span');
+                    spacer.style.cssText = 'min-width:36px;flex-shrink:0;display:inline-block;';
+                    serverContainer.appendChild(spacer);
+
                     document.getElementById('video-frame').src = episode.servers[serverIndex].link;
                 } else {
                     document.getElementById('video-frame').src = "";
@@ -4608,8 +4918,19 @@ filter: function(type, btnElement) {
         filtered = this.data.filter(i => i.type === type);
     }
     
-    filtered.sort((a, b) => b.id - a.id);
-    this.renderGrid(filtered);
+    const order = window._sortOrder || 'newest';
+    if (order === 'mostviewed') {
+        Promise.all(filtered.map(i => getDramaViews(i.id))).then(counts => {
+            const sorted = filtered
+                .map((item, idx) => ({ item, views: counts[idx] }))
+                .sort((a, b) => b.views - a.views)
+                .map(x => x.item);
+            this.renderGrid(sorted);
+        });
+    } else {
+        filtered.sort((a, b) => order === 'oldest' ? a.id - b.id : b.id - a.id);
+        this.renderGrid(filtered);
+    }
 
     // گۆڕینەوەی سەردێڕی بەش
     const sectionHeader = document.querySelector('.section-header');
@@ -4745,20 +5066,20 @@ showPersonWorks: function(role, personName) {
                     <i class="fas ${roleInfo.icon}"></i>
                     ${roleInfo.label}
                 </div>
-                <div class="pm-stats-row">
-                    <div class="pm-stat">
-                        <div class="pm-stat-num">${works.length}</div>
-                        <div class="pm-stat-lbl">کار</div>
-                    </div>
-                    <div class="pm-stat">
-                        <div class="pm-stat-num">${works.filter(w=>w.type==='drama').length}</div>
-                        <div class="pm-stat-lbl">دراما</div>
-                    </div>
-                    <div class="pm-stat">
-                        <div class="pm-stat-num">${works.filter(w=>w.type==='movie').length}</div>
-                        <div class="pm-stat-lbl">فیلم</div>
-                    </div>
-                </div>
+              <div class="pm-stats-row">
+    <div class="pm-stat">
+        <div class="pm-stat-num" style="color:rgba(${r},${g},${b},1);">${works.filter(w=>w.type==='movie').length}</div>
+        <div class="pm-stat-lbl">فیلم</div>
+    </div>
+    <div class="pm-stat">
+        <div class="pm-stat-num" style="color:rgba(${r},${g},${b},1);">${works.filter(w=>w.type==='drama').length}</div>
+        <div class="pm-stat-lbl">دراما</div>
+    </div>
+    <div class="pm-stat">
+        <div class="pm-stat-num" style="color:rgba(${r},${g},${b},1);">${works.length}</div>
+        <div class="pm-stat-lbl">کار</div>
+    </div>
+</div>
             </div>
 
             <div style="padding:20px 8px 80px;">
@@ -4929,9 +5250,11 @@ function toggleFilterSection(section) {
     const genreSection = document.getElementById('genre-section');
     const yearSection = document.getElementById('year-section');
     const ratingSection = document.getElementById('rating-section');
+    const sortSection = document.getElementById('sort-section');
     const genreBtn = document.querySelector('.filter-main-btn:nth-child(1)');
     const yearBtn = document.querySelector('.filter-main-btn:nth-child(2)');
     const ratingBtn = document.querySelector('.filter-main-btn:nth-child(3)');
+    const sortBtn = document.querySelector('.filter-main-btn:nth-child(4)');
     
     if (section === 'genre') {
         if (genreSection.style.display === 'none') {
@@ -4956,6 +5279,14 @@ function toggleFilterSection(section) {
         } else {
             ratingSection.style.display = 'none';
             ratingBtn.classList.remove('active');
+        }
+    } else if (section === 'sort') {
+        if (sortSection.style.display === 'none') {
+            sortSection.style.display = 'block';
+            sortBtn.classList.add('active');
+        } else {
+            sortSection.style.display = 'none';
+            sortBtn.classList.remove('active');
         }
     }
 }
@@ -5215,7 +5546,20 @@ document.querySelectorAll('.action-btn.active, .cat-btn.active, .filter-main-btn
     localStorage.setItem('hk-theme-r', r);
 localStorage.setItem('hk-theme-g', g);
 localStorage.setItem('hk-theme-b', b);
-
+// نوێکردنەوەی view badge رەنگەکان
+document.querySelectorAll('[data-view-badge="true"]').forEach(vb => {
+    vb.style.background = `rgba(${r},${g},${b},0.18)`;
+    vb.style.borderTop = `1px solid rgba(${r},${g},${b},0.6)`;
+    vb.style.borderRight = `1px solid rgba(${r},${g},${b},0.3)`;
+    vb.style.borderLeft = `1px solid rgba(${r},${g},${b},0.1)`;
+    vb.style.borderBottom = `1px solid rgba(${r},${g},${b},0.1)`;
+    vb.style.boxShadow = `0 2px 8px rgba(${r},${g},${b},0.2),inset 0 1px 0 rgba(255,255,255,0.1)`;
+    const icon = vb.querySelector('i');
+    if(icon) icon.style.color = `rgba(${r},${g},${b},1)`;
+    if(icon) icon.style.filter = `drop-shadow(0 0 4px rgba(${r},${g},${b},0.8))`;
+    const span = vb.querySelector('span');
+    if(span) span.style.textShadow = `0 0 5px rgba(${r},${g},${b},0.6)`;
+});
     // ✅ چارەسەری ڕەنگی نووسینی دوگمەکان کاتی ڕەنگی سپی
     const rN = Number(r), gN = Number(g), bN = Number(b);
     const lum = (0.299*rN + 0.587*gN + 0.114*bN) / 255;
@@ -5313,21 +5657,32 @@ function bnFilter(type, btn) {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function bnMenu(btn) {
-    const sidebar = document.getElementById('modern-sidebar');
-    const trigger = document.getElementById('sidebar-trigger');
+async function setSortOrder(order) {
+    window._sortOrder = order;
+    document.getElementById('sort-newest-label').classList.toggle('sort-label-active', order === 'newest');
+    document.getElementById('sort-oldest-label').classList.toggle('sort-label-active', order === 'oldest');
+    document.getElementById('sort-mostviewed-label').classList.toggle('sort-label-active', order === 'mostviewed');
     
-    sidebar.classList.toggle('active');
-    trigger.classList.toggle('active');
+    // ریزبەندی ڕاستەوخۆ بکە بەپێی فیلتەری ئێستا
+    let currentType = app.currentFilter || 'all';
+    let filtered = currentType === 'all' ? [...app.data] : app.data.filter(i => i.type === currentType);
     
-    if (sidebar.classList.contains('active')) {
-        document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    if (order === 'oldest') {
+        filtered.sort((a, b) => a.id - b.id);
+    } else if (order === 'mostviewed') {
+        const counts = await Promise.all(filtered.map(i => getDramaViews(i.id)));
+        filtered = filtered
+            .map((item, idx) => ({ item, views: counts[idx] }))
+            .sort((a, b) => b.views - a.views)
+            .map(x => x.item);
     } else {
-        document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
-        document.querySelector('.bn-item:first-child').classList.add('active');
+        filtered.sort((a, b) => b.id - a.id);
     }
+    
+    app.renderGrid(filtered);
+    toggleFilterMenu();
 }
+
 
 
 // --- هەڕەمەکیانە ---
@@ -6088,7 +6443,7 @@ body {
     padding: 4px 2px;
 }
 
-.filter-dropdown-content::-webkit-scrollbar { width: 4px; }
+.filter-dropdown-content::-webkit-scrollbar { width: 3px; }
 .filter-dropdown-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 10px; }
 .filter-dropdown-content::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #8c00ff, #b366ff); border-radius: 10px; }
 
@@ -6368,6 +6723,15 @@ body {
     color: #ff8080;
     transform: translateY(-2px);
 }
+.sort-label-active {
+    border-color: var(--accent-color) !important;
+    background: rgba(140,0,255,0.15) !important;
+    color: white !important;
+}
+.sort-label-active .check-dot {
+    background: var(--accent-color) !important;
+    border-color: var(--accent-color) !important;
+}
 
 /* مۆبایل */
 @media (max-width: 768px) {
@@ -6534,51 +6898,117 @@ body {
     background: radial-gradient(circle, rgba(140,0,255,0.15) 0%, transparent 70%);
     pointer-events: none;
 }
-.pm-avatar-ring {
+.pm-hero {
     position: relative;
-    width: 100px; height: 100px;
-    margin: 0 auto 16px;
+    text-align: center;
+    padding: 65px 24px 36px;
+    overflow: hidden;
+    background:
+        radial-gradient(ellipse 100% 65% at 50% -5%, rgba(140,0,255,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 45% 70% at 2% 50%, rgba(140,0,255,0.1) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 70% at 98% 50%, rgba(0,191,255,0.09) 0%, transparent 60%),
+        linear-gradient(180deg, rgba(10,5,26,0.35) 0%, transparent 100%);
 }
-.pm-avatar-ring img {
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid rgba(140,0,255,0.7);
-    box-shadow: 0 0 30px rgba(140,0,255,0.4), 0 0 60px rgba(140,0,255,0.15);
-    display: block;
-}
-.pm-avatar-ring::after {
+.pm-hero::before {
     content: '';
     position: absolute;
-    inset: -5px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    border-top-color: var(--accent-color);
-    border-right-color: var(--accent-light);
-    animation: spinRing 3s linear infinite;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        #8c00ff 25%,
+        #00bfff 50%,
+        #e040fb 75%,
+        transparent 100%);
+    z-index: 10;
+    pointer-events: none;
 }
-@keyframes spinRing { to { transform: rotate(360deg); } }
+.pm-avatar-ring {
+    position: relative;
+    width: 128px; height: 128px;
+    margin: 0 auto 22px;
+}
+.pm-avatar-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8c00ff 0%, #00bfff 50%, #e040fb 100%);
+    z-index: 1;
+}
+.pm-avatar-ring::after { display: none; }
+.pm-avatar-ring img {
+    position: absolute;
+    inset: 5px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    z-index: 2;
+    box-shadow:
+        0 0 22px rgba(140,0,255,0.6),
+        0 0 45px rgba(0,191,255,0.22);
+}
 .pm-name {
-    font-size: 24px; font-weight: 900; color: #fff;
-    margin-bottom: 8px; letter-spacing: 0.5px;
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, #ffffff 30%, #d4aaff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px; letter-spacing: 0.5px;
+    filter: drop-shadow(0 0 14px rgba(140,0,255,0.45));
 }
 .pm-role-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(140,0,255,0.18);
-    border: 1px solid rgba(140,0,255,0.4);
-    color: #c499ff; font-size: 12px; font-weight: 700;
-    padding: 5px 14px; border-radius: 50px; margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 800;
+    padding: 8px 24px; border-radius: 50px; margin-bottom: 28px;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.12),
+                0 0 20px rgba(140,0,255,0.15);
 }
 .pm-stats-row {
-    display: flex; justify-content: center; gap: 12px; margin-top: 4px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
 }
 .pm-stat {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px; padding: 8px 20px; text-align: center;
+    flex: 1;
+    padding: 15px 8px;
+    text-align: center;
+    position: relative;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 18px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
-.pm-stat-num { font-size: 20px; font-weight: 900; color: #fff; line-height: 1; margin-bottom: 2px; }
-.pm-stat-lbl { font-size: 11px; color: #a0a0b0; font-weight: 600; }
+.pm-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 10%; right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, #8c00ff), transparent);
+    border-radius: 2px;
+}
+.pm-stat + .pm-stat::before { display: none; }
+.pm-stat-num {
+    font-size: 24px; font-weight: 900; line-height: 1;
+    margin-bottom: 5px;
+    font-family: 'Rajdhani', sans-serif;
+}
+.pm-stat-lbl {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
 .modal-close-btn {
     position: fixed; top: 16px; left: 16px;
     background: rgba(255,255,255,0.08);
@@ -7900,11 +8330,20 @@ body {
     e.stopPropagation();
     
     // قەفڵکردنی سکرۆڵی پەیجەکە کاتی کردنەوەی مینوو
-    if (sidebar.classList.contains('active')) {
-        document.body.style.overflow = 'hidden';
-    } else {
-        document.body.style.overflow = '';
-    }
+   // قەفڵکردنی سکرۆڵی پەیجەکە کاتی کردنەوەی مینوو
+if (sidebar.classList.contains('active')) {
+    window._savedScrollY = window.scrollY;
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${window._savedScrollY}px`;
+    document.body.style.width = '100%';
+} else {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, window._savedScrollY || 0);
+}
         const menuBn = document.querySelector('.bn-item:last-child');
         if (menuBn) {
             if (sidebar.classList.contains('active')) {
@@ -7923,9 +8362,21 @@ document.addEventListener('click', (e) => {
         !trigger.contains(e.target)) {
         sidebar.classList.remove('active');
         trigger.classList.remove('active');
-        document.body.style.overflow = ''; // گەڕاندنەوەی سکرۆڵ
+        document.body.style.overflow = '';
+document.body.style.position = '';
+document.body.style.top = '';
+document.body.style.width = '';
+window.scrollTo(0, window._savedScrollY || 0);
     }
 });
+
+
+
+
+
+
+
+
     // ========== مۆداڵ ==========
     function openMenuModal(type) {
         const overlay = document.getElementById('menu-modal-overlay');
@@ -10348,103 +10799,132 @@ async function showPublicProfile(docId, userId, userName, userPhoto) {
     const initial = (userName || '?')[0].toUpperCase();
 
     modal.innerHTML = `
-        <div style="max-width:500px;margin:0 auto;padding:20px 16px 100px;">
+    <div style="max-width:480px;margin:0 auto;padding:0 0 80px;">
 
-            <!-- دوگمەی داخستن -->
-            <button onclick="document.getElementById('public-profile-modal').style.display='none';document.body.style.overflow='';"
-                style="position:fixed;top:16px;left:16px;
-                background:rgba(255,255,255,0.08);
-                border:1px solid rgba(255,255,255,0.15);
-                color:#fff;width:40px;height:40px;border-radius:50%;
-                cursor:pointer;font-size:16px;display:flex;
-                align-items:center;justify-content:center;
-                transition:all 0.3s;z-index:100;backdrop-filter:blur(10px);"
-                onmouseover="this.style.background='rgba(255,50,50,0.25)'"
-                onmouseout="this.style.background='rgba(255,255,255,0.08)'">
-                <i class="fas fa-times"></i>
-            </button>
+        <!-- دوگمەی داخستن -->
+        <button onclick="document.getElementById('public-profile-modal').style.display='none';document.body.style.overflow='';"
+            style="position:fixed;top:16px;left:16px;
+            background:rgba(10,5,20,0.9);border:1px solid rgba(255,255,255,0.1);
+            color:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;
+            font-size:15px;display:flex;align-items:center;justify-content:center;
+            z-index:100;backdrop-filter:blur(20px);
+            box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:all 0.25s ease;"
+            onmouseover="this.style.background='rgba(180,10,50,0.4)'"
+            onmouseout="this.style.background='rgba(10,5,20,0.9)'">
+            <i class="fas fa-times"></i>
+        </button>
 
-            <!-- هێرۆی پرۆفایل -->
-            <div style="text-align:center;padding:40px 20px 30px;
-                background:linear-gradient(135deg,rgba(${r},${g},${b},0.15),rgba(${r},${g},${b},0.05));
-                border:1px solid rgba(${r},${g},${b},0.25);
-                border-radius:20px;margin-bottom:20px;">
+        <!-- هێرۆ -->
+        <div style="position:relative;overflow:hidden;
+            background:linear-gradient(170deg,rgba(${r},${g},${b},0.22) 0%,rgba(${r},${g},${b},0.04) 65%,transparent 100%);
+            padding:58px 20px 32px;
+            border-bottom:1px solid rgba(${r},${g},${b},0.15);">
 
-                <!-- وێنە -->
-                <div style="position:relative;display:inline-block;margin-bottom:14px;">
-                    <div style="width:80px;height:80px;border-radius:50%;padding:3px;
-                        background:conic-gradient(rgba(${r},${g},${b},1),rgba(${r},${g},${b},0.3),rgba(${r},${g},${b},1));
-                        box-shadow:0 0 25px rgba(${r},${g},${b},0.4);margin:0 auto;">
+            <!-- گلۆی باکگراوند -->
+            <div style="position:absolute;top:-70px;right:-55px;width:230px;height:230px;border-radius:50%;
+                background:radial-gradient(circle,rgba(${r},${g},${b},0.28),transparent 70%);
+                filter:blur(45px);pointer-events:none;"></div>
+            <div style="position:absolute;bottom:-50px;left:-35px;width:175px;height:175px;border-radius:50%;
+                background:radial-gradient(circle,rgba(${r},${g},${b},0.18),transparent 70%);
+                filter:blur(38px);pointer-events:none;"></div>
+
+            <!-- ئاواتار -->
+            <div style="display:flex;justify-content:center;margin-bottom:20px;">
+                <div style="position:relative;">
+                    <!-- گلۆی ئاواتار -->
+                    <div style="position:absolute;inset:-10px;border-radius:50%;
+                        background:rgba(${r},${g},${b},0.3);filter:blur(18px);"></div>
+                    <!-- بۆردەری جوانی -->
+                    <div style="position:relative;width:94px;height:94px;border-radius:50%;padding:3px;
+                        background:conic-gradient(rgba(${r},${g},${b},1) 0%,rgba(255,255,255,0.6) 40%,rgba(${r},${g},${b},0.7) 55%,rgba(${r},${g},${b},1) 100%);
+                        box-shadow:0 0 0 1px rgba(${r},${g},${b},0.25),0 8px 35px rgba(${r},${g},${b},0.45);">
                         ${userPhoto
-                            ? `<img src="${userPhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:rgba(10,5,20,0.9);">`
+                            ? `<img src="${userPhoto}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;background:#050508;">`
                             : `<div style="width:100%;height:100%;border-radius:50%;
-                                background:rgba(${r},${g},${b},0.2);
+                                background:linear-gradient(145deg,rgba(${r},${g},${b},0.45),rgba(${r},${g},${b},0.12));
                                 display:flex;align-items:center;justify-content:center;
-                                font-size:30px;font-weight:900;color:#fff;">
-                                ${initial}
-                               </div>`
-                        }
+                                font-size:36px;font-weight:900;color:#fff;">
+                                ${initial}</div>`}
                     </div>
-                </div>
-
-                <!-- ناو -->
-                <div style="color:#fff;font-size:20px;font-weight:900;
-                    margin-bottom:8px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;">
-                    ${userName || 'بەکارهێنەر'}
-                </div>
-<!-- بایۆی بەکارهێنەر -->
-                <div id="pub-bio" style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 10px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;line-height:1.7;display:none;word-break:break-word;"></div>
-<!-- لیستی دڵخواز و بینراو -->
-                <div style="width:100%;margin:12px 0 4px;">
-                  <div style="display:flex;gap:8px;margin-bottom:10px;">
-                    <button onclick="pubShowTab('favorites')" id="pub-tab-fav"
-                      style="flex:1;padding:8px 5px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(255,60,100,0.18);border:1.5px solid rgba(255,60,100,0.5);color:#ff6080;display:flex;align-items:center;justify-content:center;gap:5px;">
-                      <i class="fas fa-heart" style="font-size:10px;"></i>دڵخوازەکان
-                      <span id="pub-fav-badge" style="background:rgba(255,60,100,0.3);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
-                    </button>
-                    <button onclick="pubShowTab('watchlist')" id="pub-tab-watch"
-                      style="flex:1;padding:8px 5px;border-radius:10px;font-size:11px;font-weight:800;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;transition:all 0.3s;background:rgba(0,180,255,0.06);border:1.5px solid rgba(0,180,255,0.2);color:rgba(0,180,255,0.6);display:flex;align-items:center;justify-content:center;gap:5px;">
-                      <i class="fas fa-eye" style="font-size:10px;"></i>بینراوەکان
-                      <span id="pub-watch-badge" style="background:rgba(0,180,255,0.2);border-radius:20px;padding:1px 7px;font-size:10px;">0</span>
-                    </button>
-                  </div>
-                  <div id="pub-favorites-list" style="display:flex;flex-direction:column;gap:8px;"></div>
-                  <div id="pub-watchlist-list" style="display:none;flex-direction:column;gap:8px;"></div>
-                </div>
-
-                <!-- باجی ئەندام -->
-                <div style="display:inline-flex;
-               
-                    background:rgba(${r},${g},${b},0.15);
-                    border:1px solid rgba(${r},${g},${b},0.35);
-                    color:rgba(${r},${g},${b},1);
-                    font-size:10px;font-weight:800;
-                    padding:3px 12px;border-radius:20px;
-                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">
-                    <i class="fas fa-user-check" style="font-size:9px;"></i>
-                    ئەندامی هاڤێ کۆریا
                 </div>
             </div>
 
-            <!-- کۆمێنتەکان -->
-            <div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
-                    <i class="fas fa-comments" style="color:rgba(${r},${g},${b},1);font-size:14px;"></i>
-                    <span style="font-size:13px;font-weight:800;color:#fff;
-                        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">کۆمێنتەکان</span>
-                    <span id="pub-comment-count" style="background:rgba(${r},${g},${b},0.2);
-                        border:1px solid rgba(${r},${g},${b},0.4);
-                        color:rgba(${r},${g},${b},1);
-                        font-size:11px;font-weight:800;
-                        padding:2px 10px;border-radius:20px;">...</span>
+            <!-- ناو + باج + بایۆ -->
+            <div style="text-align:center;">
+                <div style="font-size:22px;font-weight:900;color:#fff;letter-spacing:0.5px;margin-bottom:9px;
+                    font-family:'Rajdhani',sans-serif;text-shadow:0 0 25px rgba(${r},${g},${b},0.45);">
+                    ${userName || 'بەکارهێنەر'}
                 </div>
-                <div id="pub-comments-list" style="display:flex;flex-direction:column;gap:10px;">
-                    <div style="text-align:center;padding:20px;color:rgba(255,255,255,0.3);">
-                        <i class="fas fa-spinner fa-spin" style="font-size:20px;display:block;margin-bottom:8px;color:rgba(${r},${g},${b},0.6);"></i>
-                    </div>
+                <div style="display:inline-flex;align-items:center;gap:5px;
+                    background:rgba(${r},${g},${b},0.1);border:1px solid rgba(${r},${g},${b},0.28);
+                    color:rgba(${r},${g},${b},0.9);font-size:10px;font-weight:800;
+                    padding:4px 13px;border-radius:30px;
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+                    box-shadow:0 0 14px rgba(${r},${g},${b},0.15);">
+                    <i class="fas fa-check-circle" style="font-size:9px;"></i>ئەندامی هاڤێ کۆریا
+                </div>
+                <div id="pub-bio" style="display:none;margin-top:14px;
+                    color:rgba(255,255,255,0.45);font-size:12px;line-height:1.8;
+                    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+                    background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+                    border-radius:12px;padding:10px 14px;word-break:break-word;text-align:right;"></div>
+            </div>
+        </div>
+
+        <!-- تابەکان -->
+        <div style="display:flex;
+            border-bottom:1px solid rgba(255,255,255,0.06);
+            background:rgba(5,5,10,0.7);
+            backdrop-filter:blur(24px);
+            -webkit-backdrop-filter:blur(24px);
+            position:sticky;top:0;z-index:10;">
+
+            <button onclick="pubShowTab('favorites')" id="pub-tab-fav"
+                style="flex:1;padding:14px 4px;font-size:11px;font-weight:800;cursor:pointer;
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;border:none;background:transparent;
+                color:rgba(255,100,130,1);border-bottom:2.5px solid rgba(255,60,100,0.9);
+                display:flex;align-items:center;justify-content:center;gap:4px;
+                transition:all 0.3s;margin-bottom:-1px;">
+                <i class="fas fa-heart" style="font-size:10px;"></i>دڵخواز
+                <span id="pub-fav-badge" style="background:rgba(255,60,100,0.22);color:rgba(255,100,130,1);
+                    border-radius:20px;padding:1px 7px;font-size:9px;">0</span>
+            </button>
+
+            <button onclick="pubShowTab('watchlist')" id="pub-tab-watch"
+                style="flex:1;padding:14px 4px;font-size:11px;font-weight:800;cursor:pointer;
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;border:none;background:transparent;
+                color:rgba(255,255,255,0.25);border-bottom:2.5px solid transparent;
+                display:flex;align-items:center;justify-content:center;gap:4px;
+                transition:all 0.3s;margin-bottom:-1px;">
+                <i class="fas fa-eye" style="font-size:10px;"></i>بینراو
+                <span id="pub-watch-badge" style="background:rgba(255,255,255,0.07);
+                    border-radius:20px;padding:1px 7px;font-size:9px;">0</span>
+            </button>
+
+            <button onclick="pubShowTab('comments')" id="pub-tab-comments"
+                style="flex:1;padding:14px 4px;font-size:11px;font-weight:800;cursor:pointer;
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;border:none;background:transparent;
+                color:rgba(255,255,255,0.25);border-bottom:2.5px solid transparent;
+                display:flex;align-items:center;justify-content:center;gap:4px;
+                transition:all 0.3s;margin-bottom:-1px;">
+                <i class="fas fa-comments" style="font-size:10px;"></i>کۆمێنت
+                <span id="pub-comment-count" style="background:rgba(255,255,255,0.07);
+                    border-radius:20px;padding:1px 7px;font-size:9px;">...</span>
+            </button>
+        </div>
+
+        <!-- ناوەڕۆکی تابەکان -->
+        <div style="padding:14px 14px 0;">
+            <div id="pub-favorites-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+            <div id="pub-watchlist-list" style="display:none;flex-direction:column;gap:8px;"></div>
+            <div id="pub-comments-list" style="display:none;flex-direction:column;gap:10px;">
+                <div style="text-align:center;padding:35px 20px;color:rgba(255,255,255,0.25);">
+                    <i class="fas fa-spinner fa-spin" style="font-size:22px;display:block;margin-bottom:10px;color:rgba(${r},${g},${b},0.5);"></i>
+                    <span style="font-size:11px;font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">دەهێنرێن...</span>
                 </div>
             </div>
         </div>
+    </div>
     `;
 // هێنانی بایۆ + لیستی دڵخواز و بینراو
     try {
@@ -10837,18 +11317,36 @@ grid.innerHTML = works.map(work => `
     });
 
     function pubShowTab(tab) {
-    const fL  = document.getElementById('pub-favorites-list');
-    const wL  = document.getElementById('pub-watchlist-list');
-    const fB  = document.getElementById('pub-tab-fav');
-    const wB  = document.getElementById('pub-tab-watch');
+    const fL = document.getElementById('pub-favorites-list');
+    const wL = document.getElementById('pub-watchlist-list');
+    const cL = document.getElementById('pub-comments-list');
+    const fB = document.getElementById('pub-tab-fav');
+    const wB = document.getElementById('pub-tab-watch');
+    const cB = document.getElementById('pub-tab-comments');
+    const fBadge = document.getElementById('pub-fav-badge');
+    const wBadge = document.getElementById('pub-watch-badge');
+    const cBadge = document.getElementById('pub-comment-count');
+    const ac = getComputedStyle(document.documentElement).getPropertyValue('--accent-color').trim() || '#8c00ff';
+
+    // هەموو بڕۆشن
+    [fL, wL, cL].forEach(el => { if(el) el.style.display = 'none'; });
+    [fB, wB, cB].forEach(btn => {
+        if(btn) { btn.style.color = 'rgba(255,255,255,0.25)'; btn.style.borderBottomColor = 'transparent'; }
+    });
+    [fBadge, wBadge, cBadge].forEach(b => { if(b) b.style.background = 'rgba(255,255,255,0.07)'; });
+
     if (tab === 'favorites') {
-        if(fL) fL.style.display='flex'; if(wL) wL.style.display='none';
-        if(fB){fB.style.background='rgba(255,60,100,0.18)';fB.style.borderColor='rgba(255,60,100,0.5)';fB.style.color='#ff6080';}
-        if(wB){wB.style.background='rgba(0,180,255,0.06)';wB.style.borderColor='rgba(0,180,255,0.2)';wB.style.color='rgba(0,180,255,0.6)';}
+        if(fL) fL.style.display = 'flex';
+        if(fB) { fB.style.color = 'rgba(255,100,130,1)'; fB.style.borderBottomColor = 'rgba(255,60,100,0.9)'; }
+        if(fBadge) { fBadge.style.background = 'rgba(255,60,100,0.22)'; fBadge.style.color = 'rgba(255,100,130,1)'; }
+    } else if (tab === 'watchlist') {
+        if(wL) wL.style.display = 'flex';
+        if(wB) { wB.style.color = 'rgba(0,200,255,1)'; wB.style.borderBottomColor = 'rgba(0,180,255,0.8)'; }
+        if(wBadge) { wBadge.style.background = 'rgba(0,180,255,0.2)'; wBadge.style.color = 'rgba(0,200,255,1)'; }
     } else {
-        if(fL) fL.style.display='none'; if(wL) wL.style.display='flex';
-        if(wB){wB.style.background='rgba(0,180,255,0.2)';wB.style.borderColor='rgba(0,180,255,0.55)';wB.style.color='#40c0ff';}
-        if(fB){fB.style.background='rgba(255,60,100,0.06)';fB.style.borderColor='rgba(255,60,100,0.2)';fB.style.color='rgba(255,60,100,0.6)';}
+        if(cL) cL.style.display = 'flex';
+        if(cB) { cB.style.color = ac; cB.style.borderBottomColor = ac; }
+        if(cBadge) { cBadge.style.background = 'rgba(140,0,255,0.2)'; cBadge.style.color = ac; }
     }
 }
 </script>
