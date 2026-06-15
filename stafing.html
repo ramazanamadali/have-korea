@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>پرۆفایلی ستاف - هاڤێ کۆریا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4iUF9LvMTI2UdPpCqj8TXlSIRA0xyK4",
+            authDomain: "have-korea-9431e.firebaseapp.com",
+            projectId: "have-korea-9431e",
+            storageBucket: "have-korea-9431e.firebasestorage.app",
+            messagingSenderId: "738053641926",
+            appId: "1:738053641926:web:8b5605089a9ff3076129c7"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <style>
+        :root {
+            --accent: #8c00ff;
+            --accent-light: #b366ff;
+            --bg: #050508;
+            --bg2: #0f0f18;
+            --bg3: #13131d;
+            --glass: rgba(20, 15, 35, 0.7);
+            --border: rgba(140, 0, 255, 0.2);
+            --text: #ffffff;
+            --text2: #a0a0b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            background-image:
+                radial-gradient(ellipse at 30% 0%, rgba(140,0,255,0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 80%, rgba(179,102,255,0.07) 0%, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text);
+            font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ======= بەشی سەرەوە ======= */
+        .top-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(5,5,10,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(140,0,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(140,0,255,0.12);
+            border: 1px solid rgba(140,0,255,0.3);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: rgba(140,0,255,0.25);
+            border-color: var(--accent);
+        }
+
+        .top-logo {
+            font-size: 14px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #fff, #b366ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+        }
+
+        /* ======= هیرۆ / سەرێک ======= */
+        .hero {
+            padding-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 320px;
+            background: linear-gradient(180deg,
+                rgba(140,0,255,0.18) 0%,
+                rgba(140,0,255,0.06) 60%,
+                transparent 100%);
+            pointer-events: none;
+        }
+
+        /* خەتی جوانی سەرەوە */
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-light), transparent);
+        }
+
+        .profile-section {
+            position: relative;
+            text-align: center;
+            padding: 40px 20px 30px;
+        }
+
+        /* ======= وێنەی گردۆڵەیی ======= */
+        .avatar-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .avatar-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            padding: 3px;
+            background: conic-gradient(
+                var(--accent) 0deg,
+                var(--accent-light) 120deg,
+                #ff6b9d 200deg,
+                var(--accent) 360deg
+            );
+            box-shadow:
+                0 0 0 4px rgba(5,5,10,0.9),
+                0 0 40px rgba(140,0,255,0.5),
+                0 0 80px rgba(140,0,255,0.2);
+            animation: ring-spin 6s linear infinite;
+        }
+@keyframes ring-spin {
+    0% { opacity: 1; }
+    100% { opacity: 1; }
+}
+        .avatar-ring img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: var(--bg3);
+            display: block;
+        }
+
+        /* نوکتەی سەوز */
+        .online-dot {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00e676;
+            border: 3px solid var(--bg);
+            box-shadow: 0 0 12px rgba(0,230,118,0.7);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 1; }
+}
+        /* ======= ناو و ڕۆڵ ======= */
+        .staff-name {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            font-family: 'Scheherazade New', serif;
+            text-shadow: 0 0 30px rgba(140,0,255,0.5);
+        }
+.role-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(140,0,255,0.35);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 7px 16px;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+}
+.role-badge::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 35px; height: 35px;
+    background: radial-gradient(circle at top right, rgba(140,0,255,0.2), transparent 70%);
+    pointer-events: none;
+}
+.role-badge i {
+    color: var(--accent-light);
+    font-size: 10px;
+}
+
+        /* دوگمەی ئینستاگرام */
+       .ig-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--glass);
+    border: 1px solid rgba(140,0,255,0.35);
+    color: #fff;
+    padding: 13px 28px;
+    border-radius: 16px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(140,0,255,0.15);
+    transition: all 0.3s;
+    margin-top: 5px;
+    position: relative;
+    overflow: hidden;
+}
+.ig-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: radial-gradient(circle at top right, rgba(140,0,255,0.2), transparent 70%);
+    pointer-events: none;
+}
+.ig-btn:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(140,0,255,0.25);
+    background: rgba(140,0,255,0.12);
+}
+
+        /* ======= ئامارەکان ======= */
+        .stats-container {
+            padding: 0 16px 20px;
+        }
+
+        .stats-title {
+            font-size: 13px;
+            color: var(--text2);
+            text-align: center;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        .stats-title::before, .stats-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(140,0,255,0.3));
+        }
+        .stats-title::before { background: linear-gradient(270deg, transparent, rgba(140,0,255,0.3)); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 50px; height: 50px;
+            background: radial-gradient(circle at top right, rgba(140,0,255,0.2), transparent 70%);
+            pointer-events: none;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(140,0,255,0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(140,0,255,0.2);
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--accent-light);
+        }
+
+        .stat-num {
+            font-size: 30px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--accent-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: var(--text2);
+            font-weight: 600;
+        }
+
+        /* ======= بەشی کارەکان ======= */
+        .works-section {
+            padding: 0 16px 30px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(140,0,255,0.15);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            right: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* تابەکان */
+       .work-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+}
+
+.work-tab {
+    flex: 1;
+    padding: 11px 6px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 800;
+    font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    color: rgba(255,255,255,0.45);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+.work-tab::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 40px; height: 40px;
+    background: radial-gradient(circle at top right, rgba(140,0,255,0.15), transparent 70%);
+    pointer-events: none;
+}
+.work-tab:last-child { border-left: 1px solid var(--border); }
+.work-tab.active {
+    background: rgba(140,0,255,0.15);
+    border-color: rgba(140,0,255,0.5);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(140,0,255,0.2);
+}
+.work-tab .tab-count {
+    background: rgba(140,0,255,0.25);
+    border: 1px solid rgba(140,0,255,0.4);
+    color: var(--accent-light);
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 900;
+}
+.work-tab.active .tab-count {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+        /* کارتەکانی دراما */
+        .works-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+.work-card {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: pointer;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+.work-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: linear-gradient(180deg, transparent 55%, rgba(10,5,20,0.95) 100%);
+    pointer-events: none;
+}
+.work-card:hover {
+    border-color: rgba(140,0,255,0.55);
+    transform: translateY(-5px);
+    box-shadow:
+        0 12px 35px rgba(140,0,255,0.22),
+        0 0 0 1px rgba(140,0,255,0.15);
+}
+
+.work-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.work-card:hover img {
+    transform: scale(1.04);
+}
+
+.work-card-info {
+    padding: 10px 10px 12px;
+    position: relative;
+    z-index: 1;
+    background: rgba(13,10,25,0.6);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(140,0,255,0.12);
+}
+
+.work-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 7px;
+    color: #fff;
+    line-height: 1.5;
+}
+
+.work-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.work-role-tag {
+    font-size: 9px;
+    background: rgba(140,0,255,0.18);
+    border: 1px solid rgba(140,0,255,0.35);
+    color: var(--accent-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+}
+
+.work-year {
+    font-size: 10px;
+    color: var(--text2);
+    background: rgba(255,255,255,0.05);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+        /* خالی بەتاڵ */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text2);
+            grid-column: span 2;
+        }
+        .empty-state i {
+            font-size: 36px;
+            margin-bottom: 12px;
+            opacity: 0.4;
+            display: block;
+        }
+
+        /* بارکردن */
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text2);
+            grid-column: span 2;
+        }
+        .loading-state i { animation: spin 1s linear infinite; font-size: 24px; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* ======= فووتەر سایت ======= */
+       .site-footer-card {
+    margin: 0 16px 30px;
+    background: var(--glass);
+    border: 1px solid rgba(140,0,255,0.25);
+    border-radius: 24px;
+    padding: 28px 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+.site-footer-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.site-footer-card::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 50%;
+    transform: translateX(-50%);
+    width: 160px; height: 80px;
+    background: radial-gradient(ellipse, rgba(140,0,255,0.12), transparent 70%);
+    pointer-events: none;
+}
+.site-footer-card .hk-logo-text {
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    position: relative;
+    display: inline-block;
+}
+.site-footer-card .hk-logo-text::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    margin: 6px auto 0;
+    border-radius: 2px;
+}
+
+@keyframes shine {
+    to { background-position: 200% center; }
+}
+        .site-footer-card p {
+            font-size: 12px;
+            color: var(--text2);
+            line-height: 1.9;
+        }
+
+        .go-site-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 14px;
+            background: rgba(140,0,255,0.15);
+            border: 1px solid rgba(140,0,255,0.35);
+            color: var(--accent-light);
+            padding: 10px 22px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .go-site-btn:hover {
+            background: rgba(140,0,255,0.3);
+            border-color: var(--accent);
+        }
+
+        /* ئەنیمەیشنی دەرکەوتن */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.5s ease forwards;
+        }
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+
+<!-- سەرەوە -->
+<div class="top-bar" style="position:relative;overflow:hidden;">
+
+    <!-- خەتی سەرەوە -->
+    <div style="position:absolute;top:0;left:0;right:0;height:2px;
+        background:linear-gradient(90deg,#8c00ff,#00bfff,#b366ff,#00e5ff,#8c00ff);
+        background-size:200% 100%;"></div>
+
+    <!-- پاڵەوانی ڕاستەوە -->
+    <div style="position:absolute;top:0;right:0;bottom:0;width:60%;
+        background:linear-gradient(135deg,rgba(100,50,255,0.18) 0%,rgba(0,180,255,0.1) 50%,transparent 100%);
+        clip-path:polygon(15% 0%,100% 0%,100% 100%,0% 100%);"></div>
+
+    <!-- لۆگۆ — دەستە ڕاست -->
+    <div style="display:flex;align-items:center;gap:11px;position:relative;z-index:1;">
+        <div style="position:relative;">
+            <div style="width:40px;height:40px;border-radius:50%;
+                background:linear-gradient(135deg,#8c00ff 0%,#00bfff 100%);
+                padding:2px;box-shadow:0 0 14px rgba(100,50,255,0.5);">
+                <div style="width:100%;height:100%;border-radius:50%;
+                    background:#08051a;display:flex;align-items:center;
+                    justify-content:center;overflow:hidden;">
+                    <img src="logo2.png" style="width:88%;height:88%;border-radius:50%;object-fit:cover;">
+                </div>
+            </div>
+            <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;
+                border-radius:50%;background:#00e5ff;border:2px solid #08051a;
+                box-shadow:0 0 6px rgba(0,229,255,0.9);"></div>
+        </div>
+        <div style="line-height:1.3;">
+            <div style="font-size:13px;font-weight:900;letter-spacing:2px;
+                background:linear-gradient(90deg,#a78bfa,#38bdf8);
+                -webkit-background-clip:text;background-clip:text;
+                -webkit-text-fill-color:transparent;
+                font-family:'Rajdhani',sans-serif;">HAVE KOREA</div>
+            <div style="font-size:10px;color:rgba(130,200,255,0.7);
+                font-family:'Noto Kufi Arabic',Tahoma,sans-serif;">هاڤێ کۆریا</div>
+        </div>
+    </div>
+
+    <!-- دوگمەی گەڕانەوە — دەستە چەپ -->
+    <a onclick="history.back()"
+        style="display:flex;align-items:center;gap:7px;
+        padding:8px 15px;border-radius:50px;
+        background:rgba(255,255,255,0.04);
+        border:1px solid rgba(100,50,255,0.3);
+        color:rgba(200,220,255,0.8);font-size:11px;font-weight:800;
+        font-family:'Noto Kufi Arabic',Tahoma,sans-serif;cursor:pointer;
+        text-decoration:none;
+        backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+        transition:all 0.25s ease;position:relative;z-index:1;"
+        onmouseover="this.style.background='rgba(180,30,30,0.2)';this.style.borderColor='rgba(255,80,80,0.45)';this.style.color='#fff'"
+        onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(100,50,255,0.3)';this.style.color='rgba(200,220,255,0.8)'">
+        <span style="width:18px;height:18px;border-radius:50%;
+            border:1px solid rgba(255,80,80,0.4);
+            background:rgba(220,50,50,0.1);
+            display:flex;align-items:center;justify-content:center;
+            font-size:10px;color:rgba(255,130,130,0.85);">✕</span>
+        گەڕانەوە
+    </a>
+
+</div>
+
+<!-- هیرۆ -->
+<div class="hero">
+    <div class="hero-bg"></div>
+    <div class="profile-section fade-in">
+        <div class="avatar-wrap">
+            <div class="avatar-ring">
+                <img id="staff-img" src="" alt="وێنە"
+                     onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+            </div>
+            <div class="online-dot"></div>
+        </div>
+
+        <div class="staff-name" id="staff-name">بارکردن...</div>
+
+        <div class="role-badges" id="role-badges">
+            <span class="role-badge"><i class="fas fa-star"></i> ستافی هاڤێ کۆریا</span>
+        </div>
+
+        <a class="ig-btn" id="staff-ig-btn" href="#" target="_blank">
+            <i class="fab fa-instagram"></i>
+            بینینی لە ئینستاگرام
+        </a>
+    </div>
+</div>
+
+<!-- ئامارەکان -->
+<div class="stats-container fade-in delay-1">
+    <div class="stats-title">
+        <i class="fas fa-chart-bar" style="color:var(--accent-light);font-size:12px;"></i>
+        ئامارەکان
+    </div>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-language"></i></div>
+            <div class="stat-num" id="count-translator">0</div>
+            <div class="stat-label">وەرگێڕی</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-cogs"></i></div>
+            <div class="stat-num" id="count-tech">0</div>
+            <div class="stat-label">تەکنیک</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-palette"></i></div>
+            <div class="stat-num" id="count-poster">0</div>
+            <div class="stat-label">دیزاین</div>
+        </div>
+    </div>
+</div>
+
+<!-- کارەکان -->
+<div class="works-section fade-in delay-2">
+    <div class="section-title">
+        <i class="fas fa-film" style="color:var(--accent-light);"></i>
+        کارەکانی کردووە
+    </div>
+
+    <!-- تابەکان -->
+    <div class="work-tabs" id="work-tabs" style="display:none;">
+        <button class="work-tab active" id="tab-translator" onclick="switchTab('translator')">
+            <i class="fas fa-language" style="font-size:14px;"></i>
+            وەرگێڕی
+            <span class="tab-count" id="tab-count-translator">0</span>
+        </button>
+        <button class="work-tab" id="tab-tech" onclick="switchTab('tech')">
+            <i class="fas fa-cogs" style="font-size:14px;"></i>
+            تەکنیک
+            <span class="tab-count" id="tab-count-tech">0</span>
+        </button>
+        <button class="work-tab" id="tab-poster" onclick="switchTab('poster')">
+            <i class="fas fa-palette" style="font-size:14px;"></i>
+            دیزاین
+            <span class="tab-count" id="tab-count-poster">0</span>
+        </button>
+    </div>
+
+    <!-- گریدی کارەکان -->
+    <div class="works-grid" id="works-grid">
+        <div class="loading-state">
+            <i class="fas fa-spinner"></i>
+            <p style="margin-top:12px;font-size:13px;">کارەکان دەهێنرێن...</p>
+        </div>
+    </div>
+</div>
+
+<!-- فووتەر -->
+<div class="site-footer-card fade-in delay-3">
+    <div class="hk-logo-text">HAVE KOREA</div>
+    <p>
+        ئەم کەسە ئەندامی تیمی هاڤێ کۆریایە<br>
+        یەکەمین سایتی دراما و فیلمی کۆری بە ژێرنووسی کوردی
+    </p>
+    <a class="go-site-btn" href="index.html">
+        <i class="fas fa-home"></i>
+        بڕۆ بۆ سایتەکە
+    </a>
+</div>
+
+
+<script>
+// ============================
+// داتای ستافەکان
+// ============================
+const STAFF_DATA = {
+    'helin.jill': {
+        name: 'هێلین',
+        img: 'admin1.png',
+        roles: ['وەرگێڕ', 'بەرگساز'],
+        ig: 'https://www.instagram.com/helin.jill'
+    },
+    'sana.sa_n4': {
+        name: 'سەنا ئەحمەد',
+        img: 'سانا.png',
+        roles: ['وەرگێڕ'],
+        ig: 'https://www.instagram.com/sana.sa_n4'
+    },
+    'y9u7x': {
+        name: 'کێڵوا',
+        img: 'admin2.png',
+        roles: ['وەرگێڕ', 'تەکنیکار', 'بەرگساز'],
+        ig: 'https://www.instagram.com/y9u7x'
+    },
+    'emannn.404': {
+        name: 'ئیمان',
+        img: 'nena.png',
+        roles: ['وەرگێڕ'],
+        ig: 'https://www.instagram.com/emannn.404'
+    },
+    'asia_asiaa7': {
+        name: 'ئاسیا',
+        img: 'asia.png',
+        roles: ['وەرگێڕ'],
+        ig: 'https://www.instagram.com/asia_asiaa7'
+    },
+    'shaian': {
+        name: 'شاین',
+        img: 'shaian.png',
+        roles: ['سەرپەرشتیار'],
+        ig: null
+    },
+    'lina': {
+        name: 'لینا',
+        img: 'lina.png',
+        roles: ['وەرگێڕ'],
+        ig: null
+    },
+    'luna': {
+        name: 'لونا',
+        img: 'luna.png',
+        roles: ['وەرگێڕ'],
+        ig: null
+    },
+    'vina': {
+        name: 'ڤینا',
+        img: 'vina.png',
+        roles: ['وەرگێڕ'],
+        ig: null
+    }
+};
+
+// ============================
+// داتابەیس - هەمان داتای index.html
+// ============================
+// (ئەم بەشە لەگەل داتابەیسی index.html هاوشێوەیە)
+// پرۆگرامەکە داتای index.html بەکاردەهێنێت
+// ============================
+
+let currentStaff = null;
+let allWorks = { translator: [], tech: [], poster: [] };
+let currentTab = 'translator';
+
+// هێنانی پارامەترەکان لە URL
+const params = new URLSearchParams(window.location.search);
+const igUser = params.get('user') || '';
+const igUrl  = params.get('ig')   || '';
+
+// دەستپێکردن
+window.addEventListener('DOMContentLoaded', function() {
+    let staff = STAFF_DATA[igUser];
+    if (!staff && igUser) {
+        staff = Object.values(STAFF_DATA).find(s => s.name === decodeURIComponent(igUser));
+    }
+
+    if (staff) {
+        currentStaff = staff;
+        // دانانی زانیاری
+        document.getElementById('staff-name').textContent = staff.name;
+        document.getElementById('staff-img').src = staff.img;
+
+        // ڕۆڵەکان
+        const rolesEl = document.getElementById('role-badges');
+        rolesEl.innerHTML = staff.roles.map(r =>
+            `<span class="role-badge"><i class="fas fa-star"></i> ${r}</span>`
+        ).join('');
+
+        // دوگمەی ئینستاگرام
+        const igBtn = document.getElementById('staff-ig-btn');
+        if (staff.ig) {
+            igBtn.href = staff.ig;
+        } else {
+            igBtn.style.display = 'none';
+        }
+
+        // هێنانی کارەکان لە داتابەیسی index.html
+        loadWorksFromParent(staff.name);
+    } else {
+        // ئەگەر ناو نەدۆزرایەوە
+        document.getElementById('staff-name').textContent = igUser || 'ستافی هاڤێ کۆریا';
+        if (igUrl) document.getElementById('staff-ig-btn').href = igUrl;
+        document.getElementById('works-grid').innerHTML =
+            '<div class="empty-state"><i class="fas fa-user-slash"></i><p>زانیاری نەدۆزرایەوە</p></div>';
+    }
+});
+
+function loadWorksFromParent(staffName) {
+    // هەوڵ بدە داتابەیسی window.opener یان window.parent بهێنیت
+    // یان fetch بکە index.html و داتا parse بکە
+    try {
+        // ئەگەر لە نێو iframe یان same-origin بوو
+        let db = null;
+        if (window.opener && window.opener.database) {
+            db = window.opener.database;
+        } else if (window.parent && window.parent !== window && window.parent.database) {
+            db = window.parent.database;
+        }
+
+        if (db) {
+            processDatabase(db, staffName);
+        } else {
+            // fetch کردنی index.html و parse کردنی داتابەیس
+            fetchAndParseDatabase(staffName);
+        }
+    } catch(e) {
+        fetchAndParseDatabase(staffName);
+    }
+}
+
+function fetchAndParseDatabase(staffName) {
+    fetch('index.html')
+        .then(r => r.text())
+        .then(html => {
+            // دەرکردنی داتابەیس لە کۆدەکە
+            const match = html.match(/const database\s*=\s*(\[[\s\S]*?\]);\s*\n/);
+            if (match) {
+                try {
+                    const db = eval('(' + match[1] + ')');
+                    processDatabase(db, staffName);
+                } catch(e) {
+                    // جۆرێکی تر
+                    parseDbManually(html, staffName);
+                }
+            } else {
+                parseDbManually(html, staffName);
+            }
+        })
+        .catch(() => {
+            document.getElementById('works-grid').innerHTML =
+                '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>داتا نەدۆزرایەوە</p></div>';
+        });
+}
+
+function parseDbManually(html, staffName) {
+    // ئەگەر eval کار نەکرد، بگەڕێ بۆ firebase
+    loadFromFirebase(staffName);
+}
+
+function processDatabase(db, staffName) {
+    allWorks.translator = db.filter(d =>
+        d.translators && d.translators.some(t => t.name === staffName)
+    );
+    allWorks.tech = db.filter(d =>
+        d.technician && d.technician.name === staffName
+    );
+    allWorks.poster = db.filter(d =>
+        d.poster_designer && d.poster_designer.name === staffName
+    );
+
+    updateCounts();
+    renderWorks('translator');
+    showTabs();
+}
+
+function loadFromFirebase(staffName) {
+    // ئەگەر داتابەیس نەدۆزرایەوە، ژمارەکان لە Firestore بهێنە
+    const db2 = firebase.firestore();
+
+    // ژمارەکان دیاری بکە بەپێی داتای counts لە index.html
+    // ئەم ژمارانە لەلایەن index.htmlەوە دێن
+    const countsFromIndex = {
+        'هێلین':      { translator: null, tech: null, poster: null },
+        'سەنا ئەحمەد': { translator: null, tech: null, poster: null },
+        'کێڵوا':      { translator: null, tech: null, poster: null },
+        'ئیمان':      { translator: null, tech: null, poster: null },
+        'ئاسیا':      { translator: null, tech: null, poster: null },
+    };
+
+    document.getElementById('works-grid').innerHTML =
+        '<div class="empty-state"><i class="fas fa-database"></i><p>داتابەیس دەهێنرێت...</p></div>';
+
+    // هەوڵ بدە لە localStorage ژمارەکان بهێنیت
+    const savedCounts = localStorage.getItem('hk_staff_counts_' + staffName);
+    if (savedCounts) {
+        try {
+            const c = JSON.parse(savedCounts);
+            document.getElementById('count-translator').textContent = c.t || 0;
+            document.getElementById('count-tech').textContent = c.tech || 0;
+            document.getElementById('count-poster').textContent = c.p || 0;
+        } catch(e) {}
+    }
+
+    document.getElementById('works-grid').innerHTML =
+        '<div class="empty-state" style="grid-column:span 2;">' +
+        '<i class="fas fa-info-circle"></i>' +
+        '<p style="margin-top:12px;">بۆ بینینی کارەکان تکایە لە پەیجی سەرەکی سایتەکە بچۆ</p>' +
+        '<a href="index.html" style="display:inline-block;margin-top:14px;background:rgba(140,0,255,0.2);border:1px solid rgba(140,0,255,0.4);color:#b366ff;padding:10px 22px;border-radius:50px;text-decoration:none;font-size:13px;">' +
+        '<i class="fas fa-home"></i> سایتی سەرەکی</a></div>';
+}
+
+function updateCounts() {
+    document.getElementById('count-translator').textContent = allWorks.translator.length;
+    document.getElementById('count-tech').textContent = allWorks.tech.length;
+    document.getElementById('count-poster').textContent = allWorks.poster.length;
+
+    document.getElementById('tab-count-translator').textContent = allWorks.translator.length;
+    document.getElementById('tab-count-tech').textContent = allWorks.tech.length;
+    document.getElementById('tab-count-poster').textContent = allWorks.poster.length;
+}
+
+function showTabs() {
+    const hasMultiple = (allWorks.translator.length > 0 ? 1 : 0) +
+                        (allWorks.tech.length > 0 ? 1 : 0) +
+                        (allWorks.poster.length > 0 ? 1 : 0);
+    if (hasMultiple > 1) {
+        document.getElementById('work-tabs').style.display = 'flex';
+    }
+
+    // دەست بکە لە تابێک کە کارەکانی زیاترە
+    if (allWorks.translator.length >= allWorks.tech.length &&
+        allWorks.translator.length >= allWorks.poster.length) {
+        switchTab('translator');
+    } else if (allWorks.tech.length >= allWorks.poster.length) {
+        switchTab('tech');
+    } else {
+        switchTab('poster');
+    }
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    ['translator', 'tech', 'poster'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+    });
+    renderWorks(tab);
+}
+
+function getRoleLabel(tab) {
+    if (tab === 'translator') return 'وەرگێڕ';
+    if (tab === 'tech') return 'تەکنیکار';
+    if (tab === 'poster') return 'بەرگساز';
+    return '';
+}
+
+function renderWorks(tab) {
+    const grid = document.getElementById('works-grid');
+    const items = allWorks[tab];
+
+    if (!items || items.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><i class="fas fa-film"></i>' +
+            '<p style="margin-top:10px;">هیچ کارێک نییە</p></div>';
+        return;
+    }
+
+    grid.innerHTML = items.map(d => `
+        <div class="work-card" onclick="goToDrama(${d.id})">
+            <img src="${d.image || ''}"
+                 onerror="this.src='https://via.placeholder.com/200x300/13131d/b366ff?text='"
+                 alt="${d.title}">
+            <div class="work-card-info">
+                <div class="work-card-title">${d.title}</div>
+                <div class="work-card-meta">
+                    <span class="work-role-tag">${getRoleLabel(tab)}</span>
+                    <span class="work-year">${d.type === 'movie' ? 'فیلم' : 'دراما'}</span>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function goToDrama(id) {
+    sessionStorage.setItem('hk_open_drama', String(id));
+    window.location.href = 'index.html';
+}
+</script>
+
+</body>
+</html>

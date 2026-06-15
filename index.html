@@ -1827,6 +1827,11 @@ const slides = sliderItems.map((item, i) => `
                         <label data-genre="هەستبزوێن"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="هەستبزوێن"> هەستبزوێن</label>
                         <label data-genre="پزیشکی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="پزیشکی"> پزیشکی</label>
                         <label data-genre="سەرکێشی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="سەرکێشی"> سەرکێشی</label>
+                        <label data-genre="نهێنی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="نهێنی"> نهێنی</label>
+<label data-genre="خێزانی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="خێزانی"> خێزانی</label>
+<label data-genre="خەیاڵی زانستی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="خەیاڵی زانستی"> خەیاڵی زانستی</label>
+<label data-genre="مێژووی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="مێژووی"> مێژووی</label>
+<label data-genre="توندوتیژی"><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="توندوتیژی"> توندوتیژی</label>
                     </div>
                 </div>
                 <div class="filter-section" id="year-section" style="display: none;">
@@ -1841,6 +1846,11 @@ const slides = sliderItems.map((item, i) => `
                         <label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2019"> 2019</label>
                         <label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2018"> 2018</label>
                         <label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2017"> 2017</label>
+                        <label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2016"> 2016</label>
+<label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2015"> 2015</label>
+<label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2014"> 2014</label>
+<label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2013"> 2013</label>
+<label><span class="check-dot"><i class="fas fa-check"></i></span><input type="checkbox" value="2012"> 2012</label>
                     </div>
 
                 </div>
@@ -2270,7 +2280,79 @@ const slides = sliderItems.map((item, i) => `
         // ========================================================
         
         const database = [
+
+
+       {
+       id: 18,
+        title: "Ghost Train 2025",
+        type: "movie",
+        tmdb_id: 1241624,
+        backdrop: "https://image.tmdb.org/t/p/original/tCPmWbzqMeZEFcriacDgVgJs2jS.jpg",
+        genre: "Horror, Mystery",
+        desc: "داستانەکە باسی یوتیوبەرێکی ترسناک دەکات بە ناوی دا-کیونگ کە بۆ بەدەستهێنانی بینەر، ڤیدیۆیەک لەسەر ئەفسانە شارییە ترسناکەکانی دەوروبەری وێستگەی گوانگلیم بڵاودەکاتەوە، کە زۆرترین ڕێژەی بێسەروشوێنبوونی تێدایە لە وڵاتەکەدا. ڤیدیۆکە لە شەوێکدا دەنگدانەوەیەکی گەورە دروست دەکات، بەڵام کاتێک دا-کیونگ زیاتر لە ڕاستی وێستگەکە دەکۆڵێتەوە، دەگاتە نهێنییەکی شۆککەر.",
+        image: "ghost.png",
+        translators: [
             {
+                name: "کێڵوا",
+                avatar: "admin2.png"
+            }
+        ],
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        poster_designer: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        episodes: [
+            {
+                ep: 1,
+                name: "تەواوی فیلم",
+                servers: [
+                    { name: "vip have korea", link: "لینکی ڤیدیۆ" },
+                    { name: "mixdrop", link: "لینکی ڤیدیۆ" },
+                    { name: "streamtabe", link: "لینکی ڤیدیۆ" }
+                ]
+            }
+        ]
+    },
+    {
+        id: 17,
+        title: "urban myths 2022",
+        type: "movie",
+        tmdb_id: 957154,
+        backdrop: "https://image.tmdb.org/t/p/original/poBQvq30S0cRi6Puyu9OqFtijZf.jpg",
+        genre: "ترسناک • نھێنیئامێز",
+        desc: "فیلمەکە لە چەند چیرۆکێکی جیاوازی ترسناکی جیهانی مۆدێرن پێکهاتووە، کە باس لە ئەفسانە و شتە نامۆکانی ناو شار دەکات؛ لەوانە دەنگۆ و ترسە ڕاستەقینەکانی ناو ژیانی ڕۆژانەی مرۆڤەکان.",
+        image: "urban.png",
+        translators: [
+            {
+                name: "کێڵوا",
+                avatar: "admin2.png"
+            }
+        ],
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        poster_designer: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        episodes: [
+            {
+                ep: 1,
+                name: "تەواوی فیلم",
+                servers: [
+                    { name: "vip have korea", link: "لینکی ڤیدیۆ" },
+                    { name: "mixdrop", link: "لینکی ڤیدیۆ" },
+                    { name: "streamtabe", link: "لینکی ڤیدیۆ" }
+                ]
+            }
+        ]
+    },
+    {
     id: 16,
     title: "Once Again 2024",
     type: "movie",
@@ -3077,6 +3159,7 @@ const viewBadge = document.createElement('div');
             },
 
            openPlayer: function(item) {
+    window._scrollPos = window.scrollY;
     this.currentMovie = item;
     this.currentEpisodeIndex = 0;
 
@@ -4843,7 +4926,9 @@ goHome: function() {
     document.getElementById('video-frame').src = "";
     document.getElementById('player-modal').style.display = 'none';
     document.getElementById('home-view').style.display = 'block';
-
+setTimeout(() => {
+        window.scrollTo({ top: window._scrollPos || 0, behavior: 'instant' });
+    }, 10);
     // ← ئەمانەی نوێ زیادکراون
     const bd = document.getElementById('hero-backdrop');
     if (bd) { bd.style.backgroundImage = ''; bd.style.filter = ''; }
@@ -6585,15 +6670,19 @@ body {
 
 /* ئایکۆنی هەر ژانەرێک */
 .filter-options label[data-genre="ڕۆمانسی"]::after  { content: '\f004'; }
-.filter-options label[data-genre="ئەکشن"]::after      { content: '\f135'; }
+.filter-options label[data-genre="ئەکشن"]::after { content: '\e54e'; } /* fa-person-rifle */
 .filter-options label[data-genre="کۆمیدی"]::after     { content: '\f118'; }
-.filter-options label[data-genre="تاوانکاری"]::after  { content: '\f505'; }
-.filter-options label[data-genre="خەیاڵی"]::after     { content: '\f7e4'; }
-.filter-options label[data-genre="دراما"]::after      { content: '\f008'; }
-.filter-options label[data-genre="هەستبزوێن"]::after  { content: '\f570'; }
+.filter-options label[data-genre="تاوانکاری"]::after { content: '\f071'; }
+.filter-options label[data-genre="خەیاڵی"]::after { content: '\f72b'; }
+.filter-options label[data-genre="دراما"]::after { content: '\f630'; }
+.filter-options label[data-genre="هەستبزوێن"]::after { content: '\f7a9'; }
 .filter-options label[data-genre="پزیشکی"]::after     { content: '\f0f1'; }
-.filter-options label[data-genre="سەرکێشی"]::after    { content: '\f06d'; }
-
+.filter-options label[data-genre="سەرکێشی"]::after { content: '\f52d'; }
+.filter-options label[data-genre="نهێنی"]::after { content: '\f070'; } /* fa-eye-slash */
+.filter-options label[data-genre="خێزانی"]::after        { content: '\f0c0'; } /* fa-users */
+.filter-options label[data-genre="خەیاڵی زانستی"]::after { content: '\f0c3'; } /* fa-flask */
+.filter-options label[data-genre="مێژووی"]::after { content: '\f518'; }
+.filter-options label[data-genre="توندوتیژی"]::after     { content: '\f714'; } /* fa-skull-crossbones */
 /* چێکباکسی شاراوە */
 .filter-options input[type="checkbox"] {
     position: absolute;
@@ -8491,6 +8580,18 @@ window.scrollTo(0, window._savedScrollY || 0);
   شاین
   <span class="works-count-badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;">0</span>
 </button>
+<button class="works-person-btn" data-role="translator" data-name="لونا" data-avatar="luna.png" onclick="filterWorksModal(this)"
+  style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);padding:8px 14px;border-radius:50px;cursor:pointer;font-size:12px;font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;">
+  <img src="luna.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.3);">
+  لونا
+  <span class="works-count-badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;">0</span>
+</button>
+<button class="works-person-btn" data-role="translator" data-name="ڤینا" data-avatar="vina.png" onclick="filterWorksModal(this)"
+  style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);padding:8px 14px;border-radius:50px;cursor:pointer;font-size:12px;font-weight:700;font-family:Tahoma,sans-serif;transition:all 0.3s ease;">
+  <img src="vina.png" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,0.3);">
+  ڤینا
+  <span class="works-count-badge" style="background:rgba(255,255,255,0.15);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:20px;">0</span>
+</button>
 
     </div>
     <div id="works-modal-grid" class="person-works-grid" style="padding:0;"></div>
@@ -9362,6 +9463,8 @@ staffall: (() => {
     kelwa_t:  db.filter(d=>d.translators&&d.translators.some(t=>t.name==='کێڵوا')).length,
     iman_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئیمان')).length,
     asia_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ئاسیا')).length,
+    luna_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='لونا')).length,
+    vina_t:   db.filter(d=>d.translators&&d.translators.some(t=>t.name==='ڤینا')).length,
     kelwa_tech: db.filter(d=>d.technician&&d.technician.name==='کێڵوا').length,
     helin_p:  db.filter(d=>d.poster_designer&&d.poster_designer.name==='هێلین').length,
     kelwa_p:  db.filter(d=>d.poster_designer&&d.poster_designer.name==='کێڵوا').length,
@@ -9369,9 +9472,9 @@ staffall: (() => {
 
   function staffCard(img, name, role, count, ig) {
     return `
-    <div onclick="${ig ? `window.open('${ig}','_blank')` : ''}" style="
+    <div onclick="goToStaffProfile(${ig ? `'${ig}'` : `''`}, '${name}')" style="
       display:flex;flex-direction:column;align-items:center;gap:10px;
-      padding:18px 12px;border-radius:18px;cursor:${ig?'pointer':'default'};
+      padding:18px 12px;border-radius:18px;cursor:pointer;
       background:rgba(255,255,255,0.03);
       border:1px solid ${hexToRgba(ac,0.18)};
       transition:all 0.3s ease;position:relative;overflow:hidden;"
@@ -9452,16 +9555,41 @@ staffall: (() => {
         </defs>
       </svg>
     </div>
-<h2 style="font-family: 'Scheherazade New', serif; margin:0 0 8px; font-size:22px; font-weight:900; line-height:1.2; color:#fff;">
-      ستافی&nbsp;
-      <span style="
-        font-family: 'Scheherazade New', serif;
-        background:linear-gradient(90deg,${ac},${al},#ff6b6b);
-        -webkit-background-clip:text;background-clip:text;
-        -webkit-text-fill-color:transparent;color:transparent;">
-        هاڤێ کۆریا
-      </span>
-    </h2>
+<div style="text-align:center;position:relative;padding:6px 0 4px;">
+
+  <!-- وشەی بچووک لەسەرەوە -->
+  <div style="font-size:11px;font-weight:800;letter-spacing:5px;
+    color:${hexToRgba(ac,0.5)};text-transform:uppercase;
+    font-family:'Rajdhani','Barlow Condensed',sans-serif;
+    margin-bottom:10px;">
+    STAF HAVE KOREA
+  </div>
+
+  <!-- ناونیشانی سەرەکی -->
+  <h2 style="
+    font-family:'Scheherazade New',serif;
+    margin:0;
+    font-size:34px;
+    font-weight:900;
+    line-height:1.25;
+    background:linear-gradient(135deg,#ffffff 0%,${al} 55%,${ac} 100%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    filter:drop-shadow(0 4px 20px ${hexToRgba(ac,0.35)});
+  ">
+    ستافی هاڤێ کۆریا
+  </h2>
+
+  <!-- هێڵی نازک لەژێر -->
+  <div style="position:relative;width:100%;height:1px;margin-top:18px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      width:36px;height:3px;border-radius:3px;
+      background:linear-gradient(90deg,${ac},${al});
+      box-shadow:0 0 14px ${hexToRgba(ac,0.6)};"></div>
+  </div>
+
+</div>
 
 
     <!-- تێبینی -->
@@ -9513,15 +9641,17 @@ staffall: (() => {
   </div>
 
   <!-- ===== وەرگێران ===== -->
-  <div id="hk-content-translators" style="
+ <div id="hk-content-translators" style="
     display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
     ${staffCard('admin1.png','هێلین','وەرگێڕ',counts.helin_t,'https://www.instagram.com/helin.jill')}
     ${staffCard('سانا.png','سەنا ئەحمەد','وەرگێڕ',counts.sana_t,'https://www.instagram.com/sana.sa_n4')}
     ${staffCard('shaian.png','شاین','سەرپەرشتیار',counts.shaian_t,null)}
-        ${staffCard('lina.png','لینا','وەرگێڕ',0,null)}
+    ${staffCard('lina.png','لینا','وەرگێڕ',0,null)}
     ${staffCard('admin2.png','کێڵوا','وەرگێڕ',counts.kelwa_t,'https://www.instagram.com/y9u7x')}
     ${staffCard('nena.png','ئیمان','وەرگێڕ',counts.iman_t,'https://www.instagram.com/emannn.404')}
     ${staffCard('asia.png','ئاسیا','وەرگێڕ',counts.asia_t,'https://www.instagram.com/asia_asiaa7')}
+    ${staffCard('luna.png','لونا','وەرگێڕ',counts.luna_t,null)}
+    ${staffCard('vina.png','ڤینا','وەرگێڕ',counts.vina_t,null)}
   </div>
 
   <!-- ===== تەکنیکار ===== -->
@@ -11444,133 +11574,103 @@ grid.innerHTML = works.map(work => `
 
 /* بەشی ئەستێرەکان - دیزاینی گەردوونی جوڵاو */
 .rating-stars-section {
-    /* باگراوندێکی تاریکی شەفاف بە دیزاینی شووشەیی */
-    background: rgba(20, 20, 30, 0.6);
-    backdrop-filter: blur(12px); /* تارکردنی پشتەوە (Blur) - زۆر مۆدێرنە */
-    -webkit-backdrop-filter: blur(12px);
-    
-    padding: 30px 15px;
-    border-radius: 20px;
+    background: linear-gradient(160deg, rgba(35,15,60,0.7), rgba(15,8,28,0.85));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 34px 15px;
+    border-radius: 22px;
     margin-bottom: 25px;
-    
-    /* سنوورێکی (Border) ناسک کە ڕەنگدانەوەی هەیە */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 
-                inset 0 0 20px rgba(255, 255, 255, 0.05); /* ڕووناکی ناوەوە */
-    
+    border: 1px solid rgba(255,215,0,0.12);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4),
+                inset 0 0 30px rgba(140,0,255,0.08);
     position: relative;
     z-index: 2;
     text-align: center;
-    overflow: hidden; /* بۆ ئەوەی ڕووناکییە جوڵاوەکان نەچنە دەرەوە */
+    overflow: hidden;
 }
 
-/* دروستکردنی شەپۆلی ڕووناکی کە بە پاشبنەمادا تێدەپەڕێت */
 .rating-stars-section::before {
     content: '';
     position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(112, 0, 255, 0.1) 0%, transparent 60%);
-    animation: rotateGlow 10s linear infinite; /* ڕووناکییەکە دەسوڕێتەوە */
+    top: -60%;
+    left: -60%;
+    width: 220%;
+    height: 220%;
+    background: radial-gradient(circle, rgba(255,215,0,0.06) 0%, transparent 55%);
+    animation: rotateGlow 14s linear infinite;
     z-index: -1;
 }
 
 .stars-container {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 15px;
-    direction: rtl; /* ئێستا لە ڕاستەوە دەستپێدەکات */
+    gap: 12px;
+    margin-bottom: 16px;
+    direction: rtl;
 }
 
 .star {
     font-size: 42px;
-    color: #4a4a6a;
+    color: rgba(255,255,255,0.12);
     cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s;
     user-select: none;
-    
-    /* ڕێککردنی کێشەی ئەندرۆید */
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    vertical-align: middle;
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
     -webkit-tap-highlight-color: transparent;
 }
-/* ئەمەش لە ژێری زیاد بکە */
+
 .star svg {
-    width: 100%;
-    height: 100%;
+    width: 60%;
+    height: 60%;
     pointer-events: none;
     fill: currentColor;
+    transition: all 0.3s ease;
 }
 
-/* بۆ ئەوەی هەموو ئەستێرەکان بەیەکەوە نەجوڵێن، کاتی دەستپێکیان جیا دەکەینەوە */
-.star:nth-child(1) { animation-delay: 0s; }
-.star:nth-child(2) { animation-delay: 0.2s; }
-.star:nth-child(3) { animation-delay: 0.4s; }
-.star:nth-child(4) { animation-delay: 0.6s; }
-.star:nth-child(5) { animation-delay: 0.8s; }
+.star:hover {
+    border-color: rgba(255,215,0,0.3);
+    background: rgba(255,215,0,0.05);
+    transform: translateY(-2px);
+}
 
 .star.active {
     color: #ffd700;
-    /* گەورەبوون و درەوشانەوەی زێڕین */
-    transform: scale(1.15) translateY(-5px); 
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 
-                 0 0 40px rgba(255, 215, 0, 0.3);
-    
-    /* جوڵەی لێدانی دڵ بۆ ئەستێرە دیاریکراوەکان */
-    animation: starPulse 2s infinite alternate; 
+    background: rgba(255,215,0,0.12);
+    border-color: rgba(255,215,0,0.5);
+    transform: scale(1.12) translateY(-6px);
+    box-shadow: 0 0 18px rgba(255,215,0,0.45),
+                0 0 35px rgba(255,215,0,0.2);
+}
+
+.star.active svg {
+    filter: drop-shadow(0 0 8px rgba(255,215,0,0.7));
 }
 
 .selection-hint {
-    color: #a8a8cf;
-    font-size: 15px;
-    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    font-weight: 700;
     min-height: 24px;
-    margin-top: 15px;
+    margin-top: 14px;
     letter-spacing: 0.5px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
 }
 
 .selection-hint.active {
     color: #ffd700;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-shadow: 0 0 12px rgba(255,215,0,0.5);
 }
 
-/* --- ئەنیمەیشنەکان (Keyframes) --- */
-
-/* جوڵەی ڕووناکی باگراوند */
-@keyframes rotateGlow {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* جوڵەی مەلەکردن (Floating) - ئەستێرەکان دێن و دەچن */
-@keyframes floatingStars {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); } /* ٦ پیکسڵ دەچێتە سەرەوە */
-}
-
-/* جوڵەی ترپە (Pulse) بۆ ئەستێرە ئەکتیڤەکان */
-@keyframes starPulse {
-    0% { transform: scale(1.15) translateY(-5px); text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-    100% { transform: scale(1.25) translateY(-5px); text-shadow: 0 0 35px rgba(255, 215, 0, 0.9); }
-}
-
-/* میدیا کوێری بۆ مۆبایل */
 @media (max-width: 480px) {
-    .star {
-        font-size: 38px; /* کەمێک بچووکتر بۆ مۆبایل */
-    }
-    .rating-stars-section {
-        padding: 20px 10px;
-    }
+    .star { font-size: 34px; width: 44px; height: 44px; }
+    .rating-stars-section { padding: 24px 10px; }
 }
 
 /* دوگمەی ناردن - دیزاینی مۆری جوڵاو (با) */
@@ -12647,8 +12747,33 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 })();
 </script>
+<script>
+function goToStaffProfile(igUrl, staffName) {
+    var igName = igUrl ? igUrl.replace('https://www.instagram.com/', '').replace(/\/$/, '') : '';
+    var url = 'stafing.html?';
+    if (igName) url += 'user=' + encodeURIComponent(igName) + '&ig=' + encodeURIComponent(igUrl);
+    else if (staffName) url += 'user=' + encodeURIComponent(staffName);
+    window.location.href = url;
+}
+</script>
 
-
+<script>
+// کردنەوەی دراما ئەگەر لە stafing.html هات
+window.addEventListener('load', function() {
+    const openId = sessionStorage.getItem('hk_open_drama');
+    if (openId) {
+        sessionStorage.removeItem('hk_open_drama');
+        setTimeout(function() {
+            const drama = typeof database !== 'undefined'
+                ? database.find(d => String(d.id) === String(openId))
+                : (app && app.data ? app.data.find(d => String(d.id) === String(openId)) : null);
+            if (drama && typeof app !== 'undefined' && app.openPlayer) {
+                app.openPlayer(drama);
+            }
+        }, 0);
+    }
+});
+</script>
 
 </body>
-</html> 
+</html>
