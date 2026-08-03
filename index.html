@@ -70,6 +70,7 @@
 
 // ✅ سیستەمی بینەرانی ڕاستی (بەبێ درۆ)
 const _viewsCache = {};
+const VIEWS_OFFSET = 3743; // ← ژمارەی سەرەتایی کە بینەران لێوە دەست پێدەکەن
 
 async function trackDramaView(dramaId) {
     // ئەگەر لە ماوەی ٦ کاتژمێردا بینیووتی، دووبارە زیادمەکە
@@ -91,15 +92,14 @@ async function getDramaViews(dramaId) {
     try {
         const doc = await db.collection('drama_views').doc(String(dramaId)).get();
         const v = doc.exists ? (doc.data().views || 0) : 0;
-        _viewsCache[dramaId] = v;
-        return v;
-    } catch(e) { return 0; }
+        const displayValue = v + VIEWS_OFFSET;
+        _viewsCache[dramaId] = displayValue;
+        return displayValue;
+    } catch(e) { return VIEWS_OFFSET; }
 }
 
 function fmtViews(n) {
-    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
-    if (n >= 1000) return Math.round(n/1000) + 'K';
-    return String(n);
+    return n.toLocaleString('en-US');
 }
 </script>
     <!-- ✅ لێرە هێنرایەوە - ناو head -->
@@ -162,14 +162,13 @@ function fmtViews(n) {
     background: rgba(255, 255, 255, 0.15);
 }
         /* ================= HEADER & NAVBAR (Glass Style) ================= */
-       .navbar {
+     .navbar {
     position: fixed;
     top: 0; width: 100%;
     height: 70px;
     background: rgba(10, 5, 20, 0.97);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(140, 0, 255, 0.3);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -177,118 +176,6 @@ function fmtViews(n) {
     z-index: 1000;
     box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     transition: all 0.3s ease;
-}
-
-      /* --- دیزاینی لۆگۆی شاهانە و پڕۆفیشناڵ --- */
-        .logo {
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            /* ڕێگری لە شێوانی لۆگۆ لە ئایفۆن */
-            flex-shrink: 0; 
-        }
-
-        .logo img {
-            height: 60px;
-            width: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            padding: 3px;
-            background: var(--bg-card);
-            border: 2px solid transparent;
-            /* دروستکردنی بۆردەری جوڵاوی بێ وێنە */
-            background-image: linear-gradient(var(--bg-card), var(--bg-card)), 
-                              conic-gradient(var(--accent-color), var(--accent-light), transparent 80%);
-            background-origin: border-box;
-            background-clip: content-box, border-box;
-            
-            
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 0 15px rgba(140, 0, 255, 0.3);
-        }
-
-        /* جوڵەی سوڕانەوەی ڕەنگەکە بە دەوری لۆگۆدا */
-        @keyframes spin-border {
-            100% { filter: hue-rotate(360deg); transform: rotate(0deg); }
-        }
-
-        /* جوڵەی سەر و خوارێکی زۆر نەرم */
-        @keyframes float-logo {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-6px); }
-        }
-
-        /* کاریگەری کاتێک ماوسی دەچێتە سەر */
-        .logo:hover img {
-            transform: scale(1.1) rotate(10deg);
-            box-shadow: 0 0 25px var(--accent-color);
-            cursor: pointer;
-        }
-
-        /* --- ڕێکخستنی زۆر ورد بۆ مۆبایل و ئایفۆن --- */
-        @media (max-width: 768px) {
-            .logo {
-                gap: 8px;
-            }
-            .logo img {
-                height: 45px; /* بچووکتر بۆ ئەوەی جێگەی ببێتەوە */
-                width: 45px;
-                padding: 2px;
-            }
-            .logo span {
-                font-size: 16px !important;
-                letter-spacing: 0.5px;
-            }
-        }
-
-        /* ئەگەر شاشەکە زۆر بچووک بوو وەک iPhone SE */
-        @media (max-width: 380px) {
-            .logo span {
-                display: none; /* تەنها لۆگۆکە پیشان بدە بۆ ئەوەی دیزاینەکە تێکنەچێت */
-            }
-        }
-
-        .logo img {
-            height: 50px;
-            width: auto;
-            object-fit: contain;
-            filter: drop-shadow(0 0 15px rgba(140, 0, 255, 0.6));
-            
-        }
-
-        @keyframes floatLogo {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-       .logo span {
-    font-size: 24px;
-    font-weight: 900;
-    letter-spacing: 1.5px;
-    
-    /* گرنگ: ئەمەی بۆ زیاد بکە تا باکگراوندەکە بناسێت */
-    display: inline-block; 
-
-    background: linear-gradient(90deg, #fff, #b366ff, #fff);
-    background-size: 200% auto;
-    
-    -webkit-background-clip: text;
-    background-clip: text; /* بۆ دڵنیایی زیاتر لە وێبگەڕەکانی تر */
-    
-    -webkit-text-fill-color: transparent;
-    color: transparent; /* وەک جێگرەوە */
-    
-    animation: shineText 4s linear infinite;
-    text-shadow: 0 0 20px rgba(140, 0, 255, 0.3);
-}
-
-/* دڵنیابە لەوەی ئەنیمەیشنەکەش نووسراوە */
-@keyframes shineText {
-    to {
-        background-position: 200% center;
-    }
 }
 
         /* بەشی گەڕان */
@@ -1008,13 +895,12 @@ function fmtViews(n) {
   /* ══════════════════════════════════
      پلەیەر مۆبایل - وەک ئاوێنە
   ══════════════════════════════════ */
-
-  /* باگراوند */
+/* باگراوند */
  #hero-backdrop {
     position: fixed !important;
     height: 100vh !important;
     top:17px !important;
-    filter: brightness(0.3) saturate(1.2) !important;
+    filter: brightness(0.6) saturate(1.2) !important;
     background-position: center top !important;
     background-size: contain !important;
 background-repeat: no-repeat !important;
@@ -1027,13 +913,12 @@ background-color: #050508 !important;
     background: linear-gradient(
       to bottom,
       transparent 0%,
-      transparent 35%,
-      rgba(5,5,8,0.6) 52%,
-      rgba(5,5,8,0.95) 65%,
-      rgba(5,5,8,1) 75%
+      transparent 40%,
+      rgba(5,5,8,0.35) 55%,
+      rgba(5,5,8,0.75) 68%,
+      rgba(5,5,8,0.95) 80%
     ) !important;
   }
-
  #player-modal > div:last-child {
     padding-top: 0 !important;
     display: flex !important;
@@ -1223,8 +1108,7 @@ background-color: #050508 !important;
 </div>
   <nav class="navbar">
    <div style="display:grid;grid-template-columns:50px 1fr 50px;align-items:center;width:100%;padding:0 4%;height:70px;">
-        
-        <button class="search-icon-btn" id="searchToggleBtn" onclick="toggleSearch()">
+        <button class="search-icon-btn" id="searchToggleBtn" onclick="openSearchPage()">
             <svg class="icon-search" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="position:absolute;transition:all 0.3s;">
               <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
             </svg>
@@ -1232,28 +1116,38 @@ background-color: #050508 !important;
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
         </button>
+<div class="logo" onclick="app.goHome()" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;flex-shrink:0;overflow:visible;z-index:5;">
+    <img src="IMG_3994.PNG" alt="Logo" class="logo-img-desktop">
+    <div class="logo-mask-mobile"></div>
+</div>
+   
+</nav>
 
-        <div class="logo" onclick="app.goHome()" style="justify-self:center;display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;flex-shrink:0;">
-            <img src="logo2.png" alt="Logo" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(179,102,255,0.6);box-shadow:0 0 18px rgba(140,0,255,0.45);">
-            <div style="display:flex;flex-direction:column;line-height:1.2;">
-                <span style="font-size:17px;font-weight:800;color:#fff;letter-spacing:1.5px;">HAVE KOREA</span>
-                <span style="font-family:'Noto Naskh Arabic',serif;font-size:15px;font-weight:700;letter-spacing:0px;background:linear-gradient(90deg,#ffffff,#c499ff,#8c00ff);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:shineText 4s linear infinite;">هاڤێ کۆریا</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- سێرچ باری خوارەوە -->
-    <div class="search-bar-drop" id="searchBarDrop">
-        <div class="search-bar-inner">
-            <i class="fas fa-search" style="color:rgba(140,0,255,0.7);font-size:15px;flex-shrink:0;"></i>
-            <input type="text" id="searchInput" placeholder="گەڕان لە دراما و فیلمەکان..."
-                oninput="app.search(this.value)" autocomplete="off">
-            <button onclick="toggleSearch()" style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;font-size:16px;padding:0;flex-shrink:0;">
+<!-- ============ لاپەڕەی گەڕانی سەرتاسەری (Full-Screen) - کۆدی نوێ ============ -->
+<div id="searchPageOverlay" class="sp-overlay">
+    <div class="sp-topbar">
+        <button id="searchPageBackBtn" class="sp-back-btn" onclick="closeSearchPage()">
+            <i class="fas fa-arrow-right"></i>
+        </button>
+        <div class="sp-input-wrap">
+            <i class="fas fa-search sp-input-icon"></i>
+            <input type="text" id="searchPageInput" class="sp-input"
+                placeholder="گەڕان لە دراما و فیلمەکان..." autocomplete="off"
+                oninput="runSearchPageQuery(this.value)">
+            <button id="searchPageClearBtn" class="sp-clear-btn" onclick="clearSearchPageInput()" style="display:none;">
                 <i class="fas fa-times"></i>
             </button>
         </div>
     </div>
-</nav>
+    <div id="searchPageTypeTabs" class="sp-type-tabs" style="display:none;"></div>
+    <div id="searchPageResults" class="sp-results">
+        <div class="sp-empty-state">
+            <i class="fas fa-search"></i>
+            <span>بگەڕێ بۆ دراما یان فیلمێک...</span>
+        </div>
+    </div>
+</div>
+<!-- ============ کۆتایی لاپەڕەی گەڕان ============ -->
 
 <div class="color-picker-panel" id="colorPickerPanel">
     <span class="color-label">🎨 هەڵبژاردنی ڕەنگی سایت</span>
@@ -1271,9 +1165,12 @@ background-color: #050508 !important;
         <button class="swatch" style="background:#aa00ff" onclick="changeTheme('#aa00ff','#e040fb',this)" title="بەنەفش"></button>
         <button class="swatch" style="background:#d50000" onclick="changeTheme('#d50000','#ff5252',this)" title="سووری تۆخ"></button>
         <button class="swatch" style="background:#1565c0" onclick="changeTheme('#1565c0','#42a5f5',this)" title="شینی شاهانە"></button>
-        <button class="swatch" style="background:#f9a825" onclick="changeTheme('#f9a825','#ffd54f',this)" title="زەردی زێڕین"></button>
+       <button class="swatch" style="background:#f9a825" onclick="changeTheme('#f9a825','#ffd54f',this)" title="زەردی زێڕین"></button>
         <button class="swatch" style="background:#ffffff; border:1px solid #ddd;" onclick="changeTheme('#ffffff','#f2f2f2',this)" title="سپی"></button>
         <button class="swatch" style="background:#ff66b2" onclick="changeTheme('#ff66b2','#ffb3d9',this)" title="پینک"></button>
+        <div class="swatch swatch-rainbow" title="ڕەنگی تایبەت / زیاتر">
+            <input type="color" id="customColorInput" oninput="pickCustomColor(this.value)" value="#8c00ff">
+        </div>
     </div>
 </div>
 <div class="main-container" id="home-view">
@@ -1342,17 +1239,43 @@ if (sliderItems.length === 0) { el.style.display = 'none'; return; }
       .hks-wrap { aspect-ratio: 4/3; border-radius: 12px; }
     }
 
+@media (min-width: 769px) {
+    .logo {
+        top: 12px !important;
+    }
+    .logo-img-desktop {
+        height: 70px !important;
+        margin-top: 0 !important;
+        margin-bottom: -35px !important;
+    }
+}
 
+.logo-mask-mobile {
+    display: none;
+}
 
-
-
-
-
-
-
-
-
-
+@media (max-width: 768px) {
+    .logo-img-desktop {
+        display: none;
+    }
+    .logo-mask-mobile {
+        display: block;
+        height: 190px;
+        width: 220px;
+        margin-top: -70px;
+        margin-bottom: -70px;
+        background-color: var(--accent-color, #8c00ff);
+        -webkit-mask-image: url('IMG_3994.PNG');
+        mask-image: url('IMG_3994.PNG');
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        pointer-events: none;   /* ← تەنها ئەمە زیادکرا */
+    }
+}
     
     /* ── اسلایدەکان ── */
     .hks-slide {
@@ -1398,7 +1321,29 @@ if (sliderItems.length === 0) { el.style.display = 'none'; return; }
         );
       }
     }
-
+/* بۆ شاشەی پان بەڵام بەرزی کەم (وەک مۆبایلی خواردراوە بەلای) */
+@media (max-height: 480px) and (orientation: landscape) {
+    .logo-img-desktop {
+        display: none;
+    }
+    .logo-mask-mobile {
+        display: block;
+        height: 100px;
+        width: 130px;
+        margin-top: -30px;
+        margin-bottom: -30px;
+        background-color: var(--accent-color, #8c00ff);
+        -webkit-mask-image: url('IMG_3994.PNG');
+        mask-image: url('IMG_3994.PNG');
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        pointer-events: none;
+    }
+}
     /* ── ناوەڕۆک ── */
     .hks-content {
       position: absolute;
@@ -1741,7 +1686,7 @@ const slides = sliderItems.map((item, i) => `
   buildHTML();
   resetAuto();
   startProgress();
-  fetchRatings();
+  setTimeout(fetchRatings, 1500);
 
   /* ───── بەکارهێنان ───── */
   document.addEventListener('click', function (e) {
@@ -1812,7 +1757,7 @@ const slides = sliderItems.map((item, i) => `
 
 <div class="filter-main-buttons" style="display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:18px;">
     <button class="filter-main-btn" onclick="toggleFilterSection('sort')">
-        <i class="fas fa-sort"></i> لیستکردن بە پێی
+        <i class="fas fa-sort"></i> لیستکردنی سایتەکە بە پێی
         <i class="fas fa-chevron-left filter-arrow"></i>
     </button>
 </div>
@@ -1905,7 +1850,7 @@ const slides = sliderItems.map((item, i) => `
                     <div class="filter-options" style="grid-template-columns: 1fr 1fr 1fr;">
                        <label id="sort-newest-label" class="sort-label-active" onclick="setSortOrder('newest')">
     <span class="check-dot"><i class="fas fa-check"></i></span>
-    <i class="fas fa-clock-rotate-left" style="transform:scaleX(-1);"></i> نوێترین
+    <i class="fas fa-clock-rotate-left" style="transform:scaleX(-1);"></i> نوێترینی سایت
 </label>
 <label id="sort-oldest-label" onclick="setSortOrder('oldest')">
     <span class="check-dot"><i class="fas fa-check"></i></span>
@@ -2282,6 +2227,44 @@ const slides = sliderItems.map((item, i) => `
         const database = [
 
 
+
+       {
+       id: 19,
+        title: "agent kim reactivated 2026",
+        type: "drama",
+        tmdb_id: 296206,
+        backdrop: "https://image.tmdb.org/t/p/original/g1LJLlmWP74zv9yXKEXm7g9p10O.jpg",
+        genre: "تاوانکاری • ئەکشن • هەستبزوێن • دراما",
+        desc: "کیم دۆ-ھیۆن سیخوڕێکی پێشووی سەر بە یەکەی تایبەتە کە وەک فەرمانبەرێکی ئاسایی و باوکێکی میھرەبان دەژی. کاتێک کچەکەی  بە شێوەیەکی نادیار دەڕفێندرێت، ناچار دەبێت ناسنامە شاراوەکەی ئاشکرا بکات و تەواوی لێھاتووییەکانی بەکاربھێنێت بۆ ڕزگارکردنی.",
+        image: "agent.png",
+            slider_image: "https://image.tmdb.org/t/p/original/g1LJLlmWP74zv9yXKEXm7g9p10O.jpg",  // ← ئەمە
+
+        translators: [
+            {
+                name: "کێڵوا",
+                avatar: "admin2.png"
+            }
+        ],
+        technician: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        poster_designer: {
+            name: "کێڵوا",
+            avatar: "admin2.png"
+        },
+        episodes: [
+            {
+                ep: 1,
+                name: "تەواوی فیلم",
+                servers: [
+                    { name: "vip have korea", link: "لینکی ڤیدیۆ" },
+                    { name: "mixdrop", link: "لینکی ڤیدیۆ" },
+                    { name: "streamtabe", link: "لینکی ڤیدیۆ" }
+                ]
+            }
+        ]
+    },
        {
        id: 18,
         title: "Ghost Train 2025",
@@ -2869,7 +2852,6 @@ season: 1,
     title: "surely tomorrow 2025",
     type: "drama",
         tmdb_id: 281005,  // ← ئایدی TMDB
-    slider_image: "https://image.tmdb.org/t/p/original/fZSHDrZgR4PS3YMzfO3EvAYEiNu.jpg",  // ← ئەمە
     backdrop: "https://image.tmdb.org/t/p/original/5IWLBO4oGhpjg2kv5QL5JBfouWd.jpg", // ← ئەمە زیاد بکە
 season: 1,
     genre: "ڕۆمانسی - درامایی",
@@ -2986,9 +2968,6 @@ season: 1,
                 // ڕێکخستنی داتا بەپێی ئایدی (لە گەورەوە بۆ بچووک)
                 this.data.sort((a, b) => b.id - a.id);
                 this.renderGrid(this.data);
-
-                // ← هێنانی هەموو نمرەکان لە پشتەوە
-                this.prefetchAllRatings();
 
                 // --- لێرە کۆدە نوێیەکەی SEO بۆ دۆزینەوە لە گووگل زیاد کرا ---
                 const seoBox = document.createElement('div');
@@ -5393,7 +5372,32 @@ function closePanelOutside(e) {
         document.removeEventListener('click', closePanelOutside);
     }
 }
-function changeTheme(mainColor, lightColor, btn) {
+
+function pickCustomColor(hex) {
+    let r = parseInt(hex.substr(1,2),16);
+    let g = parseInt(hex.substr(3,2),16);
+    let b = parseInt(hex.substr(5,2),16);
+
+    // پشکنینی ڕووناکی ڕەنگەکە (luminance) - ئەگەر زۆر تاریک بوو ڕووناکتری بکەرەوە
+    const luminance = (0.299*r + 0.587*g + 0.114*b) / 255;
+    const minLuminance = 0.28;
+
+    if (luminance < minLuminance) {
+        const boost = (minLuminance - luminance) * 1.6;
+        r = Math.min(255, Math.round(r + (255-r) * boost));
+        g = Math.min(255, Math.round(g + (255-g) * boost));
+        b = Math.min(255, Math.round(b + (255-b) * boost));
+        hex = '#' + [r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
+    }
+
+    const lr = Math.min(255, Math.round(r + (255-r)*0.4));
+    const lg = Math.min(255, Math.round(g + (255-g)*0.4));
+    const lb = Math.min(255, Math.round(b + (255-b)*0.4));
+    const lightHex = '#' + [lr,lg,lb].map(x=>x.toString(16).padStart(2,'0')).join('');
+    changeTheme(hex, lightHex, document.querySelector('.swatch-rainbow'), true);
+}
+
+function changeTheme(mainColor, lightColor, btn, keepOpen) {
     document.documentElement.style.setProperty('--accent-color', mainColor);
     document.documentElement.style.setProperty('--accent-light', lightColor);
     
@@ -5415,6 +5419,7 @@ if(!backBtnStyle){
     backBtnStyle.id = 'hk-back-btn-style'; 
     document.head.appendChild(backBtnStyle); 
 }
+
 backBtnStyle.textContent = `
     .back-btn {
         border-top-color: rgba(${r},${g},${b},0.9) !important;
@@ -5428,7 +5433,49 @@ backBtnStyle.textContent = `
         box-shadow: 0 8px 30px rgba(${r},${g},${b},0.35) !important;
     }
 `;
-
+// نوێکردنەوەی فووتەری هەڕەمەکیانە (::before و ::after ـەکان)
+let randomSectionStyle = document.getElementById('hk-random-section-style');
+if(!randomSectionStyle){
+    randomSectionStyle = document.createElement('style');
+    randomSectionStyle.id = 'hk-random-section-style';
+    document.head.appendChild(randomSectionStyle);
+}
+randomSectionStyle.textContent = `
+    .home-random-section::before {
+        background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.6) 40%, rgba(${r},${g},${b},0.4) 60%, transparent) !important;
+    }
+    .home-random-section::after {
+        background: radial-gradient(circle, rgba(${r},${g},${b},0.12) 0%, transparent 70%) !important;
+    }
+    .home-random-icon::after {
+        background: rgb(${r},${g},${b}) !important;
+        box-shadow: 0 0 6px rgba(${r},${g},${b},0.8) !important;
+    }
+    .home-random-btns::before {
+        background: rgba(${r},${g},${b},0.7) !important;
+    }
+`;
+randomSectionStyle.textContent = `
+    .home-random-section::before {
+        background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.6) 40%, rgba(${r},${g},${b},0.4) 60%, transparent) !important;
+    }
+    .home-random-section::after {
+        background: radial-gradient(circle, rgba(${r},${g},${b},0.12) 0%, transparent 70%) !important;
+    }
+    .home-random-icon::after {
+        background: rgb(${r},${g},${b}) !important;
+        box-shadow: 0 0 6px rgba(${r},${g},${b},0.8) !important;
+    }
+    .home-random-btns::before {
+        background: rgba(${r},${g},${b},0.7) !important;
+    }
+    .footer-divider {
+        background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.8), transparent) !important;
+    }
+    .footer-tagline span {
+        color: rgba(${r},${g},${b},1) !important;
+    }
+`;
     // باگراوندی هەموو بەشەکان
 
 document.querySelectorAll('.bottom-navbar, .glass-sidebar, .navbar, .rating-wrapper, .rating-stars-section, .info-box, .helin-footer, .purple-glass-footer, .acc-card, .vip-staff-card, .credit-card, .result-card, .person-modal-content, .filter-dropdown, .color-picker-panel, .menu-modal-box, .home-random-section, .filter-toggle-btn, .action-btn, .cat-btn, .search-input, .player-content').forEach(el => {    el.style.background = `rgba(${Math.round(r*0.05)}, ${Math.round(g*0.03)}, ${Math.round(b*0.09)}, 0.95)`;
@@ -5446,7 +5493,6 @@ document.querySelectorAll('.bn-item span').forEach(span => {
 document.querySelectorAll('.bn-item.active span').forEach(span => {
     span.style.color = `rgb(${r},${g},${b})`;
 });
-document.querySelector('.bottom-navbar').style.borderTopColor = `rgba(${r},${g},${b},0.35)`;
 document.querySelector('.bottom-navbar').style.background = `rgba(${Math.round(r*0.04)}, ${Math.round(g*0.03)}, ${Math.round(b*0.08)}, 0.97)`;
 
 
@@ -5514,11 +5560,26 @@ if (sidebarTitle) {
     sidebarTitle.style.textShadow = `0 0 15px rgba(${r}, ${g}, ${b}, 0.8)`;
 }
 
-// گۆڕینی home-rand-btn
+// گۆڕینی home-rand-btn - دیزاینی نوێ و جوانتر
 document.querySelectorAll('.home-rand-btn').forEach(el => {
-    el.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.35)`;
+    el.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.3)`;
+    el.style.background = `rgba(${r}, ${g}, ${b}, 0.08)`;
+    el.style.color = `rgba(255, 255, 255, 0.85)`;
+});
+
+// گۆڕینی هەموو بەشەکانی home-random-section
+document.querySelectorAll('.home-random-section').forEach(el => {
+    el.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.18)`;
+});
+document.querySelectorAll('.home-random-icon').forEach(el => {
+    el.style.borderColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
     el.style.background = `rgba(${r}, ${g}, ${b}, 0.12)`;
-    el.style.color = `rgba(${r*0.8 + 200}, ${g*0.3 + 150}, ${b*0.8 + 200}, 1)`;
+});
+document.querySelectorAll('.home-random-sub').forEach(el => {
+    el.style.color = `rgba(${r}, ${g}, ${b}, 0.8)`;
+});
+document.querySelectorAll('.home-random-btns').forEach(el => {
+    el.style.borderTopColor = `rgba(${r}, ${g}, ${b}, 0.15)`;
 });
 
 // گۆڕینی bn-item active
@@ -5667,10 +5728,12 @@ document.querySelectorAll('[data-tag="true"]').forEach(tag => {
     if(span) span.style.textShadow = `0 0 5px rgba(${r},${g},${b},0.6)`;
 });
 
-    setTimeout(() => {
-        document.getElementById('colorPickerPanel').classList.remove('show');
-        document.removeEventListener('click', closePanelOutside);
-    }, 350);
+    if (!keepOpen) {
+        setTimeout(() => {
+            document.getElementById('colorPickerPanel').classList.remove('show');
+            document.removeEventListener('click', closePanelOutside);
+        }, 350);
+    }
 }
     setTimeout(() => {
         document.getElementById('colorPickerPanel').classList.remove('show');
@@ -5704,14 +5767,40 @@ document.querySelectorAll('[data-tag="true"]').forEach(tag => {
          document.querySelectorAll('.bottom-navbar, .glass-sidebar, .navbar').forEach(el => {
                 el.style.background = `rgba(${Math.round(r*0.05)}, ${Math.round(g*0.03)}, ${Math.round(b*0.09)}, 0.97)`;
             });
-
-            // ✅ هێنانەوەی ڕەنگی نووسینی دوگمەکان
+// ✅ هێنانەوەی ڕەنگی نووسینی دوگمەکان
             const savedBtnTxt = localStorage.getItem('hk-btn-txt');
             if(savedBtnTxt){
                 let bs = document.createElement('style');
                 bs.id='hk-btn-txt-style';
 bs.textContent=`.btn-modal-create,.apply-btn,.submit-rating-btn,#modal-submitFormBtn,#modal-proposal-submit-btn,#random-pick-btn,#random-watch-btn,.play-hint{color:${savedBtnTxt}!important}`;                document.head.appendChild(bs);
             }
+
+            // نوێکردنەوەی فووتەری هەڕەمەکیانە لە کاتی بارکردن
+            let rs = document.createElement('style');
+            rs.id = 'hk-random-section-style';
+            rs.textContent = `
+                .home-random-section::before {
+                    background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.6) 40%, rgba(${r},${g},${b},0.4) 60%, transparent) !important;
+                }
+                .home-random-section::after {
+                    background: radial-gradient(circle, rgba(${r},${g},${b},0.12) 0%, transparent 70%) !important;
+                }
+                .home-random-icon::after {
+                    background: rgb(${r},${g},${b}) !important;
+                    box-shadow: 0 0 6px rgba(${r},${g},${b},0.8) !important;
+                }
+                .home-random-btns::before {
+                    background: rgba(${r},${g},${b},0.7) !important;
+                }
+                .home-random-section { border-color: rgba(${r},${g},${b},0.18) !important; }
+                .home-random-icon { border-color: rgba(${r},${g},${b},0.5) !important; background: rgba(${r},${g},${b},0.12) !important; }
+                .home-random-sub { color: rgba(${r},${g},${b},0.8) !important; }
+                .home-random-btns { border-top-color: rgba(${r},${g},${b},0.15) !important; }
+                .home-rand-btn { border-color: rgba(${r},${g},${b},0.3) !important; background: rgba(${r},${g},${b},0.08) !important; color: rgba(255,255,255,0.85) !important; }
+                .footer-divider { background: linear-gradient(90deg, transparent, rgba(${r},${g},${b},0.8), transparent) !important; }
+                .footer-tagline span { color: rgba(${r},${g},${b},1) !important; }
+            `;
+            document.head.appendChild(rs);
 
             // گۆڕینی blur/glow ی خوارەوەی پەیج
             const blurEl = document.querySelector('.bottom-glow') || document.querySelector('[class*="glow"]') || document.querySelector('[class*="blur"]');
@@ -5721,7 +5810,6 @@ bs.textContent=`.btn-modal-create,.apply-btn,.submit-rating-btn,#modal-submitFor
         }
     });
 })();
-
 
 
 
@@ -6009,34 +6097,155 @@ app.fetchIMDB = async function(title) {
     } catch(e) { return { imdb: null, tmdb: null }; }
 };
 
-let _searchOpen = false;
-function toggleSearch() {
-    _searchOpen = !_searchOpen;
-    const btn = document.getElementById('searchToggleBtn');
-    const bar = document.getElementById('searchBarDrop');
-    const inp = document.getElementById('searchInput');
-
-    if (_searchOpen) {
-        btn.classList.add('active');
-        bar.classList.add('open');
-        setTimeout(() => inp.focus(), 350);
-    } else {
-        btn.classList.remove('active');
-        bar.classList.remove('open');
-        inp.value = '';
-        app.search('');
-    }
+function openSearchPage() {
+    const overlay = document.getElementById('searchPageOverlay');
+    if (!overlay) return;
+    overlay.classList.add('sp-active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+        const inp = document.getElementById('searchPageInput');
+        if (inp) inp.focus();
+    }, 200);
 }
 
-document.addEventListener('click', function(e) {
-    const navbar = document.querySelector('.navbar');
-    if (_searchOpen && navbar && !navbar.contains(e.target)) {
-        _searchOpen = false;
-        document.getElementById('searchToggleBtn').classList.remove('active');
-        document.getElementById('searchBarDrop').classList.remove('open');
-        const inp = document.getElementById('searchInput');
-        inp.value = '';
-        app.search('');
+function closeSearchPage() {
+    const overlay = document.getElementById('searchPageOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('sp-active');
+    document.body.style.overflow = '';
+    const inp = document.getElementById('searchPageInput');
+    if (inp) inp.value = '';
+    const clearBtn = document.getElementById('searchPageClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    renderSearchPageResults([]);
+}
+
+function clearSearchPageInput() {
+    const inp = document.getElementById('searchPageInput');
+    if (inp) { inp.value = ''; inp.focus(); }
+    const clearBtn = document.getElementById('searchPageClearBtn');
+    if (clearBtn) clearBtn.style.display = 'none';
+    _spCurrentQuery = '';
+    _spCurrentTypeFilter = 'all';
+    renderSearchPageResults([]);
+    renderSearchPageTypeTabs([]);
+}
+
+let _spCurrentTypeFilter = 'all';
+let _spCurrentQuery = '';
+
+function runSearchPageQuery(query) {
+    const clearBtn = document.getElementById('searchPageClearBtn');
+    if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+    _spCurrentQuery = query;
+    _spCurrentTypeFilter = 'all';
+
+    if (!query || !query.trim()) {
+        renderSearchPageResults([]);
+        renderSearchPageTypeTabs([]);
+        return;
+    }
+    const q = query.trim().toLowerCase();
+    const allMatches = (typeof database !== 'undefined' ? database : [])
+        .filter(item => item.title.toLowerCase().includes(q));
+
+    renderSearchPageTypeTabs(allMatches);
+    renderSearchPageResults(allMatches, query);
+}
+
+function renderSearchPageTypeTabs(allMatches) {
+    const tabsContainer = document.getElementById('searchPageTypeTabs');
+    if (!tabsContainer) return;
+
+    if (!allMatches.length) {
+        tabsContainer.style.display = 'none';
+        tabsContainer.innerHTML = '';
+        return;
+    }
+
+    const typeMap = {
+        movie:    { label: 'فیلم',   icon: 'fa-film' },
+        drama:    { label: 'دراما',  icon: 'fa-tv' },
+        chinese:  { label: 'چینی',   icon: 'fa-dragon' },
+        japanese: { label: 'ژاپۆنی', icon: 'fa-sun' }
+    };
+
+    const counts = { all: allMatches.length };
+    Object.keys(typeMap).forEach(t => {
+        counts[t] = allMatches.filter(i => i.type === t).length;
+    });
+
+    let tabsHTML = `
+        <div class="sp-type-tab ${_spCurrentTypeFilter==='all'?'active':''}" onclick="sp_filterByType('all')">
+            <i class="fas fa-layer-group"></i> هەمووی <span class="sp-type-count">(${counts.all})</span>
+        </div>`;
+
+    Object.keys(typeMap).forEach(t => {
+        if (counts[t] > 0) {
+            tabsHTML += `
+            <div class="sp-type-tab ${_spCurrentTypeFilter===t?'active':''}" onclick="sp_filterByType('${t}')">
+                <i class="fas ${typeMap[t].icon}"></i> ${typeMap[t].label} <span class="sp-type-count">(${counts[t]})</span>
+            </div>`;
+        }
+    });
+
+    tabsContainer.innerHTML = tabsHTML;
+    tabsContainer.style.display = 'flex';
+}
+
+function sp_filterByType(type) {
+    _spCurrentTypeFilter = type;
+    const q = _spCurrentQuery.trim().toLowerCase();
+    const allMatches = (typeof database !== 'undefined' ? database : [])
+        .filter(item => item.title.toLowerCase().includes(q));
+
+    renderSearchPageTypeTabs(allMatches);
+
+    const filtered = type === 'all' ? allMatches : allMatches.filter(i => i.type === type);
+    renderSearchPageResults(filtered, _spCurrentQuery);
+}
+
+function renderSearchPageResults(list, query) {
+    const container = document.getElementById('searchPageResults');
+    if (!container) return;
+
+    if (!query) {
+        container.innerHTML = `
+            <div class="sp-empty-state">
+                <i class="fas fa-search"></i>
+                <span>بگەڕێ بۆ دراما یان فیلمێک...</span>
+            </div>`;
+        return;
+    }
+
+    if (list.length === 0) {
+        container.innerHTML = `
+            <div class="sp-empty-state">
+                <i class="fas fa-face-frown"></i>
+                <span>هیچ ئەنجامێک نەدۆزرایەوە بۆ "${query}"</span>
+            </div>`;
+        return;
+    }
+
+    container.innerHTML = list.map(item => `
+        <div class="sp-result-item" onclick="closeSearchPage();setTimeout(()=>app.openPlayer(database.find(d=>d.id===${item.id})),200);">
+            <div class="sp-result-img">
+                <img src="${item.image}" alt="${item.title}" loading="lazy">
+            </div>
+            <div class="sp-result-info">
+                <div class="sp-result-title">${item.title}</div>
+                <div class="sp-result-genre">${item.genre || ''}</div>
+                <div class="sp-result-desc">${item.desc || ''}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const overlay = document.getElementById('searchPageOverlay');
+        if (overlay && overlay.classList.contains('sp-active')) closeSearchPage();
     }
 });
 // ===== PAGINATION SYSTEM =====
@@ -6170,7 +6379,6 @@ app.init();
     background: rgba(8, 8, 14, 0.97);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
-    border-top: 1px solid rgba(140, 0, 255, 0.25);
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -6329,6 +6537,41 @@ body {
     font-weight: 900;
     text-shadow: 0 1px 4px rgba(0,0,0,0.6);
     pointer-events: none;
+}
+
+.swatch-rainbow {
+    position: relative;
+    overflow: hidden;
+    background: conic-gradient(from 0deg, #ff0055, #ff9900, #ffee00, #33ff55, #00e5ff, #4d6bff, #b366ff, #ff0055) !important;
+    animation: rainbowSpin 5s linear infinite;
+}
+
+@keyframes rainbowSpin {
+    0%   { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+}
+
+.swatch-rainbow:hover {
+    transform: scale(1.3);
+    border-color: rgba(255,255,255,0.8);
+    box-shadow: 0 0 18px rgba(255,255,255,0.3);
+}
+
+.swatch-rainbow.active-swatch {
+    border-color: #fff;
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+.swatch-rainbow input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
 }
 
 
@@ -7186,13 +7429,45 @@ body {
     .person-works-grid { grid-template-columns: repeat(2, 1fr); }
 }
 .search-wrapper { display:flex; align-items:center; position:relative; }
+
+
 .search-icon-btn {
   width:44px; height:44px; border-radius:50%;
-  background:rgba(140,0,255,0.15); border:1.5px solid rgba(140,0,255,0.4);
-  color:#b366ff; cursor:pointer; display:flex; align-items:center;
+  background:rgba(140,0,255,0.1); 
+  border: 1px solid rgba(140,0,255,0.15);
+  color: var(--accent-light, #b366ff); cursor:pointer; display:flex; align-items:center;
   justify-content:center; transition:all 0.3s; flex-shrink:0; position:relative;
+  overflow: hidden;
+}
+
+.search-icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 6px; right: -1px;
+    width: 45%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-light, #b366ff), var(--accent-color, #8c00ff));
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 0 6px rgba(140,0,255,0.6);
+}
+
+.search-icon-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 6px; left: -1px;
+    width: 45%; height: 2px;
+    background: linear-gradient(90deg, var(--accent-color, #8c00ff), var(--accent-light, #b366ff), transparent);
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 6px rgba(140,0,255,0.6);
+}
+.search-icon-btn:hover::before,
+.search-icon-btn:hover::after {
+    box-shadow: 0 0 12px rgba(140,0,255,0.9);
 }
 .search-icon-btn:hover { background:rgba(140,0,255,0.3); color:#fff; box-shadow:0 0 15px rgba(140,0,255,0.4); }
+.search-icon-btn.active { background:rgba(140,0,255,0.35); color:#fff; border-radius:50% 0 0 50%; border-color: var(--accent-light, rgba(179,102,255,0.9)); }
+.search-icon-btn {
+    color: var(--accent-color, #8c00ff);
+}
 .search-icon-btn.active { background:rgba(140,0,255,0.35); color:#fff; border-radius:50% 0 0 50%; border-color:rgba(179,102,255,0.9); }
 .search-icon-btn.active .icon-search { opacity:0; transform:rotate(90deg); }
 .search-icon-btn.active .icon-close { opacity:1 !important; transform:rotate(0deg) !important; }
@@ -7222,51 +7497,275 @@ body {
     display: flex;
     align-items: center;
 }
-
-/* سێرچ باری خوارەوە */
-.search-bar-drop {
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                padding 0.4s ease,
-                opacity 0.3s ease;
-    opacity: 0;
-    background: rgba(10, 5, 20, 0.98);
-    border-top: 1px solid rgba(140, 0, 255, 0.15);
+/* ========================================
+   سێرچ باری خوارەوە - دیزاینی Premium Elegant
+   ======================================== */
+#searchPageOverlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: #08070c;
+    flex-direction: column;
+    animation: spOverlayIn 0.35s ease;
+}
+#searchPageOverlay.sp-active { display: flex; }
+@keyframes spOverlayIn {
+    from { opacity:0; }
+    to   { opacity:1; }
 }
 
-.search-bar-drop.open {
-    max-height: 70px;
-    opacity: 1;
-    padding: 10px 4%;
-}
-
-.search-bar-inner {
+/* ===== بەشی سەرەوە ===== */
+.sp-topbar {
     display: flex;
     align-items: center;
-    gap: 12px;
-    background: rgba(140, 0, 255, 0.07);
-    border: 1px solid rgba(140, 0, 255, 0.3);
-    border-radius: 12px;
-    padding: 10px 16px;
-    width: 100%;
+    gap: 14px;
+    padding: 22px 5% 18px;
+    flex-shrink: 0;
+    background: #0b0a10;
 }
 
-.search-bar-inner input {
-    flex: 1;
+.sp-back-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.7);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer; flex-shrink:0;
+    transition: all 0.25s ease;
+}
+.sp-back-btn:hover {
+    border-color: #fff;
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+}
+
+.sp-input-wrap {
+    flex: 1; display:flex; align-items:center; gap:12px;
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    border-radius: 0;
+    padding: 12px 4px;
+    transition: border-color 0.3s ease;
+}
+.sp-input-wrap:focus-within {
+    border-bottom-color: var(--accent-color, #8c00ff);
+}
+
+.sp-input-icon {
+    color: rgba(255,255,255,0.35);
+    font-size:15px; flex-shrink:0;
+}
+.sp-input-wrap:focus-within .sp-input-icon { color: var(--accent-color, #8c00ff); }
+
+.sp-input {
+    flex:1; background:none; border:none; outline:none;
+    color:#fff; font-size:16px; font-weight:600;
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+    direction: rtl;
+}
+.sp-input::placeholder { color: rgba(255,255,255,0.28); font-weight:500; }
+
+.sp-clear-btn {
+    background: none;
+    border:none;color:rgba(255,255,255,0.4);
+    cursor:pointer;font-size:13px;flex-shrink:0;
+    transition: color 0.25s ease;
+}
+.sp-clear-btn:hover { color: #ff5566; }
+
+/* ===== تابەکانی جۆر ===== */
+.sp-type-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 5%;
+    flex-shrink: 0;
+    background: #0b0a10;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.sp-type-tabs::-webkit-scrollbar { display: none; }
+
+.sp-type-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 7px;
     background: none;
     border: none;
-    outline: none;
-    color: #fff;
-    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    padding: 14px 18px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 700;
     font-family: 'Noto Kufi Arabic', Tahoma, sans-serif;
-    direction: rtl;
-    width: 100%;
+    transition: color 0.25s ease;
+    white-space: nowrap;
+}
+.sp-type-tab i { font-size: 12px; opacity: 0.7; }
+.sp-type-tab:hover { color: rgba(255,255,255,0.75); }
+
+.sp-type-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%; right: 50%;
+    height: 2.5px;
+    background: var(--accent-color, #8c00ff);
+    border-radius: 3px 3px 0 0;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.sp-type-tab.active {
+    color: #fff;
+}
+.sp-type-tab.active::after { left: 12px; right: 12px; }
+
+.sp-type-tab.active i { color: var(--accent-color, #8c00ff); opacity: 1; }
+
+.sp-type-tab span.sp-type-count {
+    color: rgba(255,255,255,0.3);
+    font-weight: 800;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 11.5px;
+}
+.sp-type-tab.active span.sp-type-count { color: var(--accent-color, #8c00ff); }
+
+/* ===== ئەنجامەکان - کۆنتەینەر ===== */
+.sp-results {
+    flex:1; overflow-y:auto; padding: 20px 5% 20px;
+    -webkit-overflow-scrolling: touch;
+    background: #08070c;
 }
 
-.search-bar-inner input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+.sp-empty-state {
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:20px; padding: 110px 20px; color: rgba(255,255,255,0.22);
+    text-align: center;
+}
+
+.sp-empty-state i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 82px;
+    height: 82px;
+    border-radius: 50%;
+    font-size: 27px;
+    color: var(--accent-color, #8c00ff);
+    background:
+        linear-gradient(#0b0a10, #0b0a10) padding-box,
+        linear-gradient(135deg, var(--accent-color, #8c00ff), transparent 65%) border-box;
+    border: 1.5px solid transparent;
+    position: relative;
+}
+
+.sp-empty-state i::after {
+    content: '';
+    position: absolute;
+    inset: -9px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--accent-color, #8c00ff) 16%, transparent);
+    pointer-events: none;
+}
+
+.sp-empty-state span {
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+    font-size:13px;
+    font-weight:600;
+    color: rgba(255,255,255,0.34);
+    line-height: 1.7;
+    max-width: 260px;
+}
+
+/* ===== کارتی ئەنجام - دیزاینی نوێ ===== */
+.sp-result-item {
+    display:flex; gap:14px; padding:12px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 18px;
+    margin-bottom: 12px;
+    cursor:pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+}
+.sp-result-item::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 0;
+    background: var(--accent-color, #8c00ff);
+    transition: width 0.3s ease;
+    border-radius: 0 18px 18px 0;
+}
+.sp-result-item:hover {
+    background: linear-gradient(135deg, rgba(140,0,255,0.09), rgba(255,255,255,0.02));
+    border-color: rgba(255,255,255,0.14);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.4);
+}
+.sp-result-item:hover::before { width: 3px; }
+
+.sp-result-img {
+    width: 72px; height: 102px; border-radius:12px; overflow:hidden;
+    flex-shrink:0; border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.55);
+    position: relative;
+}
+.sp-result-img img {
+    width:100%; height:100%; object-fit:cover; display:block;
+    transition: transform 0.4s ease, filter 0.4s ease;
+}
+.sp-result-item:hover .sp-result-img img { transform: scale(1.07); }
+
+.sp-result-info {
+    flex:1; min-width:0; display:flex; flex-direction:column;
+    justify-content:center; gap:8px;
+}
+.sp-result-title {
+    font-size:15.5px; font-weight:800; color:#fff;
+    font-family:'Rajdhani',sans-serif; letter-spacing:0.3px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* genre - شێوەی نوێ: pill چکۆلە */
+.sp-result-genre {
+    font-size:10.5px;
+    color: var(--accent-color, #8c00ff);
+    font-weight:800;
+    background: color-mix(in srgb, var(--accent-color, #8c00ff) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent-color, #8c00ff) 35%, transparent);
+    padding: 3px 11px;
+    border-radius: 20px;
+    width: fit-content;
+    display: block;
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+    letter-spacing: 0.2px;
+}
+.sp-result-desc {
+    font-size:11.5px; color: rgba(255,255,255,0.38); line-height:1.65;
+    display:-webkit-box; -webkit-line-clamp:2; line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    font-family:'Noto Kufi Arabic',Tahoma,sans-serif;
+}
+/* ===== نیشانەی کۆتایی لیستەکە - هەمیشە دەردەکەوێت ===== */
+.sp-results::after {
+    content: '';
+    display: block;
+    width: 70px;
+    height: 3px;
+    margin: 18px auto 6px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, transparent, var(--accent-color, #8c00ff), transparent);
+    opacity: 0.6;
+}
+
+/* سکرۆڵبار */
+.sp-results::-webkit-scrollbar { width: 4px; }
+.sp-results::-webkit-scrollbar-track { background: transparent; }
+.sp-results::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--accent-color, #8c00ff) 55%, transparent);
+    border-radius: 10px;
 }
 
 /* main-container مارجین */
@@ -7548,7 +8047,7 @@ body {
         <div style="display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:35px;">
   <div style="display:flex;align-items:center;gap:10px;">
     <div style="width:28px;height:1px;background:rgba(140,0,255,0.5);"></div>
-    <span style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:6px;color:#fff;">HAVE <span style="color:rgba(140,0,255,0.95);">K</span>OREA</span>
+    <div class="sidebar-logo-mask"></div>
     <div style="width:28px;height:1px;background:rgba(140,0,255,0.5);"></div>
   </div>
   <div style="width:100%;height:2px;background:rgba(140,0,255,0.55);border-radius:2px;"></div>
@@ -7680,57 +8179,69 @@ body {
     top: 15px;
     left: 15px;
     z-index: 10001;
-    width: 44px;
-    height: 44px;
-    border-radius: 13px;
-    background: rgba(140, 0, 255, 0.1);
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: rgba(140,0,255,0.1);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(140, 0, 255, 0.25);
-    border-top: 1px solid rgba(179, 102, 255, 0.35);
+    border: 1px solid rgba(140,0,255,0.15);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: none;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    overflow: hidden;
+}
+.vertical-bars-btn::before {
+    content: '';
+    position: absolute;
+    top: 6px; right: -1px;
+    width: 30%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-light, #b366ff), var(--accent-color, #8c00ff));
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 0 6px rgba(140,0,255,0.6);
+}
+.vertical-bars-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 6px; left: -1px;
+    width: 30%; height: 2px;
+    background: linear-gradient(90deg, var(--accent-color, #8c00ff), var(--accent-light, #b366ff), transparent);
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 6px rgba(140,0,255,0.6);
 }
 .vertical-bars-btn:hover {
-    background: rgba(140, 0, 255, 0.2);
+    background: rgba(140,0,255,0.3);
+    box-shadow: 0 0 15px rgba(140,0,255,0.4);
     transform: scale(1.05);
 }
+.vertical-bars-btn:hover::before,
+.vertical-bars-btn:hover::after {
+    box-shadow: 0 0 12px rgba(140,0,255,0.9);
+}
 .vertical-bars-btn.active {
-    background: rgba(255, 50, 50, 0.15);
-    border-color: rgba(255, 50, 50, 0.35);
-    border-top-color: rgba(255, 80, 80, 0.5);
+    background: rgba(255,50,50,0.15);
 }
-.bars-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    width: auto;
-    height: auto;
+.vertical-bars-btn.active::before,
+.vertical-bars-btn.active::after {
+    background: linear-gradient(90deg, transparent, #ff8080, #ff3333);
 }
+.bars-wrapper { display: flex; flex-direction: column; gap: 5px; position: relative; z-index: 1; }
 .bars-wrapper span {
     display: block;
-    height: 1.5px;
-    background: rgba(200, 160, 255, 0.9);
-    border-radius: 2px;
-    transition: 0.4s;
-    box-shadow: none;
+    height: 2px;
+    background: var(--accent-color, #8c00ff);
+    border-radius: 3px;
+    box-shadow: 0 0 6px rgba(140,0,255,0.5);
+    transition: 0.4s cubic-bezier(0.4,0,0.2,1);
 }
-.bars-wrapper .bar-1 { width: 16px; }
-.bars-wrapper .bar-2 { width: 10px; }
-.bars-wrapper .bar-3 { width: 16px; }
-.vertical-bars-btn.active .bar-1 {
-    transform: rotate(45deg) translate(4.5px, 4.5px);
-    width: 16px;
-}
+.bars-wrapper .bar-1 { width: 18px; }
+.bars-wrapper .bar-2 { width: 12px; margin-right: 0; align-self: flex-end; }
+.bars-wrapper .bar-3 { width: 18px; }
+.vertical-bars-btn.active .bar-1 { transform: rotate(45deg) translate(5px, 5px); width: 18px; background: #ff5555; }
 .vertical-bars-btn.active .bar-2 { opacity: 0; }
-.vertical-bars-btn.active .bar-3 {
-    transform: rotate(-45deg) translate(4.5px, -4.5px);
-    width: 16px;
-}
+.vertical-bars-btn.active .bar-3 { transform: rotate(-45deg) translate(5px, -5px); width: 18px; background: #ff5555; }
 .glass-sidebar { 
     position: fixed; 
     top: 0; 
@@ -8392,7 +8903,21 @@ body {
     .home-rand-btn { flex: 1; justify-content: center; }
     .home-random-section { padding: 22px 16px 18px; }
 }
-
+.sidebar-logo-mask {
+    height: 42px;
+    width: 130px;
+    background-color: var(--accent-color, #8c00ff);
+    -webkit-mask-image: url('IMG_3994.PNG');
+    mask-image: url('IMG_3994.PNG');
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    filter: drop-shadow(0 0 12px rgba(140,0,255,0.5));
+    flex-shrink: 0;
+}
 </style>
 
 
